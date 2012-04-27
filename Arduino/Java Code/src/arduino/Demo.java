@@ -75,7 +75,14 @@ public class Demo {
 		// TODO Auto-generated catch block
 		error.printStackTrace();
 	}
+	try {
+		System.out.println("State of Sensor A is: "+ard.getValue(ard.SENSORA));
+	} catch (WrongModeSelected e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
 	if (ard.switchMode(ard.MCHANGES)) System.out.println("mode changed");
+	
 	}
 	
 }

@@ -76,15 +76,31 @@ public class Arduino implements SerialPortEventListener{
 	private List<SensorEventListener> sensorEventListener = 
 			new ArrayList<SensorEventListener>(); 
 	
+	/**
+	 * stores the current mode
+	 */
+	private int mode = 0;
 	
+	/**
+	 * the default static instanciation, the empty constructor
+	 * and the getInstance method are part of the singleton pattern
+	 */
 	private static Arduino instance = new Arduino();
 	
 	private Arduino() {};
 	
+	/**
+	 * gives you the instance you have to work with
+	 * @return instance of the Arduino board
+	 */
 	public static Arduino getInstance() {
 		return instance;
 	}
 	
+	/**
+	 * get connection state
+	 * @return if the connection is established
+	 */
 	public boolean isConnected() {
 		return serialPort != null;
 	}
@@ -169,23 +185,39 @@ public class Arduino implements SerialPortEventListener{
 	 * @return success of sending the command
 	 */
 	public boolean switchMode(int Mode){
-		try {
-			output.write(Mode);
-			return true;
-		} catch (IOException e) {
-			return false;
+		if (this.isConnected()){
+			try {
+				output.write(Mode);
+				return true;
+			} catch (IOException e) {
+				return false;
+			}
 		}
+		return false;
 	}
 	
-	public boolean getValue(int Port){
+	/**
+	 * gets the status of the given Port its only available in the Mode MPoll
+	 * @param Port
+	 * @return
+	 * @throws WrongModeSelected
+	 */
+	public boolean getValue(int Port) throws WrongModeSelected{
 		try {
 			output.write(Port);
+			if (mode==0){
+				int letter = input.read();
+				// read bytes until we get the correct port data
+				while (Character.toUpperCase(letter) != Character.toUpperCase(Port)){
+					letter = input.read();
+				}
+				if (letter>=97) return this.LOW; else return this.HIGH;
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return true;
-		//TODO: implement me
+		throw new WrongModeSelected();
 		
 	}
 
@@ -205,7 +237,13 @@ public class Arduino implements SerialPortEventListener{
 					triggeredEvent = new SensorEvent(SPE,
 							lowerCaseInputByte, 
 							((inputByte>='a' && inputByte<='e') ? this.LOW : this.HIGH));
-				} else return;
+				} else 
+					// it its not sensor data check if the board tells you something about a mode change
+					// and store the new mode or return becouse that was no valid data
+					if (inputByte>=48 && inputByte<=50) {
+						this.mode = inputByte-48;
+						return;
+					} else return;
 				
 				CallSensorEventListener[] threads = 
 						new CallSensorEventListener[sensorEventListener.size()];
