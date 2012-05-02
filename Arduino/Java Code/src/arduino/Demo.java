@@ -76,12 +76,12 @@ public class Demo {
 		error.printStackTrace();
 	}
 	try {
-		System.out.println("State of Sensor A is: "+ard.getValue(ard.SENSORA));
+		System.out.println("State of Sensor A is: "+ard.getValue(Arduino.SENSORA));
 	} catch (WrongModeSelected e1) {
 		// TODO Auto-generated catch block
 		e1.printStackTrace();
 	}
-	if (ard.switchMode(ard.MCHANGES)) System.out.println("mode changed");
+	if (ard.switchMode(Arduino.MCHANGES)) System.out.println("mode changed");
 	
 	}
 	

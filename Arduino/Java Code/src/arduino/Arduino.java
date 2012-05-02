@@ -1,15 +1,11 @@
 package arduino;
 
-import java.awt.AWTEvent;
-import java.awt.Event;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.TooManyListenersException;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
@@ -211,7 +207,7 @@ public class Arduino implements SerialPortEventListener{
 				while (Character.toUpperCase(letter) != Character.toUpperCase(Port)){
 					letter = input.read();
 				}
-				if (letter>=97) return this.LOW; else return this.HIGH;
+				if (letter>=97) return Arduino.LOW; else return Arduino.HIGH;
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -236,7 +232,7 @@ public class Arduino implements SerialPortEventListener{
 				if (lowerCaseInputByte>='a' && lowerCaseInputByte<='e'){
 					triggeredEvent = new SensorEvent(SPE,
 							lowerCaseInputByte, 
-							((inputByte>='a' && inputByte<='e') ? this.LOW : this.HIGH));
+							((inputByte>='a' && inputByte<='e') ? Arduino.LOW : Arduino.HIGH));
 				} else 
 					// it its not sensor data check if the board tells you something about a mode change
 					// and store the new mode or return becouse that was no valid data

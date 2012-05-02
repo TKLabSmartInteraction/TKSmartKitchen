@@ -41,6 +41,10 @@ void loop() {
         Serial.write("0");
         break;
       case 49:
+        // if we are in MPoll and change to MChange we want to
+        // start with up to date sensor data so first send all
+        // the sensorstates
+        if (Mode == 0) sendAll();
         Mode = 1;
         Serial.write("1");
         break;
@@ -94,13 +98,18 @@ void loop() {
     }
     // if the mode is Agressive send all the Sensordata
     if (Mode == 2) {
-      sendStateA();
-      sendStateB();
-      sendStateC();
-      sendStateD();
-      sendStateE();
+      sendAll();
     }
   }
+}
+
+// sends all sensorstates
+void sendAll() {
+  sendStateA();
+  sendStateB();
+  sendStateC();
+  sendStateD();
+  sendStateE();
 }
       
 // Send an uppercase letter when the Port
