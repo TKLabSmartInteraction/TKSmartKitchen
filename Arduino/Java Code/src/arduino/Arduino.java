@@ -169,6 +169,7 @@ public class Arduino implements SerialPortEventListener{
 		if (this.isConnected()) {
 			serialPort.removeEventListener();
 			serialPort.close();
+			serialPort = null;
 			return true;
 		}
 		return false;		
