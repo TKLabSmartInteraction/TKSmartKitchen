@@ -67,7 +67,7 @@ public class Demo {
 			
 		}
 	});
-	ard.connect("COM20");
+	ard.connect("COM3");
 	System.out.println("started");
 	try {
 		Thread.sleep(1000);
