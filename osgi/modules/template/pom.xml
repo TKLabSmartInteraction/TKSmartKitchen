@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>kitchen</artifactId>
+		<groupId>de.tud.kitchen</groupId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>kitchen-module-template</artifactId>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Export-Package>de.tud.kitchen.template</Export-Package>
+						<Bundle-Activator>de.tud.kitchen.template.Activator</Bundle-Activator>
+					</instructions>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>bundle</goal>
+							<goal>bundleall</goal>
+						</goals>
+						<phase>package</phase>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+	</dependencies>
+</project>
