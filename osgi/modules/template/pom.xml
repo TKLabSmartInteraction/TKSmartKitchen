@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>kitchen</artifactId>
+		<artifactId>kitchen-modules</artifactId>
 		<groupId>de.tud.kitchen</groupId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
@@ -23,7 +23,6 @@
 					<execution>
 						<goals>
 							<goal>bundle</goal>
-							<goal>bundleall</goal>
 						</goals>
 						<phase>package</phase>
 					</execution>
@@ -32,5 +31,13 @@
 		</plugins>
 	</build>
 	<dependencies>
+		<dependency>
+			<groupId>de.tud.kitchen</groupId>
+			<artifactId>kitchen-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.illposed</groupId>
+			<artifactId>osc</artifactId>
+		</dependency>
 	</dependencies>
 </project>

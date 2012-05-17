@@ -1,12 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<name>Kitchen API</name>
+	<description>This bundle contains all interfaces and class definitions used in the kitchen api. The actual service implementing the interfaces is part of the kitchen service package</description>
+	<artifactId>kitchen-api</artifactId>
 	<parent>
 		<artifactId>kitchen</artifactId>
 		<groupId>de.tud.kitchen</groupId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>kitchen-main</artifactId>
 	<build>
 		<plugins>
 			<plugin>
@@ -15,7 +17,7 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Bundle-Activator>de.tud.kitchen.Activator</Bundle-Activator>
+						<Export-Package>de.tud.kitchen.api</Export-Package>
 					</instructions>
 				</configuration>
 				<executions>
@@ -29,10 +31,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<dependencies>
-		<dependency>
-			<groupId>de.tud.kitchen</groupId>
-			<artifactId>kitchen-api</artifactId>
-		</dependency>
-	</dependencies>
 </project>
