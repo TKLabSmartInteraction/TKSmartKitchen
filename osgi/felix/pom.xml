@@ -91,7 +91,11 @@
 		<dependency>
 			<groupId>com.illposed</groupId>
 			<artifactId>osc</artifactId>
-			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.apache.felix.main</artifactId>
+			<version>4.0.2</version>
 		</dependency>
 	</dependencies>
 </project>
