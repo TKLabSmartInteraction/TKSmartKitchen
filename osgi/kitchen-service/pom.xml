@@ -6,16 +6,19 @@
 		<groupId>de.tud.kitchen</groupId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>kitchen-main</artifactId>
+	<artifactId>kitchen-service</artifactId>
+	<name>Kitchen Service</name>
+	<packaging>bundle</packaging>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
+				<version>2.3.7</version>
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Bundle-Activator>de.tud.kitchen.Activator</Bundle-Activator>
+						<Bundle-Activator>de.tud.kitchen.main.Activator</Bundle-Activator>
 					</instructions>
 				</configuration>
 				<executions>
@@ -33,6 +36,7 @@
 		<dependency>
 			<groupId>de.tud.kitchen</groupId>
 			<artifactId>kitchen-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>
