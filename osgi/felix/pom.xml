@@ -43,17 +43,16 @@
 							<artifactItems>
 								<!-- Our bundles which need to be deployed -->
 								<artifactItem>
-									<groupId>de.tud.kitchen</groupId>
+									<groupId>${project.groupId}</groupId>
 									<artifactId>kitchen-api</artifactId>
 								</artifactItem>
 								<artifactItem>
-									<groupId>de.tud.kitchen</groupId>
+									<groupId>${project.groupId}</groupId>
 									<artifactId>kitchen-service</artifactId>
 								</artifactItem>
-								<artifactItem>
-									<groupId>de.tud.kitchen</groupId>
-									<artifactId>kitchen-module-template</artifactId>
-								</artifactItem>
+								<!-- Add module bundles here -->
+								
+								<!-- Add third party dependencies here -->
 								<artifactItem>
 									<groupId>com.illposed</groupId>
 									<artifactId>osc</artifactId>
@@ -83,11 +82,9 @@
 			<artifactId>kitchen-service</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>kitchen-module-template</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+		<!-- Add module bundles here -->
+								
+		<!-- Add third party dependencies here -->
 		<dependency>
 			<groupId>com.illposed</groupId>
 			<artifactId>osc</artifactId>
