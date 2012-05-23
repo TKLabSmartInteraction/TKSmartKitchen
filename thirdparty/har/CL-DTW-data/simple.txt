@@ -1,0 +1,25 @@
+# 'clafouti-begin' recipe
+# Simple activity recognition data file
+# Last updated on 6/7/2011
+
+# name deviceId SIMPLE minEnergy minFreq minRange
+
+#SPARE            121
+
+SPOON_MOVE        133 simple / / 0.07
+LADLE_MOVE        132 simple / / 0.07
+SMALLKNIFE_MOVE   138 simple / / 0.07
+BIGKNIFE_MOVE     104 simple / / 0.07
+PEELER_MOVE       130 simple / / 0.07
+WHISK_MOVE        131 simple / / 0.07
+
+LID_MOVE          137 simple / / 0.07
+PAN_MOVE          136 simple / / 0.07
+SIEVE_MOVE        139 simple / / 0.07
+GRATER_MOVE       140 simple / / 0.07
+
+FRIERPAN_MOVE     117 simple / / 0.07
+BREADKNIFE_MOVE   141 simple / / 0.07
+TOMATOKNIFE_MOVE  142 simple / / 0.07
+SPOTTEDSPOON_MOVE 135 simple / / 0.07
+SPATULA_MOVE      134 simple / / 0.07

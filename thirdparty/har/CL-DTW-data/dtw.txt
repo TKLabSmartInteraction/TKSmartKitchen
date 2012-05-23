@@ -1,0 +1,53 @@
+# Ambient kitchen demo -- last updated on 6/7/2011
+# 'clafouti-begin' recipe
+# Simple activity recognition data file
+
+# Spoon
+135 SPOON_STIR.csv SPOON_STIR stir
+135 SPOON_SCOOP.csv SPOON_SCOOP scoop
+135 SPOON_SCOOP1.csv SPOON_SCOOP scoop
+
+# Ladle
+132 LADLE_POUR.csv LADLE_POUR scoop/pour
+132 LADLE_POUR1.csv LADLE_POUR scoop
+
+# Small knife - scrape out vanilla seeds
+137 BIGKNIFE_SCRAPEOFF.csv SMALLKNIFE_SCRAPE scrape-off  # DATA FROM BIG KNIFE FOR NOW
+138 SMALLKNIFE_SPREAD.csv SMALLKNIFE_SCRAPE spread
+
+# Small knife - core pears
+138 SMALLKNIFE_CORE.csv SMALLKNIFE_CORE core
+# Small knife - quarter or slice pears
+138 SMALLKNIFE_SLICE.csv SMALLKNIFE_SLICE slice
+138 SMALLKNIFE_CHOP.csv SMALLKNIFE_SLICE chop
+
+# Big knife - scrape out vanilla seeds
+104 BIGKNIFE_SCRAPEOFF.csv BIGKNIFE_SCRAPE scrape-off
+104 BIGKNIFE_SHAVE.csv BIGKNIFE_SCRAPE shave
+
+# Big knife - quarter or slice pears
+104 BIGKNIFE_CHOP.csv BIGKNIFE_SLICE chop
+104 BIGKNIFE_SLICE.csv BIGKNIFE_SLICE slice
+
+# Peeler
+136 PEELER_PEEL.csv PEELER_PEEL peel
+
+# Whisk
+131 WHISK_WHISK.csv WHISK_WHISK whisk
+131 WHISK_WHISK1.csv WHISK_WHISK whisk
+
+#Bread knife-- data from big knife
+137 BIGKNIFE_SLICE.csv BREADKNIFE_SLICE slice
+137 BIGKNIFE_CHOP.csv BREADKNIFE_CHOP chop
+137 BIGKNIFE_SCRAPEOFF.csv BREADKNIFE_SCRAPE scrape-off
+
+#Tomato knife 142-- data from small knife
+
+142 SMALLKNIFE_SPREAD.csv TOMATOKNIFE_SPREAD spread
+# Small knife - core pears
+142 SMALLKNIFE_CORE.csv TOMATOKNIFE_CORE core
+# Small knife - quarter or slice pears
+142 SMALLKNIFE_SLICE.csv TOMATOKNIFE_SLICE slice
+142 SMALLKNIFE_CHOP.csv TOMATOKNIFE_SLICE chop
+ 
+
