@@ -1,8 +1,8 @@
 This folder contains frameworks and tools that we have not written ourselves:
 
 ## Human Activity Recognition (HAR) 
-From: Newcastle University
-License: Unknown
+From: Newcastle University  
+License: Unknown  
 Researchers: 
 
  * Cuong Pham <cuong.pham@newcastle.ac.uk>
