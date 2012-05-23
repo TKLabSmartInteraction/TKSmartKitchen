@@ -11,6 +11,7 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>template</module>
+		<module>Arduino</module>
 	</modules>
 	<repositories>
 		<repository>
