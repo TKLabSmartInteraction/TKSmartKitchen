@@ -13,6 +13,7 @@
 		<module>template</module>
 		<module>Arduino</module>
 		<module>Wax3</module>
+		<module>zeroconf-osc</module>
 	</modules>
 	<repositories>
 		<repository>
