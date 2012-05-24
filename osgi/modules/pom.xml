@@ -12,6 +12,7 @@
 	<modules>
 		<module>template</module>
 		<module>Arduino</module>
+		<module>Wax3</module>
 	</modules>
 	<repositories>
 		<repository>
