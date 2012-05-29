@@ -19,7 +19,7 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Export-Package>de.tud.kitchen.api</Export-Package>
+						<Export-Package>*</Export-Package>
 					</instructions>
 				</configuration>
 				<executions>
