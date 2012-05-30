@@ -37,7 +37,7 @@ public class Activator implements BundleActivator {
 		@Override
 		public Object addingService(ServiceReference reference) {
 			KitchenModule module = (KitchenModule) context.getService(reference);
-			module.setKitchen(new Kitchen() {
+			module.start(new Kitchen() {
 				@Override
 				public void registerEventConsumer(EventConsumer consumer) {
 					
@@ -63,8 +63,7 @@ public class Activator implements BundleActivator {
 		
 		@Override
 		public void removedService(ServiceReference reference, Object service) {
-			// TODO Auto-generated method stub
-			
+			((KitchenModule) service).stop();
 		}
 	}
 }

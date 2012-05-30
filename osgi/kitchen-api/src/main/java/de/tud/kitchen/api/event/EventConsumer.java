@@ -19,10 +19,10 @@ public abstract class EventConsumer {
 	/**
 	 * Override with the following snippet:
 	 * <pre>
-	 *  try {
-     * 		getMethod( o.getClass() ).invoke(this, new Object[] { o } );
+	 * try {
+     *     getMethod(o.getClass()).invoke(this, new Object[]{o});
      * } catch (Exception ex) {
-     *  System.out.println( "no appropriate handle() method" );
+     *     System.out.println("no appropriate handle() method");
      * }
 	 * </pre>
 	 * @param o

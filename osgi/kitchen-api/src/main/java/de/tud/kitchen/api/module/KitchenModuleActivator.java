@@ -6,6 +6,13 @@ import org.osgi.framework.ServiceRegistration;
 
 import de.tud.kitchen.api.Kitchen;
 
+
+/**
+ * Convenient base class for Activators used in modules for the SmartKitchen environment
+ * 
+ * 
+ * @author niklas
+ */
 public abstract class KitchenModuleActivator implements KitchenModule, BundleActivator {
 
 	
@@ -21,7 +28,19 @@ public abstract class KitchenModuleActivator implements KitchenModule, BundleAct
 		registration.unregister();
 	}
 	
+	/**
+	 * Gets called when the kitchen-service bundle detects and loads the module.</br>
+	 * In this method you will typically get the EventPublisher and register EventConsumers used by this module
+	 * <pre>
+	 * kitchen.getEventPublisher(MyCustomEvent.class)
+	 * kitchen.registerEventConsumer(myConsumer);
+	 * </pre>
+	 */
 	abstract public void start(Kitchen kitchen);
+	
+	/**
+	 * Gets called when the kitchen-service bundle decides to unload the module
+	 */
 	abstract public void stop();
 	
 }

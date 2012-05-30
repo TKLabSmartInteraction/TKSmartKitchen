@@ -4,6 +4,6 @@ import de.tud.kitchen.api.Kitchen;
 
 public interface KitchenModule {
 
-	void setKitchen(Kitchen kitchen);
-	
+	void start(Kitchen kitchen);
+	void stop();
 }
