@@ -44,23 +44,24 @@ public class AccelerometerTest {
 	   
 	}
 	
-	boolean accelerometerConsumerCalled = false;
+	public class AccelerometerConsumer extends AccelerometerEventConsumer<Float> {
+		public boolean accelerometerConsumerCalled = false;
+		@Override
+		public void handleAccelerometerEvent(AccelerometerEvent<Float> event) {
+			accelerometerConsumerCalled = true;
+		}
+	};
 	@Test
 	public void doubleDispatchTest() {
 		AccelerometerEvent<Float> testEvent = new AccelerometerEvent<Float>("testSensor1", 134134238742L, 341.2f, 123.1f, 991.0f);
 		Event downCastEvent = testEvent;
 		
-		AccelerometerEventConsumer<Float> accelerometerEventConsumer = new AccelerometerEventConsumer<Float>() {
-			@Override
-			public void handleAccelerometerEvent(AccelerometerEvent<Float> event) {
-				accelerometerConsumerCalled = true;
-			}
-		};
+		AccelerometerConsumer accelerometerEventConsumer = new AccelerometerConsumer();
 		
 		EventConsumer downcastAccelerometerConsumer = accelerometerEventConsumer;
 		downCastEvent.dispatchTo(downcastAccelerometerConsumer);
 		
-		assertTrue("Accelerometer Consumer not called", accelerometerConsumerCalled);
+		assertTrue("Accelerometer Consumer not called", accelerometerEventConsumer.accelerometerConsumerCalled);
 		
 	}
 	

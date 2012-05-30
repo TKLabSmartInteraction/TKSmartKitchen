@@ -8,7 +8,6 @@ import java.lang.reflect.Method;
  * 
  * To extend this class you have to:
  * <ol>
- * 	<li>Override the handle method using the snippet in the JavaDoc for that method</li>
  * 	<li>Add a handle* method for each event type you want to receive where * is the name of the event class</li>
  * </ol>
  * 
@@ -17,17 +16,18 @@ import java.lang.reflect.Method;
 public abstract class EventConsumer {
 
 	/**
-	 * Override with the following snippet:
-	 * <pre>
-	 * try {
-     *     getMethod(o.getClass()).invoke(this, new Object[]{o});
-     * } catch (Exception ex) {
-     *     System.out.println("no appropriate handle() method");
-     * }
-	 * </pre>
+	 * generic handle method
 	 * @param o
 	 */
-	abstract public void handle(Object o);
+	public final void handle(Object o) {
+		try {
+			getMethod(o.getClass()).invoke(this, new Object[] { o });
+		} catch (IllegalAccessException iae) {
+			throw new RuntimeException("Anonymous event consumers are not supported. Declare your event consumer as normal or inner class",iae);
+		} catch (Exception ex) {
+			System.out.println("no appropriate handle() method");
+		}
+	}
 
 	/**
 	 * Method taken from Reflective Visitor Example at
@@ -47,8 +47,12 @@ public abstract class EventConsumer {
 		Class newc = c;
 		Method m = null;
 		while (m == null && newc != Object.class) {
-			String method = newc.getName();
-			method = "handle" + method.substring(method.lastIndexOf('.') + 1);
+			String method = newc.getCanonicalName();
+			if (method == null) {
+				newc = newc.getSuperclass();
+				continue;
+			}
+			method = generateMethodName(method);
 			try {
 				m = getClass().getMethod(method, new Class[] { newc });
 			} catch (NoSuchMethodException ex) {
@@ -60,8 +64,7 @@ public abstract class EventConsumer {
 			Class[] interfaces = c.getInterfaces();
 			for (int i = 0; i < interfaces.length; i++) {
 				String method = interfaces[i].getName();
-				method = "handle"
-						+ method.substring(method.lastIndexOf('.') + 1);
+				method = generateMethodName(method);
 				try {
 					m = getClass().getMethod(method,
 							new Class[] { interfaces[i] });
@@ -72,10 +75,19 @@ public abstract class EventConsumer {
 		if (m == null)
 			try {
 				m = getClass().getMethod("handleObject",
-						new Class[] { Object.class });
+						new Class[] { Event.class });
 			} catch (Exception ex) {
 			}
 		return m;
+	}
+	
+	private static String generateMethodName(String className) {
+		className = className.substring(className.lastIndexOf('.') + 1);
+		return "handle" + className;
+	}
+	
+	public void handleObject(Event event) {
+		System.out.println("Try avoiding these printouts");
 	}
 
 }

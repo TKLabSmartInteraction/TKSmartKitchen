@@ -4,13 +4,13 @@ import static org.easymock.EasyMock.*;
 import org.junit.Test;
 
 public class EventTest {
-
+	
 	@Test
 	public void dispatchTest() {
 		//SETUP
-		EventConsumer eventConsumer = createMock(EventConsumer.class);
+		EventConsumer eventConsumer = createMockBuilder(EventConsumer.class).addMockedMethod("handleObject").createMock();
 		Event event = new Event("testSensor") {};
-		eventConsumer.handle(event);
+		eventConsumer.handleObject(event);
 		replay(eventConsumer);
 		//TEST
 		event.dispatchTo(eventConsumer);
