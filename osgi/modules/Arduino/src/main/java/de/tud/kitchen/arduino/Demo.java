@@ -42,7 +42,7 @@ public class Demo {
 	ard.addSensorEventListener(new SensorEventListener() {
 		
 		@Override
-		public void SensorEvent(SensorEvent arg0) {
+		public void SensorEvent(DoorSensorEvent arg0) {
 			JButton buttonToModify;
 			switch (arg0.getSensor()) {
 			case 'a':

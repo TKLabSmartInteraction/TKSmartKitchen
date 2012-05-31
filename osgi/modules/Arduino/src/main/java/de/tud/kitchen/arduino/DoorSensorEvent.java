@@ -14,7 +14,7 @@ import gnu.io.SerialPortEvent;
  * @author cklos
  *
  */
-public class SensorEvent extends SerialPortEvent{
+public class DoorSensorEvent extends SerialPortEvent {
 
 	/**
 	 * 
@@ -24,7 +24,7 @@ public class SensorEvent extends SerialPortEvent{
 	private boolean Value;
 	
 	
-	public SensorEvent(SerialPortEvent sE) {
+	public DoorSensorEvent(SerialPortEvent sE) {
 		super((SerialPort) sE.getSource(), 
 				sE.getEventType(), 
 				sE.getOldValue(), 
@@ -32,7 +32,7 @@ public class SensorEvent extends SerialPortEvent{
 	}
 	
 	
-	public SensorEvent(SerialPortEvent sE, Character Sensor, boolean Value){
+	public DoorSensorEvent(SerialPortEvent sE, Character Sensor, boolean Value){
 		super((SerialPort) sE.getSource(), 
 				sE.getEventType(), 
 				sE.getOldValue(), 

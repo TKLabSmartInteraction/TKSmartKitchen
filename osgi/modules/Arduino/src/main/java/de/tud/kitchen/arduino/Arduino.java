@@ -229,9 +229,9 @@ public class Arduino implements SerialPortEventListener{
 				Character lowerCaseInputByte = 
 						Character.toLowerCase((char) inputByte);
 				// create the event
-				SensorEvent triggeredEvent;
+				DoorSensorEvent triggeredEvent;
 				if (lowerCaseInputByte>='a' && lowerCaseInputByte<='e'){
-					triggeredEvent = new SensorEvent(SPE,
+					triggeredEvent = new DoorSensorEvent(SPE,
 							lowerCaseInputByte, 
 							((inputByte>='a' && inputByte<='e') ? Arduino.LOW : Arduino.HIGH));
 				} else 
@@ -284,9 +284,9 @@ public class Arduino implements SerialPortEventListener{
 class CallSensorEventListener extends Thread {
 	
 	private SensorEventListener sEL;
-	private SensorEvent sE;
+	private DoorSensorEvent sE;
 	
-	public CallSensorEventListener(SensorEventListener sEL, SensorEvent sE) {
+	public CallSensorEventListener(SensorEventListener sEL, DoorSensorEvent sE) {
 		this.sE = sE;
 		this.sEL = sEL;
 	}
