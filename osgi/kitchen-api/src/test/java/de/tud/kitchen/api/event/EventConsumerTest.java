@@ -38,7 +38,57 @@ public class EventConsumerTest {
 		//VERIFY
 		verify(consumer);
 	}
-	
+
+	@Test
+	public void testReflectiveDispatchWithAnonymousEventClass() {
+		//SETUP
+		EventConsumerSubclassWithoutTestEventMethod consumer = createMockBuilder(EventConsumerSubclassWithoutTestEventMethod.class).addMockedMethod("handleEvent").createMock();
+		Event event = new Event("testSender") {};
+		consumer.handleEvent(event);
+		expectLastCall().once();
+		replay(consumer);
+		//TEST
+		event.dispatchTo(consumer);
+		//VERIFY
+		verify(consumer);
+	}
+
+	@Test
+	public void testReflectiveDispatchWithLocalEventClass() {
+		//SETUP
+		EventConsumerSubclass consumer = createMockBuilder(EventConsumerSubclass.class).addMockedMethod("handleTestEvent").createMock();
+		LocalTestEvent event = new LocalTestEvent() {};
+		consumer.handleTestEvent(event);
+		expectLastCall().once();
+		replay(consumer);
+		//TEST
+		event.dispatchTo(consumer);
+		//VERIFY
+		verify(consumer);
+	}
+
+	public class LocalTestEvent extends TestEvent {
+	}
+
+	@Test
+	public void testReflectiveDispatchWithLocalEventConsumer() {
+		//SETUP
+		LocalEventConsumer consumer = createMockBuilder(LocalEventConsumer.class).addMockedMethod("handleEvent").createMock();
+		Event event = new Event("testSender") {};
+		consumer.handleEvent(event);
+		expectLastCall().once();
+		replay(consumer);
+		//TEST
+		event.dispatchTo(consumer);
+		//VERIFY
+		verify(consumer);
+	}
+
+	public class LocalEventConsumer extends EventConsumer {
+		public void handleEvent(Event event) {
+		}
+	}
+
 	@Test 
 	public void testClassHierarchyBasedDispatch() {
 		//SETUP
