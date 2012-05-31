@@ -6,53 +6,43 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
-import de.tud.kitchen.api.Kitchen;
-import de.tud.kitchen.api.event.EventConsumer;
-import de.tud.kitchen.api.event.EventPublisher;
 import de.tud.kitchen.api.module.KitchenModule;
+import de.tud.kitchen.main.impl.KitchenModuleManager;
+import de.tud.kitchen.main.impl.SingletonKitchenFactory;
 
 public class Activator implements BundleActivator {
 	
 	public ServiceTracker kitchenModuleTracker;
+	public KitchenModuleManager kitchenModuleManager;
 	
 	public void start(BundleContext context) throws Exception {
 		System.out.println("Starting Kitchen Service Bundle");
+		kitchenModuleManager = new KitchenModuleManager(new SingletonKitchenFactory());
 		kitchenModuleTracker = new ServiceTracker(context, KitchenModule.class.getName(), new KitchenModuleTrackerCustomizer(context));
 		kitchenModuleTracker.open();
 	}
 
 	public void stop(BundleContext context) throws Exception {
+		for (Object o : kitchenModuleTracker.getServices()) {
+			if (o instanceof KitchenModule)
+				kitchenModuleManager.remove((KitchenModule) o);
+		}
 		kitchenModuleTracker.close();
 		System.out.println("Stopping Bundle");
 	}
 	
 	public class KitchenModuleTrackerCustomizer implements ServiceTrackerCustomizer {
 		
-		public BundleContext context;
+		private BundleContext context;
 		
 		public KitchenModuleTrackerCustomizer(BundleContext context) {
-		
+			this.context = context;
 		}
 		
 		@Override
 		public Object addingService(ServiceReference reference) {
 			KitchenModule module = (KitchenModule) context.getService(reference);
-			module.start(new Kitchen() {
-				@Override
-				public void registerEventConsumer(EventConsumer consumer) {
-					
-				}
-				
-				@Override
-				public <T> EventPublisher<T> getEventPublisher(Class<T> eventType) {
-					return new EventPublisher<T>() {
-						@Override
-						public void publish(T event) {
-							System.out.println("Event received");
-						}
-					};
-				}
-			});
+			kitchenModuleManager.add(module);
 			return module;
 		}
 		
@@ -63,7 +53,9 @@ public class Activator implements BundleActivator {
 		
 		@Override
 		public void removedService(ServiceReference reference, Object service) {
-			((KitchenModule) service).stop();
+			if (service instanceof KitchenModule) {
+				kitchenModuleManager.remove((KitchenModule) service);
+			}
 		}
 	}
 }
