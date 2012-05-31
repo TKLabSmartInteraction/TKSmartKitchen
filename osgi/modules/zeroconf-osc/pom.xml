@@ -37,7 +37,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.strangeberry</groupId>
-			<artifactId>jmDNS</artifactId>
+			<artifactId>jmdns</artifactId>
 			<version>3.4.1</version>
 		</dependency>
 		<dependency>
