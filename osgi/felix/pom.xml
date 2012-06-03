@@ -51,7 +51,10 @@
 									<artifactId>kitchen-service</artifactId>
 								</artifactItem>
 								<!-- Add module bundles here -->
-								
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>dsensingni-adapter</artifactId>
+								</artifactItem>
 								<!-- Add third party dependencies here -->
 								<artifactItem>
 									<groupId>com.illposed</groupId>
@@ -83,7 +86,11 @@
 			<version>${project.version}</version>
 		</dependency>
 		<!-- Add module bundles here -->
-								
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>dsensingni-adapter</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<!-- Add third party dependencies here -->
 		<dependency>
 			<groupId>com.illposed</groupId>
