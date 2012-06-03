@@ -16,19 +16,13 @@ public class Activator implements BundleActivator {
 	public KitchenModuleManager kitchenModuleManager;
 	
 	public void start(BundleContext context) throws Exception {
-		System.out.println("Starting Kitchen Service Bundle");
 		kitchenModuleManager = new KitchenModuleManager(new SingletonKitchenFactory());
 		kitchenModuleTracker = new ServiceTracker(context, KitchenModule.class.getName(), new KitchenModuleTrackerCustomizer(context));
 		kitchenModuleTracker.open();
 	}
 
 	public void stop(BundleContext context) throws Exception {
-		for (Object o : kitchenModuleTracker.getServices()) {
-			if (o instanceof KitchenModule)
-				kitchenModuleManager.remove((KitchenModule) o);
-		}
 		kitchenModuleTracker.close();
-		System.out.println("Stopping Bundle");
 	}
 	
 	public class KitchenModuleTrackerCustomizer implements ServiceTrackerCustomizer {
