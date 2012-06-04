@@ -18,4 +18,9 @@ public abstract class Event {
 	public void dispatchTo(EventConsumer handler) {
 		handler.handle(this);
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("%s sender: %s, time: %d",getClass().getSimpleName(), sender, timestamp);
+	}
 }

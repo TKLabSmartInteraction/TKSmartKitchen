@@ -19,7 +19,8 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Export-Package>de.tud.kitchen.*</Export-Package>
+						<Bundle-Classpath>.,lib/vecmath-1.3.1.jar</Bundle-Classpath>
+						<Export-Package>de.tud.kitchen.*,javax.vecmath</Export-Package>
 					</instructions>
 				</configuration>
 				<executions>
@@ -33,4 +34,11 @@
 			</plugin>
 		</plugins>
 	</build>
+	<dependencies>
+		<dependency>
+			<groupId>java3d</groupId>
+			<artifactId>vecmath</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+	</dependencies>
 </project>
