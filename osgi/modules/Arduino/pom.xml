@@ -18,10 +18,11 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Bundle-Classpath>.,lib/RXTXcomm.jar</Bundle-Classpath>
+						<Bundle-Classpath>.,lib,lib/RXTXcomm.jar</Bundle-Classpath>
 						<Import-Package>!gnu.io,*</Import-Package>
-						<Export-Package>de.tud.kitchen.template</Export-Package>
-						<Bundle-Activator>de.tud.kitchen.template.Activator</Bundle-Activator>
+						<Export-Package></Export-Package>
+						<Bundle-Activator>de.tud.kitchen.newArduino.Activator</Bundle-Activator>
+						<Bundle-NativeCode>lib/rxtxSerial.dll; processor=x86; osname=win32</Bundle-NativeCode>
 					</instructions>
 				</configuration>
 				<executions>
