@@ -5,8 +5,16 @@ import javax.vecmath.Point4f;
 
 public class BlobEvent extends TUIOEvent {
 
-	public BlobEvent(String senderId, long timestamp, Point3f position, Point4f velocity) {
-		super(senderId, timestamp, position, velocity);
+	public final int touchedTangible;
+	
+	public BlobEvent(String senderId, long timestamp, Point3f position, Point4f velocity, float tableDistance, int tangibleID) {
+		super(senderId, timestamp, position, velocity, tableDistance);
+		this.touchedTangible = tangibleID;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("%s, touchedTangible: %d", super.toString(), this.touchedTangible);
 	}
 
 }

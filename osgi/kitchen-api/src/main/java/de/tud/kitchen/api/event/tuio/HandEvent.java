@@ -5,12 +5,10 @@ import javax.vecmath.Point4f;
 
 public class HandEvent extends TUIOEvent {
 
-	public final float tableDistance;
 	public final Point3f pointingTo;
 	
 	public HandEvent(String sender, long timestamp, Point3f position, Point4f velocity, float tableDistance, Point3f pointingTo) {
-		super(sender, timestamp, position, velocity);
-		this.tableDistance = tableDistance;
+		super(sender, timestamp, position, velocity, tableDistance);
 		this.pointingTo = pointingTo;
 	}
 	

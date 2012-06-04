@@ -9,6 +9,7 @@ import com.illposed.osc.OSCListener;
 import com.illposed.osc.OSCMessage;
 
 import de.tud.kitchen.api.Kitchen;
+import de.tud.kitchen.api.event.EventPublisher;
 import de.tud.kitchen.api.event.tuio.BlobEvent;
 import de.tud.kitchen.api.event.tuio.FingerEvent;
 import de.tud.kitchen.api.event.tuio.HandEvent;
@@ -18,10 +19,14 @@ public class DSensingNICursorEventConverter implements OSCListener {
 	private static final int HAND_EVENT_RANGE_START = 715827882;
 	private static final int FINGER_EVENT_RANGE_START = 1431655764;
 	
-	private final Kitchen kitchen;
+	private final EventPublisher<BlobEvent> blobEventPublisher;
+	private final EventPublisher<FingerEvent> fingerEventPublisher;
+	private final EventPublisher<HandEvent> handEventPublisher;
 	
 	public DSensingNICursorEventConverter(Kitchen kitchen) {
-		this.kitchen = kitchen;
+		blobEventPublisher = kitchen.getEventPublisher(BlobEvent.class);
+		fingerEventPublisher = kitchen.getEventPublisher(FingerEvent.class);
+		handEventPublisher = kitchen.getEventPublisher(HandEvent.class);
 	}
 	
 	@Override
@@ -30,11 +35,11 @@ public class DSensingNICursorEventConverter implements OSCListener {
 		if(arguments[0].equals("set")){
 			int id = ((Integer) arguments[1]);
 			if (id < HAND_EVENT_RANGE_START)
-				System.out.println(createBlobEvent(id, arguments));
+				blobEventPublisher.publish(createBlobEvent(id, arguments));
 			else if (id < FINGER_EVENT_RANGE_START)
-				System.out.println(createHandEvent(id - HAND_EVENT_RANGE_START, arguments));
+				handEventPublisher.publish(createHandEvent(id - HAND_EVENT_RANGE_START, arguments));
 			else
-				System.out.println(createFingerEvent(id - FINGER_EVENT_RANGE_START,arguments));
+				fingerEventPublisher.publish(createFingerEvent(id - FINGER_EVENT_RANGE_START,arguments));
 				
 		}
 	}
@@ -54,17 +59,21 @@ public class DSensingNICursorEventConverter implements OSCListener {
 	}
 	
 	private static final BlobEvent createBlobEvent(int id, Object[] arguments) {
-		return new BlobEvent(createSenderId(id, "blob"),
-							System.currentTimeMillis(),
-							createPoint3f(arguments, 2, 3, 4),
-							createPoint4f(arguments, 5, 6, 7, 8));
+		return new BlobEvent(createSenderId(id, "blob"),			//id
+							System.currentTimeMillis(),				//time
+							createPoint3f(arguments, 2, 3, 4),		//position
+							createPoint4f(arguments, 5, 6, 7, 8),	//velocity
+							(Float)arguments[9],					//tableDistance
+							(Integer) arguments[13]);				//tangibleObjectId
 	}
 
 	private static final FingerEvent createFingerEvent(int id, Object[] arguments) {
-		return new FingerEvent(createSenderId(id, "blob"),
-							  System.currentTimeMillis(),
-							  createPoint3f(arguments, 2, 3, 4),
-							  createPoint4f(arguments, 5, 6, 7, 8));
+		return new FingerEvent(createSenderId(id, "finger"),		//id
+							  System.currentTimeMillis(),			//time
+							  createPoint3f(arguments, 2, 3, 4),	//position
+							  createPoint4f(arguments, 5, 6, 7, 8),	//velocity
+							  (Float)arguments[9],					//tableDistance
+							  (Integer) arguments[13]);				//handId
 	}
 	
 	private static final Point3f createPoint3f(Object[] arguments, int x, int y, int z) {
