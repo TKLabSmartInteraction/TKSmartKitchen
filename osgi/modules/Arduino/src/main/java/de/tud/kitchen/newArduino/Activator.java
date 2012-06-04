@@ -15,17 +15,16 @@ public class Activator extends KitchenModuleActivator {
 	EventPublisher<DoorEvent> eventpublisher;
 
 	@Override
-	public void start(Kitchen kitchen) {		
+	public void start(Kitchen kitchen) {	
 		 eventpublisher = kitchen.getEventPublisher(DoorEvent.class);
-		 ard.connect();
+		 ard.connect("COM4");
 		 ard.switchMode(Arduino.MCHANGES);
 		 ard.addSensorEventListener(new SensorEventListener() {
 			
 			@Override
 			public void SensorEvent(DoorSensorEvent arg0) {
 				DoorEvent event = new DoorEvent(arg0.getSensor(), arg0.getValue());
-				eventpublisher.publish(event);
-				
+				eventpublisher.publish(event);			
 			}
 		});
 		

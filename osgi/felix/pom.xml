@@ -55,6 +55,11 @@
 									<groupId>${project.groupId}</groupId>
 									<artifactId>dsensingni-adapter</artifactId>
 								</artifactItem>
+								<!-- Add apps here -->
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>kitchen-event-inspector</artifactId>
+								</artifactItem>
 								<!-- Add third party dependencies here -->
 								<artifactItem>
 									<groupId>com.illposed</groupId>
@@ -89,6 +94,12 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>dsensingni-adapter</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<!-- Add app bundles here -->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>kitchen-event-inspector</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<!-- Add third party dependencies here -->

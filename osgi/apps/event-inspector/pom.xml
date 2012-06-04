@@ -2,12 +2,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>kitchen-modules</artifactId>
+		<artifactId>kitchen</artifactId>
 		<groupId>de.tud.kitchen</groupId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>Arduino-Board</artifactId>
-	<name>Arduino-Board</name>
+	<artifactId>kitchen-event-inspector</artifactId>
+	<name>Event Inspector</name>
 	<packaging>bundle</packaging>
 	<build>
 		<plugins>
@@ -18,11 +18,8 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Bundle-Classpath>.,lib,lib/RXTXcomm.jar</Bundle-Classpath>
-						<Import-Package>!gnu.io,*</Import-Package>
-						<Export-Package></Export-Package>
-						<Bundle-Activator>de.tud.kitchen.newArduino.Activator</Bundle-Activator>
-						<Bundle-NativeCode>lib/rxtxSerial.dll; processor=x86; osname=win32</Bundle-NativeCode>
+						<Import-Package>de.tud.kitchen.api,*</Import-Package>
+						<Bundle-Activator>de.tud.kitchen.apps.eventinspector.Activator</Bundle-Activator>
 					</instructions>
 				</configuration>
 				<executions>
@@ -40,16 +37,6 @@
 		<dependency>
 			<groupId>de.tud.kitchen</groupId>
 			<artifactId>kitchen-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.illposed</groupId>
-			<artifactId>osc</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.rxtx</groupId>
-			<artifactId>rxtx</artifactId>
-			<version>2.1.7</version>
-			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 </project>
