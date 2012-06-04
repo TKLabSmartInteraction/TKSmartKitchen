@@ -16,7 +16,7 @@ public class Activator extends KitchenModuleActivator {
 	
 	@Override
 	public void start(BundleContext context) throws Exception {
-		System.out.println("DsensingNI Bundle start called");
+//		System.out.println("DsensingNI Bundle start called");
 		super.start(context);
 	}
 
@@ -25,8 +25,8 @@ public class Activator extends KitchenModuleActivator {
 		try {
 			dsensingni = new OSCPortIn(3333);
 			dsensingni.addListener("/tuio/3Dcur", new DSensingNICursorEventConverter(kitchen));
+			dsensingni.addListener("/tuio/3Dblb", new DSensingNIObjectEventConverter(kitchen));
 			dsensingni.startListening();
-			System.out.println("DsensingNI Bundle running");
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}

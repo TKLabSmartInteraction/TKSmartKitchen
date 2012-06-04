@@ -45,11 +45,11 @@ public class DSensingNICursorEventConverter implements OSCListener {
 	}
 
 	private static final HandEvent createHandEvent(int id, Object[] arguments) {
-		for (int i = 9; i < arguments.length; i++) {		
-			Object object = arguments[i];
-			System.out.print(i+": "+object+" ");
-		}
-		System.out.println("");
+//		for (int i = 9; i < arguments.length; i++) {		
+//			Object object = arguments[i];
+//			System.out.print(i+": "+object+" ");
+//		}
+//		System.out.println("");
 		return new HandEvent(createSenderId(id, "hand"),			//id
 							System.currentTimeMillis(), 			//time
 							createPoint3f(arguments, 2,3,4),		//position 
