@@ -9,6 +9,8 @@ import com.illposed.osc.OSCListener;
 import com.illposed.osc.OSCMessage;
 
 import de.tud.kitchen.api.Kitchen;
+import de.tud.kitchen.api.event.tuio.BlobEvent;
+import de.tud.kitchen.api.event.tuio.FingerEvent;
 import de.tud.kitchen.api.event.tuio.HandEvent;
 
 public class DSensingNICursorEventConverter implements OSCListener {
@@ -28,11 +30,11 @@ public class DSensingNICursorEventConverter implements OSCListener {
 		if(arguments[0].equals("set")){
 			int id = ((Integer) arguments[1]);
 			if (id < HAND_EVENT_RANGE_START)
-				blobEvent(id, arguments);
+				System.out.println(createBlobEvent(id, arguments));
 			else if (id < FINGER_EVENT_RANGE_START)
 				System.out.println(createHandEvent(id - HAND_EVENT_RANGE_START, arguments));
 			else
-				fingerEvent(id - FINGER_EVENT_RANGE_START);
+				System.out.println(createFingerEvent(id - FINGER_EVENT_RANGE_START,arguments));
 				
 		}
 	}
@@ -51,25 +53,29 @@ public class DSensingNICursorEventConverter implements OSCListener {
 							createPoint3f(arguments, 13, 14, 15));	//pointing Direction
 	}
 	
-	private static Point3f createPoint3f(Object[] arguments, int x, int y, int z) {
+	private static final BlobEvent createBlobEvent(int id, Object[] arguments) {
+		return new BlobEvent(createSenderId(id, "blob"),
+							System.currentTimeMillis(),
+							createPoint3f(arguments, 2, 3, 4),
+							createPoint4f(arguments, 5, 6, 7, 8));
+	}
+
+	private static final FingerEvent createFingerEvent(int id, Object[] arguments) {
+		return new FingerEvent(createSenderId(id, "blob"),
+							  System.currentTimeMillis(),
+							  createPoint3f(arguments, 2, 3, 4),
+							  createPoint4f(arguments, 5, 6, 7, 8));
+	}
+	
+	private static final Point3f createPoint3f(Object[] arguments, int x, int y, int z) {
 		return new Point3f((Float)arguments[x],(Float)arguments[y],(Float)arguments[z]);
 	}
 	
-	private static Point4f createPoint4f(Object[] arguments, int x, int y, int z, int w) {
+	private static final Point4f createPoint4f(Object[] arguments, int x, int y, int z, int w) {
 		return new Point4f((Float)arguments[x],(Float)arguments[y],(Float)arguments[z],(Float)arguments[w]);
 	}
 
 	private static final String createSenderId(final int id, final String type) {
 		return "kinect/" + type + "/" + id;
 	}
-	
-	private void blobEvent(int id, Object[] arguments) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void fingerEvent(int i) {
-		// TODO Auto-generated method stub
-	}
-	
 }
