@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
@@ -18,7 +19,7 @@ public class EventWindow {
 	private JFrame frame;
 	private EventConsumer consumer;
 	private JToggleButton eventStreamEnableButton;
-	private JTextPane eventTextPane;
+	private JTextArea eventTextPane;
 	
 	/**
 	 * Create the application.
@@ -56,7 +57,7 @@ public class EventWindow {
 		JScrollPane scrollPane = new JScrollPane();
 		frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 		
-		eventTextPane = new JTextPane();
+		eventTextPane = new JTextArea();
 		eventTextPane.setEditable(false);
 		scrollPane.setViewportView(eventTextPane);
 	}
@@ -66,7 +67,8 @@ public class EventWindow {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					eventTextPane.setText(eventTextPane.getText() + "\n" + event.toString());
+					eventTextPane.append("\n" + event.toString());
+					eventTextPane.setCaretPosition(eventTextPane.getDocument().getLength());
 				}
 			});
 		}
