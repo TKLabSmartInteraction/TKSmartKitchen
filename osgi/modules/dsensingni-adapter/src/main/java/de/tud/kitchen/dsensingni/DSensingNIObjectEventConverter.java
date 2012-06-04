@@ -10,15 +10,9 @@ import com.illposed.osc.OSCMessage;
 
 import de.tud.kitchen.api.Kitchen;
 import de.tud.kitchen.api.event.EventPublisher;
-import de.tud.kitchen.api.event.tuio.BlobEvent;
-import de.tud.kitchen.api.event.tuio.FingerEvent;
-import de.tud.kitchen.api.event.tuio.HandEvent;
 import de.tud.kitchen.api.event.tuio.TangibleEvent;
 
 public class DSensingNIObjectEventConverter implements OSCListener {
-
-	private static final int HAND_EVENT_RANGE_START = 715827882;
-	private static final int FINGER_EVENT_RANGE_START = 1431655764;
 	
 	private final EventPublisher<TangibleEvent> tangibleEventPublisher;
 	

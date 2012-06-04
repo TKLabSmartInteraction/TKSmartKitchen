@@ -54,6 +54,7 @@ public class DSensingNICursorEventConverter implements OSCListener {
 							System.currentTimeMillis(), 			//time
 							createPoint3f(arguments, 2,3,4),		//position 
 							createPoint4f(arguments, 5, 6, 7, 8), 	//velocity
+							id,										//handId
 							(Float)arguments[9],					//tableDistance
 							createPoint3f(arguments, 13, 14, 15));	//pointing Direction
 	}

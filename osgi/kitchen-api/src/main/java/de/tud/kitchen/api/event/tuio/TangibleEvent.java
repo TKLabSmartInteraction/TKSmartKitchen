@@ -16,4 +16,8 @@ public class TangibleEvent extends TUIOEvent {
 		this.grabbedByHand = grabbedByHand;
 	}
 	
+	@Override
+	public String toString() {
+		return String.format("%s, dimensions: %s, parentTangible: %s, hand: %s",super.toString(),dimension,parentTangible,grabbedByHand);
+	}
 }
