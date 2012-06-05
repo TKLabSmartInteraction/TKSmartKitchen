@@ -1,8 +1,9 @@
 package de.tud.kitchen.newArduino;
 
-import org.osgi.framework.BundleContext;
+
 
 import de.tud.kitchen.api.Kitchen;
+import de.tud.kitchen.api.event.EventConsumer;
 import de.tud.kitchen.api.event.EventPublisher;
 import de.tud.kitchen.api.module.KitchenModuleActivator;
 import de.tud.kitchen.arduino.Arduino;
@@ -30,6 +31,13 @@ public class Activator extends KitchenModuleActivator {
 		});
 		
 		
+	}
+	public class DoorEventConsumer extends EventConsumer {
+		public void handleDoorEvent(DoorEvent event) {
+			
+		}
+			
+	
 	}
 
 	@Override
