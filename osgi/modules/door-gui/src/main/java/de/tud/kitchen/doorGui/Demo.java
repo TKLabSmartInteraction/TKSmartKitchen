@@ -5,7 +5,7 @@ import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-import de.tud.kitchen.newArduino.DoorEvent;
+import de.tud.kitchen.api.event.furniture.DoorEvent;
 
 public class Demo {
 
@@ -44,7 +44,7 @@ public class Demo {
 
 	public void updateGui(DoorEvent arg0) {
 		JButton buttonToModify;
-		switch (arg0.getSensor()) {
+		switch (arg0.sensor) {
 		case 'a':
 			buttonToModify = a;
 			break;
@@ -63,7 +63,7 @@ public class Demo {
 		default:
 			buttonToModify = new JButton();
 		}
-		buttonToModify.setBackground(arg0.getValue() ? Color.green : Color.red);
+		buttonToModify.setBackground(arg0.closed? Color.green : Color.red);
 	}
 
 }
