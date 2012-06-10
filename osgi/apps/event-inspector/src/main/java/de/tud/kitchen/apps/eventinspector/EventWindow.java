@@ -14,8 +14,6 @@ import javax.swing.tree.TreeSelectionModel;
 
 import de.tud.kitchen.api.event.Event;
 import de.tud.kitchen.api.event.EventConsumer;
-import de.tud.kitchen.api.event.furniture.DoorEvent;
-import de.tud.kitchen.api.event.tuio.HandEvent;
 import de.tud.kitchen.apps.eventinspector.DynamicEventFilter.DynamicEventFilterDelegate;
 
 public class EventWindow {
@@ -68,15 +66,13 @@ public class EventWindow {
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
-						eventTextPane.append(event.toString());
+						eventTextPane.append(event.toString().concat("\n"));
 					}
 				});
 			}
 		});
 		tree.getSelectionModel().addTreeSelectionListener(dynamicEventFilter);
 		rootTreeNode = new ClassTreeNode(Event.class);
-		rootTreeNode.add(new ClassTreeNode(DoorEvent.class));
-		rootTreeNode.add(new ClassTreeNode(HandEvent.class));
 		tree.setModel(new DefaultTreeModel(rootTreeNode));
 		for (int i = 0; i < tree.getRowCount(); i++) {
 		         tree.expandRow(i);
@@ -96,6 +92,11 @@ public class EventWindow {
 					public void run() {
 						ClassTreeNode newTreeNode = new ClassTreeNode(event.getClass());
 						rootTreeNode.add(newTreeNode);
+						if (newTreeNode.getParent()!= null)
+							((DefaultTreeModel) tree.getModel()).nodeStructureChanged(newTreeNode.getParent());
+						for (int i = 0; i < tree.getRowCount(); i++) {
+					         tree.expandRow(i);
+						}
 					}
 				});
 			}
