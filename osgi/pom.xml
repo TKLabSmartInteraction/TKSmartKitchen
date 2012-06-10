@@ -9,6 +9,7 @@
 	<modules>
 		<module>kitchen-api</module>
 		<module>modules</module>
+		<module>apps</module>
 		<module>kitchen-service</module>
 		<module>felix</module>
 	</modules>
