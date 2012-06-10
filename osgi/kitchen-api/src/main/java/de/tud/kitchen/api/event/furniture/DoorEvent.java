@@ -1,8 +1,8 @@
-package de.tud.kitchen.newArduino;
+package de.tud.kitchen.api.event.furniture;
 
 import de.tud.kitchen.api.event.Event;
 
-public class DoorEvent extends Event{
+public class DoorEvent extends Event {
 	
 	public final Character Sensor;
 	public final boolean closed;
