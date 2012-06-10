@@ -41,8 +41,8 @@
 			<version>3.4.1</version>
 		</dependency>
 		<dependency>
-			<groupId>com.illposed</groupId>
-			<artifactId>osc</artifactId>
+			<groupId>com.illposed.osc</groupId>
+			<artifactId>javaosc-core</artifactId>
 		</dependency>
 	</dependencies>
 </project>
