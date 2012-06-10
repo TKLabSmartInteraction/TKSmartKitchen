@@ -38,5 +38,10 @@
 			<groupId>de.tud.kitchen</groupId>
 			<artifactId>kitchen-api</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.5</version>
+		</dependency>
 	</dependencies>
 </project>

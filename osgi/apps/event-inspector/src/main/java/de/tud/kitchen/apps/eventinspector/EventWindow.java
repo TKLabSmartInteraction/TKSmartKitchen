@@ -1,25 +1,31 @@
 package de.tud.kitchen.apps.eventinspector;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import java.awt.Dimension;
+import java.util.HashSet;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
-import javax.swing.JToggleButton;
+import javax.swing.JTree;
 import javax.swing.SwingUtilities;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeSelectionModel;
 
 import de.tud.kitchen.api.event.Event;
 import de.tud.kitchen.api.event.EventConsumer;
+import de.tud.kitchen.api.event.furniture.DoorEvent;
+import de.tud.kitchen.api.event.tuio.HandEvent;
+import de.tud.kitchen.apps.eventinspector.DynamicEventFilter.DynamicEventFilterDelegate;
 
 public class EventWindow {
 
 	private JFrame frame;
 	private EventConsumer consumer;
-	private JToggleButton eventStreamEnableButton;
 	private JTextArea eventTextPane;
+	private JTree tree;
+	private ClassTreeNode rootTreeNode;
+	private DynamicEventFilter dynamicEventFilter;
 	
 	/**
 	 * Create the application.
@@ -46,31 +52,55 @@ public class EventWindow {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
-		flowLayout.setAlignment(FlowLayout.RIGHT);
-		frame.getContentPane().add(panel, BorderLayout.NORTH);
-		
-		eventStreamEnableButton = new JToggleButton("Show Events");
-		panel.add(eventStreamEnableButton);
-		
 		JScrollPane scrollPane = new JScrollPane();
 		frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
 		
 		eventTextPane = new JTextArea();
 		eventTextPane.setEditable(false);
 		scrollPane.setViewportView(eventTextPane);
+		
+		tree = new JTree();
+		tree.setPreferredSize(new Dimension(160, 76));
+		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
+		dynamicEventFilter = new DynamicEventFilter(new DynamicEventFilterDelegate() {
+			@Override
+			public void handleEvent(final Event event) {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						eventTextPane.append(event.toString());
+					}
+				});
+			}
+		});
+		tree.getSelectionModel().addTreeSelectionListener(dynamicEventFilter);
+		rootTreeNode = new ClassTreeNode(Event.class);
+		rootTreeNode.add(new ClassTreeNode(DoorEvent.class));
+		rootTreeNode.add(new ClassTreeNode(HandEvent.class));
+		tree.setModel(new DefaultTreeModel(rootTreeNode));
+		for (int i = 0; i < tree.getRowCount(); i++) {
+		         tree.expandRow(i);
+		}
+		
+		frame.getContentPane().add(tree, BorderLayout.EAST);
 	}
 	
 	public class DebugEventConsumer extends EventConsumer {
+		
+		private HashSet<Class<?>> seenClasses = new HashSet<Class<?>>();
+		
 		public void handleEvent(final Event event) {
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					eventTextPane.append("\n" + event.toString());
-					eventTextPane.setCaretPosition(eventTextPane.getDocument().getLength());
-				}
-			});
+			if (seenClasses.add(event.getClass())) {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						ClassTreeNode newTreeNode = new ClassTreeNode(event.getClass());
+						rootTreeNode.add(newTreeNode);
+					}
+				});
+			}
+			dynamicEventFilter.handleEvent(event);
+				
 		}
 	}
 
