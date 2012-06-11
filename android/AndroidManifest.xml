@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="de.tud.kitchen.android"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk android:minSdkVersion="8" />
+    
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"></uses-permission>
+    
+    <application
+        android:icon="@drawable/app_logo"
+        android:label="TK SmartKitchen">
+        <activity
+            android:name="de.tud.kitchen.android.AccelerometerSender"
+            android:label="TK SmartKitchen"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
