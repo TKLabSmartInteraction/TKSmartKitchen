@@ -16,40 +16,48 @@ import de.tud.kitchen.api.module.KitchenModuleActivator;
 public class Activator extends KitchenModuleActivator {
 	OSCPortIn port;
 	EventPublisher<AccelerometerEvent> publisher;
-	
+
 	@Override
 	public void start(Kitchen kitchen) {
+		System.out.println("bundle started " + OSCPort.defaultSCOSCPort());
 		try {
-			port = new OSCPortIn(OSCPort.defaultSCOSCPort());
+			port = new OSCPortIn(57110);
+			System.out.println("assigned Port");
 			publisher = kitchen.getEventPublisher(AccelerometerEvent.class);
-			port.addListener("/wax3/101", new parametricOscListener("101"));
-			port.addListener("/wax3/102", new parametricOscListener("102"));
-			port.addListener("/wax3/103", new parametricOscListener("103"));
-			port.addListener("/wax3/104", new parametricOscListener("104"));
+			port.addListener("/wax/101", new parametricOscListener("101"));
+			port.addListener("/wax/102", new parametricOscListener("102"));
+			port.addListener("/wax/103", new parametricOscListener("103"));
+			port.addListener("/wax/104", new parametricOscListener("104"));
+			port.startListening();
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	@Override
 	public void stop() {
-		port.close();		
+		port.stopListening();
+		port.close();
 	}
-	
+
 	private class parametricOscListener implements OSCListener {
-		String source;		
-		public parametricOscListener(String source){
+		String source;
+
+		public parametricOscListener(String source) {
 			super();
-			this.source = source;			
-		}		
+			this.source = source;
+		}
+
 		@Override
 		public void acceptMessage(Date arg0, OSCMessage arg1) {
-			publisher.publish(new AccelerometerEvent<Float>(source, System.currentTimeMillis(), 
-					new Float(arg1.getArguments()[0].toString()), 
-					new Float(arg1.getArguments()[1].toString()), 
-					new Float(arg1.getArguments()[2].toString())));				
+			final AccelerometerEvent<Float> event = new AccelerometerEvent<Float>(source,
+					System.currentTimeMillis(), 
+					(Float) arg1.getArguments()[0], 
+					(Float) arg1.getArguments()[1],
+					(Float) arg1.getArguments()[2]);
+			publisher.publish(event);
 		}
-		
+
 	}
 }
