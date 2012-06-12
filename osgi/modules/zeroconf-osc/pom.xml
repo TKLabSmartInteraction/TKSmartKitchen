@@ -18,8 +18,7 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Export-Package>com.illposed.osc.*,javax.jmdns.*,de.tud.kitchen.osc.api</Export-Package>
-						<Import-Package>de.tud.kitchen.api,*</Import-Package>
+						<Import-Package>de.tud.kitchen.api.*,com.illposed.osc,javax.jmdns</Import-Package>
 						<Bundle-Activator>de.tud.kitchen.osc.Activator</Bundle-Activator>
 					</instructions>
 				</configuration>

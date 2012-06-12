@@ -5,6 +5,8 @@ import java.net.SocketException;
 
 import de.tud.kitchen.api.Kitchen;
 import de.tud.kitchen.api.event.EventConsumer;
+import de.tud.kitchen.api.event.EventPublisher;
+import de.tud.kitchen.api.event.acc.AccelerometerEvent;
 import de.tud.kitchen.api.event.furniture.DoorEvent;
 import de.tud.kitchen.api.module.KitchenModuleActivator;
 
@@ -23,14 +25,16 @@ public class Activator extends KitchenModuleActivator {
 
 	private OSCPortIn port;
 	private JmDNS jmdns;
-
+	private EventPublisher<AccelerometerEvent> publisher;
+	
 	@Override
 	public void start(Kitchen kitchen) {
 		System.out.println("Starting Android Bundle");
-
+		publisher = kitchen.getEventPublisher(AccelerometerEvent.class);
 		// ----- start jmdns and register service for android ----- //
 		try {
-			ServiceInfo pairservice = ServiceInfo.create(REMOTE_TYPE, "KitchenAndroidOSCReceiver", 3333,
+			jmdns = JmDNS.create();
+			ServiceInfo pairservice = ServiceInfo.create(REMOTE_TYPE, "KitchenAndroidOSCReceiver", 3334,
 					"TK SmartKitchen Project, Android OSC Receiver");
 			jmdns.registerService(pairservice);
 		} catch (IOException e) {
@@ -40,12 +44,18 @@ public class Activator extends KitchenModuleActivator {
 
 		// ----- start osc and register listener for data reception ----- //
 		try {
-			port = new OSCPortIn(3333);
+			port = new OSCPortIn(3334);
 			OSCListener listener = new OSCListener() {
 				public void acceptMessage(java.util.Date time, OSCMessage message) {
 					Object[] sensor_data = message.getArguments();
 					System.out.println("OSC: " + sensor_data[0] + " | " + sensor_data[1] + " | " + sensor_data[2] + "  ||  "
 							+ sensor_data[3]);
+					final AccelerometerEvent<Float> event = new AccelerometerEvent<Float>(message.getAddress(),
+							System.currentTimeMillis(), 
+							(Float) sensor_data[0], 
+							(Float) sensor_data[1],
+							(Float) sensor_data[2]);
+					publisher.publish(event);
 				}
 			};
 			port.addListener("/android/101", listener);
