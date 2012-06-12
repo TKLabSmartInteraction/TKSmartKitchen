@@ -1,5 +1,13 @@
 package de.tud.kitchen.osc;
 
+import java.io.IOException;
+import java.net.SocketException;
+
+import de.tud.kitchen.api.Kitchen;
+import de.tud.kitchen.api.event.EventConsumer;
+import de.tud.kitchen.api.event.furniture.DoorEvent;
+import de.tud.kitchen.api.module.KitchenModuleActivator;
+
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;
 
@@ -10,36 +18,57 @@ import com.illposed.osc.OSCListener;
 import com.illposed.osc.OSCMessage;
 import com.illposed.osc.OSCPortIn;
 
-public class Activator implements BundleActivator {
+public class Activator extends KitchenModuleActivator {
 	public final static String REMOTE_TYPE = "_tk_kitchen._tcp.local.";
 
 	private OSCPortIn port;
 	private JmDNS jmdns;
 
-	public void start(BundleContext context) throws Exception {
-		System.out.println("Starting Bundle");
+	@Override
+	public void start(Kitchen kitchen) {
+		System.out.println("Starting Android Bundle");
 
-		ServiceInfo pairservice = ServiceInfo.create(REMOTE_TYPE, "KitchenAndroidOSCReceiver", 3333, "TK SmartKitchen Project, Android OSC Receiver");
-		jmdns.registerService(pairservice);
+		// ----- start jmdns and register service for android ----- //
+		try {
+			ServiceInfo pairservice = ServiceInfo.create(REMOTE_TYPE, "KitchenAndroidOSCReceiver", 3333,
+					"TK SmartKitchen Project, Android OSC Receiver");
+			jmdns.registerService(pairservice);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		port = new OSCPortIn(3333);
-		OSCListener listener = new OSCListener() {
-			public void acceptMessage(java.util.Date time, OSCMessage message) {
-				Object[] sensor_data = message.getArguments();
-				System.out.println("OSC: " + sensor_data[0] + " | " + sensor_data[1] + " | " + sensor_data[2] + "  ||  " + sensor_data[3]);
-			}
-		};
-		port.addListener("/android/101", listener);
-		port.startListening();
+		// ----- start osc and register listener for data reception ----- //
+		try {
+			port = new OSCPortIn(3333);
+			OSCListener listener = new OSCListener() {
+				public void acceptMessage(java.util.Date time, OSCMessage message) {
+					Object[] sensor_data = message.getArguments();
+					System.out.println("OSC: " + sensor_data[0] + " | " + sensor_data[1] + " | " + sensor_data[2] + "  ||  "
+							+ sensor_data[3]);
+				}
+			};
+			port.addListener("/android/101", listener);
+			port.startListening();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	public void stop(BundleContext context) throws Exception {
+	@Override
+	public void stop() {
 		System.out.println("Stopping Bundle");
 
-		port.
+		port.stopListening();
 		port.close();
 
-		jmdns.unregisterAllServices();
-		jmdns.close();
+		try {
+			jmdns.unregisterAllServices();
+			jmdns.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
