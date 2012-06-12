@@ -51,8 +51,13 @@ public class Activator extends KitchenModuleActivator {
 
 		@Override
 		public void acceptMessage(Date arg0, OSCMessage arg1) {
+			System.out.println(arg0.getTime());
+			Object[] test = arg1.getArguments();
+			for (int i = 0; i<test.length; i++)
+				System.out.print(test[i]+" ");
+			System.out.println();
 			final AccelerometerEvent<Float> event = new AccelerometerEvent<Float>(source,
-					System.currentTimeMillis(), 
+					((Date) arg1.getArguments()[4]).getTime(), 
 					(Float) arg1.getArguments()[0], 
 					(Float) arg1.getArguments()[1],
 					(Float) arg1.getArguments()[2]);
