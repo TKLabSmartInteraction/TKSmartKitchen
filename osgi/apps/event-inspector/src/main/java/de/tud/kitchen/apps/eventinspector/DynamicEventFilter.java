@@ -12,15 +12,15 @@ public class DynamicEventFilter implements TreeSelectionListener {
 
 	private DynamicEventFilterDelegate delegate;
 	
-	private HashSet<Class<?>> allowedEventClasses = new HashSet<Class<?>>();
+	private HashSet<String> allowedEventSender = new HashSet<String>();
 	
 	public DynamicEventFilter(DynamicEventFilterDelegate delegate) {
 		this.delegate = delegate;
 	}
 	
 	void handleEvent(final Event event) {
-		synchronized (allowedEventClasses) {
-			if (allowedEventClasses.contains(event.getClass())) {
+		synchronized (allowedEventSender) {
+			if (allowedEventSender.contains(generateIdentifier(event))) {
 				delegate.handleEvent(event);
 			}	
 		}
@@ -28,7 +28,7 @@ public class DynamicEventFilter implements TreeSelectionListener {
 	
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
-		synchronized (allowedEventClasses) {
+		synchronized (allowedEventSender) {
 			for (TreePath path : e.getPaths()) {
 				if (e.isAddedPath(path))
 					this.addedPath(path);
@@ -37,13 +37,30 @@ public class DynamicEventFilter implements TreeSelectionListener {
 			}
 		}
 	}
+	
+	private static String generateIdentifier(final Event event) {
+		return String.format("%s#%s", event.getClass().getName(), event.sender);
+	}
+	
+	private static String generateIdentifier(final Class<?> cls, final String sender) {
+		return String.format("%s#%s", cls.getName(), sender);
+	}
+
 
 	private void addedPath(TreePath path) {
-		allowedEventClasses.add((Class<?>) ((ClassTreeNode) path.getLastPathComponent()).getUserObject());
+		final Object lastPathComponent = path.getLastPathComponent();
+		if (lastPathComponent instanceof SourceTreeNode) {	
+			final SourceTreeNode sourceTreeNode = (SourceTreeNode) lastPathComponent;
+			allowedEventSender.add(generateIdentifier((Class<?>) ((ClassTreeNode) sourceTreeNode.getParent()).getUserObject(), (String) (sourceTreeNode.getUserObject())));
+		}
 	}
 	
 	private void removedPath(TreePath path) {
-		allowedEventClasses.remove((Class<?>) ((ClassTreeNode) path.getLastPathComponent()).getUserObject());
+		final Object lastPathComponent = path.getLastPathComponent();
+		if (lastPathComponent instanceof SourceTreeNode) {			
+			final SourceTreeNode sourceTreeNode = (SourceTreeNode) lastPathComponent;
+			allowedEventSender.remove(generateIdentifier((Class<?>) ((ClassTreeNode) sourceTreeNode.getParent()).getUserObject(), (String) (sourceTreeNode.getUserObject())));
+		}
 	}
 		
 	public interface DynamicEventFilterDelegate {

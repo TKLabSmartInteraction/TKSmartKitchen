@@ -3,7 +3,9 @@ package de.tud.kitchen.apps.eventinspector;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import javax.swing.AbstractAction;
@@ -17,6 +19,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -122,27 +125,62 @@ public class EventWindow {
 	
 	public class DebugEventConsumer extends EventConsumer {
 		
-		private HashSet<Class<?>> seenClasses = new HashSet<Class<?>>();
+		private HashMap<Class<?>, ClassTreeNode> seenClasses = new HashMap<Class<?>, ClassTreeNode>();
+		private HashSet<String> seenSenders = new HashSet<String>();
 		
 		public void handleEvent(final Event event) {
-			if (seenClasses.add(event.getClass())) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						ClassTreeNode newTreeNode = new ClassTreeNode(event.getClass());
-						rootTreeNode.add(newTreeNode);
-						TreeNode parent = newTreeNode.getParent();
-						if (parent!= null)
-							((DefaultTreeModel) tree.getModel()).nodesWereInserted(parent,new int[] {parent.getIndex(newTreeNode)});
-						for (int i = 0; i < tree.getRowCount(); i++) {
-					         tree.expandRow(i);
+			if (!seenClasses.containsKey(event.getClass())) {
+				try {
+					SwingUtilities.invokeAndWait(new Runnable() {
+						@Override
+						public void run() {
+							ClassTreeNode newTreeNode = new ClassTreeNode(event.getClass());
+							rootTreeNode.add(newTreeNode);
+							if (informTreeModel(newTreeNode)) {
+								seenClasses.put(event.getClass(), newTreeNode);
+							}
+							for (int i = 0; i < tree.getRowCount(); i++) {
+						         tree.expandRow(i);
+							}
 						}
-					}
-				});
+					});
+					seenSenders.add(generateIdentifier(event));
+					addSender(event);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				}
+			} else if (seenSenders.add(generateIdentifier(event))) {
+				addSender(event);
 			}
 			dynamicEventFilter.handleEvent(event);
 				
 		}
+		
+		private boolean informTreeModel(TreeNode newTreeNode) {
+			TreeNode parent = newTreeNode.getParent();
+			if (parent!= null) {
+				((DefaultTreeModel) tree.getModel()).nodesWereInserted(parent,new int[] {parent.getIndex(newTreeNode)});
+				return true;
+			}
+			return false;
+		}
+
+		private void addSender(final Event event) {
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					SourceTreeNode newSourceTreeNode = new SourceTreeNode(event.sender);
+					seenClasses.get(event.getClass()).add(newSourceTreeNode);
+					informTreeModel(newSourceTreeNode);
+				}
+			});
+		}
+	}
+	
+	private static String generateIdentifier(final Event event) {
+		return String.format("%s#%s", event.getClass().getName(), event.sender);
 	}
 
 	private class ClearAction extends AbstractAction {
