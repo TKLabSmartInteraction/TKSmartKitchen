@@ -2,6 +2,7 @@ package de.tud.kitchen.apps.eventinspector;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.util.Enumeration;
 import java.util.HashSet;
 
 import javax.swing.JFrame;
@@ -9,7 +10,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import de.tud.kitchen.api.event.Event;
@@ -71,6 +76,27 @@ public class EventWindow {
 				});
 			}
 		});
+		tree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
+			@Override
+			public void valueChanged(TreeSelectionEvent arg0) {
+				for (TreePath path : arg0.getPaths()) {
+					TreeNode node = (TreeNode) path.getLastPathComponent();
+					TreePath[] paths = new TreePath[node.getChildCount()];
+					Enumeration<TreeNode> children = node.children();
+					for (int i = 0; i < node.getChildCount(); i++) {
+						final TreeNode child = children.nextElement();
+						paths[i] = path.pathByAddingChild(child);
+					}
+					if (paths.length > 0) {
+						if (arg0.isAddedPath(path)) {
+							tree.getSelectionModel().addSelectionPaths(paths);
+						} else {
+							tree.getSelectionModel().removeSelectionPaths(paths);
+						}
+					}
+				}
+			}
+		});
 		tree.getSelectionModel().addTreeSelectionListener(dynamicEventFilter);
 		rootTreeNode = new ClassTreeNode(Event.class);
 		tree.setModel(new DefaultTreeModel(rootTreeNode));
@@ -92,8 +118,9 @@ public class EventWindow {
 					public void run() {
 						ClassTreeNode newTreeNode = new ClassTreeNode(event.getClass());
 						rootTreeNode.add(newTreeNode);
-						if (newTreeNode.getParent()!= null)
-							((DefaultTreeModel) tree.getModel()).nodeStructureChanged(newTreeNode.getParent());
+						TreeNode parent = newTreeNode.getParent();
+						if (parent!= null)
+							((DefaultTreeModel) tree.getModel()).nodesWereInserted(parent,new int[] {parent.getIndex(newTreeNode)});
 						for (int i = 0; i < tree.getRowCount(); i++) {
 					         tree.expandRow(i);
 						}
