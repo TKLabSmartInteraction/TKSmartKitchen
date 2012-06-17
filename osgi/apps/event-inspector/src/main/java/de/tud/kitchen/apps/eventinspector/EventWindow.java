@@ -2,12 +2,16 @@ package de.tud.kitchen.apps.eventinspector;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.util.Enumeration;
 import java.util.HashSet;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
@@ -29,6 +33,8 @@ public class EventWindow {
 	private JTree tree;
 	private ClassTreeNode rootTreeNode;
 	private DynamicEventFilter dynamicEventFilter;
+	private JToolBar toolBar;
+	private final Action action = new ClearAction();
 	
 	/**
 	 * Create the application.
@@ -82,7 +88,8 @@ public class EventWindow {
 				for (TreePath path : arg0.getPaths()) {
 					TreeNode node = (TreeNode) path.getLastPathComponent();
 					TreePath[] paths = new TreePath[node.getChildCount()];
-					Enumeration<TreeNode> children = node.children();
+					@SuppressWarnings("unchecked")
+					Enumeration<TreeNode> children = (Enumeration<TreeNode>) node.children();
 					for (int i = 0; i < node.getChildCount(); i++) {
 						final TreeNode child = children.nextElement();
 						paths[i] = path.pathByAddingChild(child);
@@ -105,6 +112,12 @@ public class EventWindow {
 		}
 		
 		frame.getContentPane().add(tree, BorderLayout.EAST);
+		
+		toolBar = new JToolBar();
+		toolBar.setFloatable(false);
+		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
+		
+		toolBar.add(action);
 	}
 	
 	public class DebugEventConsumer extends EventConsumer {
@@ -132,4 +145,14 @@ public class EventWindow {
 		}
 	}
 
+	private class ClearAction extends AbstractAction {
+		private static final long serialVersionUID = -6449203531109728100L;
+		public ClearAction() {
+			putValue(NAME, "Clear");
+			putValue(SHORT_DESCRIPTION, "Clear the event log");
+		}
+		public void actionPerformed(ActionEvent e) {
+			eventTextPane.setText("");
+		}
+	}
 }
