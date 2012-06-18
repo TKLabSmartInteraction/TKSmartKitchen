@@ -42,14 +42,14 @@
 			<artifactId>kitchen-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.illposed</groupId>
-			<artifactId>osc</artifactId>
+			<groupId>com.illposed.osc</groupId>
+			<artifactId>javaosc-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.rxtx</groupId>
 			<artifactId>rxtx</artifactId>
 			<version>2.1.7</version>
-			<scope>runtime</scope>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>

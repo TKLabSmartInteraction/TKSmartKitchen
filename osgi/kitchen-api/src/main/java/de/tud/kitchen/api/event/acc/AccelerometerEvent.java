@@ -1,5 +1,7 @@
 package de.tud.kitchen.api.event.acc;
 
+import java.util.Locale;
+
 import de.tud.kitchen.api.event.Event;
 
 
@@ -21,6 +23,10 @@ public class AccelerometerEvent<PRECISION> extends Event {
 		this.z = z;
 	}
 	
+	@Override
+	public String toString() {
+		return String.format(Locale.US, "%s, x: %15.12f, y: %15.12f, z: %15.12f", super.toString(), x, y, z);
+	}
 	
 	@Override
 	public boolean equals(Object obj) {

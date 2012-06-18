@@ -2,8 +2,8 @@ package de.tud.kitchen.doorGui;
 
 import de.tud.kitchen.api.Kitchen;
 import de.tud.kitchen.api.event.EventConsumer;
+import de.tud.kitchen.api.event.furniture.DoorEvent;
 import de.tud.kitchen.api.module.KitchenModuleActivator;
-import de.tud.kitchen.newArduino.DoorEvent;
 
 public class Activator extends KitchenModuleActivator {
 
@@ -21,7 +21,7 @@ public class Activator extends KitchenModuleActivator {
 		
 	}
 	
-	class myEventConsumer extends EventConsumer {
+	public class myEventConsumer extends EventConsumer {
 		
 		public void handleDoorEvent (DoorEvent e){
 			Gui.updateGui(e);

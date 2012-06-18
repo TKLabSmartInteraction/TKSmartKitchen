@@ -38,7 +38,7 @@ public class KitchenImplTest {
 	public void testCorrectEventDeliveryOneToOne() {
 		//SETUP
 		EventPublisher<TestEvent> pub = kitchen.getEventPublisher(TestEvent.class);
-		TestEventConsumer consumer = createMockBuilder(TestEventConsumer.class).addMockedMethod("handleEvent").createMock();
+		TestEventConsumer consumer = createMockBuilder(TestEventConsumer.class).withConstructor(this).addMockedMethod("handleEvent").createMock();
 		kitchen.registerEventConsumer(consumer);
 		TestEvent testEvent = new TestEvent();
 		consumer.handleEvent(testEvent);
@@ -56,7 +56,7 @@ public class KitchenImplTest {
 		TestEvent testEvent = new TestEvent();
 		TestEventConsumer[] eventConsumers = new TestEventConsumer[10];
 		for (int i = 0; i < eventConsumers.length; i++) {
-			final TestEventConsumer newConsumer = createMockBuilder(TestEventConsumer.class).addMockedMethod("handleEvent").createMock();
+			final TestEventConsumer newConsumer = createMockBuilder(TestEventConsumer.class).withConstructor(this).addMockedMethod("handleEvent").createMock();
 			eventConsumers[i] = newConsumer;
 			kitchen.registerEventConsumer(newConsumer);
 			newConsumer.handleEvent(testEvent);
@@ -72,7 +72,7 @@ public class KitchenImplTest {
 	public void testCorrectEventDeliveryManyToOne() {
 		//SETUP
 		TestEvent testEvent = new TestEvent();
-		TestEventConsumer consumer = createMockBuilder(TestEventConsumer.class).addMockedMethod("handleEvent").createMock();
+		TestEventConsumer consumer = createMockBuilder(TestEventConsumer.class).withConstructor(this).addMockedMethod("handleEvent").createMock();
 		EventPublisher<?>[] eventPublishers = new EventPublisher<?>[10];
 		for (int i = 0; i < eventPublishers.length; i++) {
 			eventPublishers[i] = kitchen.getEventPublisher(TestEvent.class);

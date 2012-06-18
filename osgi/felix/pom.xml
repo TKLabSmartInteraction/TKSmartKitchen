@@ -62,8 +62,13 @@
 								</artifactItem>
 								<!-- Add third party dependencies here -->
 								<artifactItem>
-									<groupId>com.illposed</groupId>
-									<artifactId>osc</artifactId>
+									<groupId>com.illposed.osc</groupId>
+									<artifactId>javaosc-core</artifactId>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.strangeberry</groupId>
+									<artifactId>jmdns</artifactId>
+									<version>3.4.1</version>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.osgi</groupId>
@@ -104,8 +109,13 @@
 		</dependency>
 		<!-- Add third party dependencies here -->
 		<dependency>
-			<groupId>com.illposed</groupId>
-			<artifactId>osc</artifactId>
+			<groupId>com.illposed.osc</groupId>
+			<artifactId>javaosc-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.strangeberry</groupId>
+			<artifactId>jmdns</artifactId>
+			<version>3.4.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.felix</groupId>

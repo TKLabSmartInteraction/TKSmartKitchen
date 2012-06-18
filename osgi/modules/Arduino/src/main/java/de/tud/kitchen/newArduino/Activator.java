@@ -5,6 +5,7 @@ package de.tud.kitchen.newArduino;
 import de.tud.kitchen.api.Kitchen;
 import de.tud.kitchen.api.event.EventConsumer;
 import de.tud.kitchen.api.event.EventPublisher;
+import de.tud.kitchen.api.event.furniture.DoorEvent;
 import de.tud.kitchen.api.module.KitchenModuleActivator;
 import de.tud.kitchen.arduino.Arduino;
 import de.tud.kitchen.arduino.DoorSensorEvent;

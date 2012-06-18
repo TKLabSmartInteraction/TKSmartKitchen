@@ -1,6 +1,7 @@
 package de.tud.kitchen.api.event;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 
 /**
  * Base class for all EventConsumers. </br>
@@ -15,6 +16,12 @@ import java.lang.reflect.Method;
  */
 public abstract class EventConsumer {
 
+	private final HashMap<Class<?>, Method> lookupCache;
+	
+	public EventConsumer() {
+		lookupCache = new HashMap<Class<?>, Method>();
+	}
+	
 	/**
 	 * generic handle method
 	 * @param o
@@ -45,7 +52,7 @@ public abstract class EventConsumer {
 	@SuppressWarnings("rawtypes")
 	protected Method getMethod(Class c) {
 		Class newc = c;
-		Method m = null;
+		Method m = this.lookupCache.get(c);
 		while (m == null && newc != Object.class) {
 			String method = newc.getCanonicalName();
 			if (method == null) {
@@ -55,6 +62,7 @@ public abstract class EventConsumer {
 			method = generateMethodName(method);
 			try {
 				m = getClass().getMethod(method, new Class[] { newc });
+				lookupCache.put(c, m);
 			} catch (NoSuchMethodException ex) {
 				newc = newc.getSuperclass();
 			}
@@ -68,6 +76,7 @@ public abstract class EventConsumer {
 				try {
 					m = getClass().getMethod(method,
 							new Class[] { interfaces[i] });
+					lookupCache.put(c, m);
 				} catch (NoSuchMethodException ex) {
 				}
 			}
@@ -76,6 +85,7 @@ public abstract class EventConsumer {
 			try {
 				m = getClass().getMethod("handleObject",
 						new Class[] { Event.class });
+				lookupCache.put(c, m);
 			} catch (Exception ex) {
 			}
 		return m;

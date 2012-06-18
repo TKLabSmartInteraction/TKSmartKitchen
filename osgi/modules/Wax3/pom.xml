@@ -39,8 +39,8 @@
 			<artifactId>kitchen-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.illposed</groupId>
-			<artifactId>osc</artifactId>
+			<groupId>com.illposed.osc</groupId>
+			<artifactId>javaosc-core</artifactId>
 		</dependency>
 	</dependencies>
 </project>
