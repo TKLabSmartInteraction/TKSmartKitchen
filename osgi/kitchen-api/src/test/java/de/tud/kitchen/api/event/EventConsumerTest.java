@@ -12,7 +12,7 @@ public class EventConsumerTest {
 	@Test
 	public void testReflectiveDispatchInSubclass() {
 		//SETUP
-		EventConsumerSubclass consumer = createMockBuilder(EventConsumerSubclass.class).addMockedMethod("handleTestEvent").createMock();
+		EventConsumerSubclass consumer = createMockBuilder(EventConsumerSubclass.class).addMockedMethod("handleTestEvent").withConstructor().createMock();
 		TestEvent testEvent = new TestEvent();
 		consumer.handleTestEvent(testEvent);
 		expectLastCall().once();
@@ -26,7 +26,7 @@ public class EventConsumerTest {
 	@Test
 	public void testReflectiveDispatchInDowncastedSubclass() {
 		//SETUP
-		EventConsumerSubclass consumer = createMockBuilder(EventConsumerSubclass.class).addMockedMethod("handleTestEvent").createMock();
+		EventConsumerSubclass consumer = createMockBuilder(EventConsumerSubclass.class).addMockedMethod("handleTestEvent").withConstructor().createMock();
 		TestEvent testEvent = new TestEvent();
 		consumer.handleTestEvent(testEvent);
 		expectLastCall().once();
@@ -42,7 +42,7 @@ public class EventConsumerTest {
 	@Test
 	public void testReflectiveDispatchWithAnonymousEventClass() {
 		//SETUP
-		EventConsumerSubclassWithoutTestEventMethod consumer = createMockBuilder(EventConsumerSubclassWithoutTestEventMethod.class).addMockedMethod("handleEvent").createMock();
+		EventConsumerSubclassWithoutTestEventMethod consumer = createMockBuilder(EventConsumerSubclassWithoutTestEventMethod.class).addMockedMethod("handleEvent").withConstructor().createMock();
 		Event event = new Event("testSender") {};
 		consumer.handleEvent(event);
 		expectLastCall().once();
@@ -56,7 +56,7 @@ public class EventConsumerTest {
 	@Test
 	public void testReflectiveDispatchWithLocalEventClass() {
 		//SETUP
-		EventConsumerSubclass consumer = createMockBuilder(EventConsumerSubclass.class).addMockedMethod("handleTestEvent").createMock();
+		EventConsumerSubclass consumer = createMockBuilder(EventConsumerSubclass.class).addMockedMethod("handleTestEvent").withConstructor().createMock();
 		LocalTestEvent event = new LocalTestEvent() {};
 		consumer.handleTestEvent(event);
 		expectLastCall().once();
@@ -73,7 +73,7 @@ public class EventConsumerTest {
 	@Test
 	public void testReflectiveDispatchWithLocalEventConsumer() {
 		//SETUP
-		LocalEventConsumer consumer = createMockBuilder(LocalEventConsumer.class).addMockedMethod("handleEvent").createMock();
+		LocalEventConsumer consumer = createMockBuilder(LocalEventConsumer.class).addMockedMethod("handleEvent").withConstructor(this).createMock();
 		Event event = new Event("testSender") {};
 		consumer.handleEvent(event);
 		expectLastCall().once();
@@ -92,7 +92,7 @@ public class EventConsumerTest {
 	@Test 
 	public void testClassHierarchyBasedDispatch() {
 		//SETUP
-		EventConsumerSubclassWithoutTestEventMethod consumer = createMockBuilder(EventConsumerSubclassWithoutTestEventMethod.class).addMockedMethod("handleEvent").createMock();
+		EventConsumerSubclassWithoutTestEventMethod consumer = createMockBuilder(EventConsumerSubclassWithoutTestEventMethod.class).addMockedMethod("handleEvent").withConstructor().createMock();
 		Event event = new Event("testSensor") {}; 
 		TestEvent testEvent = new TestEvent();
 		consumer.handleEvent(event);

@@ -21,7 +21,7 @@ public class Activator extends KitchenModuleActivator {
 		
 	}
 	
-	class myEventConsumer extends EventConsumer {
+	public class myEventConsumer extends EventConsumer {
 		
 		public void handleDoorEvent (DoorEvent e){
 			Gui.updateGui(e);

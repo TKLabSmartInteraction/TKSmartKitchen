@@ -19,7 +19,7 @@
 				<configuration>
 					<instructions>
 						<Import-Package>de.tud.kitchen.api,*</Import-Package>
-						<Bundle-Activator>de.tud.kitchen.template.Activator</Bundle-Activator>
+						<Bundle-Activator>de.tud.kitchen.doorGui.Activator</Bundle-Activator>
 					</instructions>
 				</configuration>
 				<executions>
