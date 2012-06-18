@@ -74,7 +74,26 @@
                 android:ems="10"
                 android:singleLine="true" />
         </TableRow>
-    </TableLayout>
+
+         <TableRow
+            android:id="@+id/tableRow4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <EditText
+                android:id="@+id/edtUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:singleLine="true" />
+        </TableRow>    </TableLayout>
         
             <CheckBox
                 android:id="@+id/chkShowData"
@@ -84,11 +103,13 @@
                 android:onClick="setShowDataStatus"
                 android:text="Show Accelerometer Data" />
 
-                 <TextView
+                 <EditText
                      android:id="@+id/txtStatus"
                      android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
                      android:text="Status"
+                     android:editable="false"
+              		 android:ems="10"
                      android:textAppearance="?android:attr/textAppearanceMedium" />
 
 

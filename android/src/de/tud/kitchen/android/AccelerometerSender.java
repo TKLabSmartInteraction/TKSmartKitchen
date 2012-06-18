@@ -7,8 +7,11 @@ import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceListener;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -21,15 +24,21 @@ public class AccelerometerSender extends Activity {
 	public final static int SENSOR_DELAY = SensorManager.SENSOR_DELAY_UI;
 	public final static String REMOTE_TYPE = "_tk_kitchen._tcp.local.";
 
+	private static final String PREFS_NAME = "TkKitchenPrefsData";
+
 	private SensorEventReceiver mSimulationView;
 
 	private InetAddress IPAddress = null;
+	private int IPPort = 3334;
 
 	private JmDNS jmdns;
 	private ServiceListener listener;
 
-	private TextView txtStatus;
+	private EditText txtStatus;
+	private EditText edtUserName;
 	private boolean showData = false;
+
+	private String userName;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -37,7 +46,26 @@ public class AccelerometerSender extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		txtStatus = (TextView) findViewById(R.id.txtStatus);
+		userName = "user" + Math.ceil(Math.random() * 100);
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		userName = settings.getString("userName", userName);
+		edtUserName = (EditText) findViewById(R.id.edtUserName);
+		edtUserName.setText(userName);
+
+		TextWatcher textWatcher = new TextWatcher() {
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+
+			public void afterTextChanged(Editable arg0) {
+				userName = edtUserName.getText().toString();
+			}
+
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+		};
+		edtUserName.addTextChangedListener(textWatcher);
+
+		txtStatus = (EditText) findViewById(R.id.txtStatus);
 		setStatus("Starting. Not connected.");
 
 		// Get an instance of the SensorManager
@@ -51,7 +79,8 @@ public class AccelerometerSender extends Activity {
 			jmdns.addServiceListener(REMOTE_TYPE, listener = new ServiceListener() {
 				public void serviceResolved(ServiceEvent ev) {
 					IPAddress = ev.getInfo().getInetAddresses()[0];
-					setStatus("Connected to: " + IPAddress);
+					IPPort = ev.getInfo().getPort();
+					setStatus("Connected to: " + IPAddress + ":" + IPPort);
 				}
 
 				public void serviceRemoved(ServiceEvent ev) {
@@ -74,8 +103,8 @@ public class AccelerometerSender extends Activity {
 		// If an IP address for a data receiver is set, transmit the sensor data.
 		if (IPAddress != null) {
 			try {
-				OSCPortOut sender = new OSCPortOut(IPAddress);
-				OSCMessage msg = new OSCMessage("/android/101", data.toOSCArray());
+				OSCPortOut sender = new OSCPortOut(IPAddress, IPPort);
+				OSCMessage msg = new OSCMessage("/android/" + userName, data.toOSCArray());
 				sender.send(msg);
 			} catch (Exception e) {
 				setStatus("Send Error: " + e.getMessage());
@@ -109,4 +138,14 @@ public class AccelerometerSender extends Activity {
 		showData = chkShowData.isChecked();
 	}
 
+	@Override
+	protected void onStop() {
+		super.onStop();
+
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString("userName", userName);
+
+		editor.commit();
+	}
 }
