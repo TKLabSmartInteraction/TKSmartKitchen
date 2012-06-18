@@ -16,6 +16,7 @@
 		<module>zeroconf-osc</module>
 		<module>dsensingni-adapter</module>
 		<module>door-gui</module>
+		<module>tagging-gui</module>
 	</modules>
 	<repositories>
 		<repository>
