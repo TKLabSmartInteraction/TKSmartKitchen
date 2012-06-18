@@ -38,9 +38,5 @@
 			<groupId>de.tud.kitchen</groupId>
 			<artifactId>kitchen-api</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.illposed</groupId>
-			<artifactId>osc</artifactId>
-		</dependency>
 	</dependencies>
 </project>
