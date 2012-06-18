@@ -43,6 +43,7 @@ public class Activator extends KitchenModuleActivator {
 
 	private class parametricOscListener implements OSCListener {
 		String source;
+		private long lastTime;
 
 		public parametricOscListener(String source) {
 			super();
@@ -51,13 +52,12 @@ public class Activator extends KitchenModuleActivator {
 
 		@Override
 		public void acceptMessage(Date arg0, OSCMessage arg1) {
-			System.out.println(arg0.getTime());
-			Object[] test = arg1.getArguments();
-			for (int i = 0; i<test.length; i++)
-				System.out.print(test[i]+" ");
-			System.out.println();
+			long time = ((Date) arg1.getArguments()[4]).getTime();
+			if (time == 0) 
+				time = lastTime+20;
+			lastTime=time;
 			final AccelerometerEvent<Float> event = new AccelerometerEvent<Float>(source,
-					((Date) arg1.getArguments()[4]).getTime(), 
+					time, 
 					(Float) arg1.getArguments()[0], 
 					(Float) arg1.getArguments()[1],
 					(Float) arg1.getArguments()[2]);
