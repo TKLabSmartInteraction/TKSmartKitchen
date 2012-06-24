@@ -13,13 +13,14 @@ import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.text.DefaultCaret;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -37,7 +38,9 @@ public class EventWindow {
 	private ClassTreeNode rootTreeNode;
 	private DynamicEventFilter dynamicEventFilter;
 	private JToolBar toolBar;
-	private final Action action = new ClearAction();
+	private final Action clearAction = new ClearAction();
+	private final Action toggleScrollAction = new ToggleScrollAction();
+	private JToggleButton tglbtnScroll;
 	
 	/**
 	 * Create the application.
@@ -120,7 +123,14 @@ public class EventWindow {
 		toolBar.setFloatable(false);
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
 		
-		toolBar.add(action);
+		toolBar.add(clearAction);
+		
+		tglbtnScroll = new JToggleButton(toggleScrollAction);
+		tglbtnScroll.setSelected(true);
+		toolBar.add(tglbtnScroll);
+
+		DefaultCaret caret = (DefaultCaret)eventTextPane.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 	}
 	
 	public class DebugEventConsumer extends EventConsumer {
@@ -191,6 +201,29 @@ public class EventWindow {
 		}
 		public void actionPerformed(ActionEvent e) {
 			eventTextPane.setText("");
+		}
+	}
+	
+	private class ToggleScrollAction extends AbstractAction {
+		private static final long serialVersionUID = -6449203531109728100L;
+		
+		private boolean scrolling = true;
+		
+		public ToggleScrollAction() {
+			putValue(NAME, "Scroll");
+			putValue(SHORT_DESCRIPTION, "Toggle Scroll Mode");
+		}
+		public void actionPerformed(ActionEvent e) {
+			DefaultCaret caret = (DefaultCaret)eventTextPane.getCaret();
+			if (scrolling) {
+				caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
+				eventTextPane.setCaretPosition(eventTextPane.getCaretPosition()-1);
+				scrolling = false;
+			} else {
+				caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+				eventTextPane.setCaretPosition(eventTextPane.getDocument().getLength());
+				scrolling = true;
+			}
 		}
 	}
 }
