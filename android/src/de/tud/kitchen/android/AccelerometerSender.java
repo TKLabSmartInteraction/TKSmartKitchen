@@ -1,17 +1,21 @@
 package de.tud.kitchen.android;
 
 import java.net.InetAddress;
+import java.net.SocketException;
 
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
+import javax.jmdns.ServiceInfo;
 import javax.jmdns.ServiceListener;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.hardware.SensorManager;
+import android.net.wifi.WifiManager.MulticastLock;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -21,6 +25,9 @@ import com.illposed.osc.OSCMessage;
 import com.illposed.osc.OSCPortOut;
 
 public class AccelerometerSender extends Activity {
+	
+	public final String TAG = "Kitchen-DataSender";
+	
 	public final static int SENSOR_DELAY = SensorManager.SENSOR_DELAY_UI;
 	public final static String REMOTE_TYPE = "_tk_kitchen._tcp.local.";
 
@@ -28,8 +35,7 @@ public class AccelerometerSender extends Activity {
 
 	private SensorEventReceiver mSimulationView;
 
-	private InetAddress IPAddress = null;
-	private int IPPort = 3334;
+	private OSCPortOut sender;
 
 	private JmDNS jmdns;
 	private ServiceListener listener;
@@ -39,11 +45,15 @@ public class AccelerometerSender extends Activity {
 	private boolean showData = false;
 
 	private String userName;
+	private MulticastLock multicastLock;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		startMulticast();
+		
 		setContentView(R.layout.main);
 
 		userName = "user" + Math.ceil(Math.random() * 100);
@@ -53,14 +63,16 @@ public class AccelerometerSender extends Activity {
 		edtUserName.setText(userName);
 
 		TextWatcher textWatcher = new TextWatcher() {
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
 			}
 
 			public void afterTextChanged(Editable arg0) {
 				userName = edtUserName.getText().toString();
 			}
 
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
 			}
 		};
 		edtUserName.addTextChangedListener(textWatcher);
@@ -76,35 +88,61 @@ public class AccelerometerSender extends Activity {
 		try {
 			jmdns = JmDNS.create();
 
-			jmdns.addServiceListener(REMOTE_TYPE, listener = new ServiceListener() {
-				public void serviceResolved(ServiceEvent ev) {
-					IPAddress = ev.getInfo().getInetAddresses()[0];
-					IPPort = ev.getInfo().getPort();
-					setStatus("Connected to: " + IPAddress + ":" + IPPort);
-				}
+			jmdns.addServiceListener(REMOTE_TYPE,
+					listener = new ServiceListener() {
+						public void serviceResolved(ServiceEvent ev) {
+							connect(ev.getInfo());
+						}
 
-				public void serviceRemoved(ServiceEvent ev) {
-					IPAddress = null;
-					setStatus("Not connected!");
-				}
+						public void serviceRemoved(ServiceEvent ev) {
+							disconnect();
+						}
 
-				public void serviceAdded(ServiceEvent event) {
-					// Required to force serviceResolved to be called again
-					// (after the first search)
-					jmdns.requestServiceInfo(event.getType(), event.getName(), 1);
-				}
-			});
+						public void serviceAdded(ServiceEvent event) {
+							if (event.getInfo() == null || event.getInfo().getInetAddresses().length == 0) {
+								jmdns.requestServiceInfo(event.getType(), event.getName(), true);
+							} else {
+								connect(event.getInfo());
+							}
+						}
+						
+						private void disconnect() {
+							runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									sender = null;
+									setStatus("Not connected!");
+								}
+							});
+						}
+						
+						private void connect(final ServiceInfo info) {
+							runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									try {
+										sender = new OSCPortOut(info.getInetAddresses()[0], info.getPort());
+										setStatus("Connected to: " + info.getInetAddresses()[0] + ":" + info.getPort());
+									} catch (SocketException e) {
+										setStatus("Connection problem: " + e.getMessage());
+										e.printStackTrace();
+									}
+								}
+							});
+						}
+					});
 		} catch (Exception ex) {
 			setStatus("Error: " + ex.getMessage());
 		}
 	}
 
 	public void transmitData(SensorData data) {
-		// If an IP address for a data receiver is set, transmit the sensor data.
-		if (IPAddress != null) {
+		// If an IP address for a data receiver is set, transmit the sensor
+		// data.
+		if (sender != null) {
 			try {
-				OSCPortOut sender = new OSCPortOut(IPAddress, IPPort);
-				OSCMessage msg = new OSCMessage("/android/" + userName, data.toOSCArray());
+				OSCMessage msg = new OSCMessage("/android/" + userName,
+						data.toOSCArray());
 				sender.send(msg);
 			} catch (Exception e) {
 				setStatus("Send Error: " + e.getMessage());
@@ -147,5 +185,18 @@ public class AccelerometerSender extends Activity {
 		editor.putString("userName", userName);
 
 		editor.commit();
+	}
+
+	private void startMulticast() { // to be called by onCreate
+		android.net.wifi.WifiManager wifi = (android.net.wifi.WifiManager) getSystemService(android.content.Context.WIFI_SERVICE);
+		multicastLock = wifi.createMulticastLock("HeeereDnssdLock");
+		multicastLock.setReferenceCounted(true);
+		multicastLock.acquire();
+	}
+
+	protected void onDestroy() {
+		super.onDestroy();
+		if (multicastLock != null)
+			multicastLock.release();
 	}
 }

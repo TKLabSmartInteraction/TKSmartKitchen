@@ -48,8 +48,7 @@ public class Activator extends KitchenModuleActivator {
 			OSCListener listener = new OSCListener() {
 				public void acceptMessage(java.util.Date time, OSCMessage message) {
 					Object[] sensor_data = message.getArguments();
-					System.out.println("OSC: " + sensor_data[0] + " | " + sensor_data[1] + " | " + sensor_data[2] + "  ||  "
-							+ sensor_data[3]);
+					//System.out.println("OSC: " + sensor_data[0] + " | " + sensor_data[1] + " | " + sensor_data[2] + "  ||  " + sensor_data[3]);
 					final AccelerometerEvent<Float> event = new AccelerometerEvent<Float>(message.getAddress(),
 							System.currentTimeMillis(), 
 							(Float) sensor_data[0], 
@@ -58,7 +57,7 @@ public class Activator extends KitchenModuleActivator {
 					publisher.publish(event);
 				}
 			};
-			port.addListener("/android/101", listener);
+			port.addListener("/android/.*", listener);
 			port.startListening();
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
