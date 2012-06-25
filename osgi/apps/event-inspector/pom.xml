@@ -44,5 +44,20 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>1.6.5</version>
 		</dependency>
+		<dependency>
+			<groupId>com.jidesoft</groupId>
+			<artifactId>jide-oss</artifactId>
+			<version>3.4.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.xmlgraphics</groupId>
+			<artifactId>xmlgraphics-commons</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>info.monitorenter</groupId>
+			<artifactId>jchart2d</artifactId>
+			<version>3.2.2</version>
+		</dependency>
 	</dependencies>
 </project>
