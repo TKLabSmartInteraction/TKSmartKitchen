@@ -76,6 +76,7 @@ public class GraphWindow extends JFrame {
 
 	private DynamicEventFilter eventFilter = new DynamicEventFilter(new DynamicEventFilterDelegate() {
 		HashMap<String, Trace2DLtd[]> traces = new HashMap<String, Trace2DLtd[]>();
+		float lastHueValue = 0.0f;
 		@Override
 		public void handleEvent(final Event event) {
 			final AccelerometerEvent<?> accEvent = (AccelerometerEvent<?>) event;
@@ -89,6 +90,11 @@ public class GraphWindow extends JFrame {
 				array[0].setColor(Color.BLUE);
 				array[1].setColor(Color.RED);
 				array[2].setColor(Color.GREEN);
+				array[3].setColor(Color.getHSBColor(lastHueValue, 0.9f, 0.9f));
+				lastHueValue += 0.1f;
+				if (lastHueValue > 1.0) {
+					lastHueValue = (float) (Math.random()/10);
+				}
 			} else {
 				array = traces.get(event.sender);
 			}
