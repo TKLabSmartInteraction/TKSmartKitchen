@@ -3,6 +3,9 @@ package de.tud.kitchen.apps.eventinspector;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -11,6 +14,8 @@ import java.util.HashSet;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
@@ -27,7 +32,9 @@ import javax.swing.tree.TreeSelectionModel;
 
 import de.tud.kitchen.api.event.Event;
 import de.tud.kitchen.api.event.EventConsumer;
+import de.tud.kitchen.api.event.acc.AccelerometerEvent;
 import de.tud.kitchen.apps.eventinspector.DynamicEventFilter.DynamicEventFilterDelegate;
+import de.tud.kitchen.apps.eventinspector.rtgraph.GraphWindow;
 
 public class EventWindow {
 
@@ -41,6 +48,8 @@ public class EventWindow {
 	private final Action clearAction = new ClearAction();
 	private final Action toggleScrollAction = new ToggleScrollAction();
 	private JToggleButton tglbtnScroll;
+	
+	private GraphWindow graphWindow;
 	
 	/**
 	 * Create the application.
@@ -117,6 +126,45 @@ public class EventWindow {
 		         tree.expandRow(i);
 		}
 		
+		MouseListener ml = new MouseAdapter() {
+			private void myPopupEvent(MouseEvent e) {
+				int x = e.getX();
+				int y = e.getY();
+				JTree tree = (JTree) e.getSource();
+				final TreePath path = tree.getPathForLocation(x, y);
+				if (path == null)
+					return;
+
+				if (path.getLastPathComponent() instanceof SourceTreeNode) {
+					final SourceTreeNode obj = (SourceTreeNode) path.getLastPathComponent();
+					final ClassTreeNode parent = (ClassTreeNode) obj.getParent();
+					if (((Class<?>) parent.getUserObject()).equals(AccelerometerEvent.class)) {
+					JPopupMenu popup = new JPopupMenu();
+					popup.add(new JMenuItem(new AbstractAction("Plot") {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							graphWindow.getEventFilter().addedPath(path);
+							if (!graphWindow.isVisible())
+								graphWindow.setVisible(true);
+						}
+					}));
+					popup.show(tree, x, y);
+					}
+				}
+			}
+
+			public void mousePressed(MouseEvent e) {
+				if (e.isPopupTrigger())
+					myPopupEvent(e);
+			}
+
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger())
+					myPopupEvent(e);
+			}
+		};
+		 tree.addMouseListener(ml);
+		
 		frame.getContentPane().add(tree, BorderLayout.EAST);
 		
 		toolBar = new JToolBar();
@@ -131,6 +179,8 @@ public class EventWindow {
 
 		DefaultCaret caret = (DefaultCaret)eventTextPane.getCaret();
 		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		
+		graphWindow = new GraphWindow();
 	}
 	
 	public class DebugEventConsumer extends EventConsumer {
@@ -165,6 +215,10 @@ public class EventWindow {
 				addSender(event);
 			}
 			dynamicEventFilter.handleEvent(event);
+			
+			if (graphWindow.isVisible()) {
+				graphWindow.getEventFilter().handleEvent(event);
+			}
 				
 		}
 		

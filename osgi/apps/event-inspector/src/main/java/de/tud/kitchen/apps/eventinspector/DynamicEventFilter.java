@@ -18,7 +18,7 @@ public class DynamicEventFilter implements TreeSelectionListener {
 		this.delegate = delegate;
 	}
 	
-	void handleEvent(final Event event) {
+	public void handleEvent(final Event event) {
 		synchronized (allowedEventSender) {
 			if (allowedEventSender.contains(generateIdentifier(event))) {
 				delegate.handleEvent(event);
@@ -47,19 +47,23 @@ public class DynamicEventFilter implements TreeSelectionListener {
 	}
 
 
-	private void addedPath(TreePath path) {
-		final Object lastPathComponent = path.getLastPathComponent();
-		if (lastPathComponent instanceof SourceTreeNode) {	
-			final SourceTreeNode sourceTreeNode = (SourceTreeNode) lastPathComponent;
-			allowedEventSender.add(generateIdentifier((Class<?>) ((ClassTreeNode) sourceTreeNode.getParent()).getUserObject(), (String) (sourceTreeNode.getUserObject())));
+	public void addedPath(TreePath path) {
+		synchronized (allowedEventSender) {
+			final Object lastPathComponent = path.getLastPathComponent();
+			if (lastPathComponent instanceof SourceTreeNode) {	
+				final SourceTreeNode sourceTreeNode = (SourceTreeNode) lastPathComponent;
+				allowedEventSender.add(generateIdentifier((Class<?>) ((ClassTreeNode) sourceTreeNode.getParent()).getUserObject(), (String) (sourceTreeNode.getUserObject())));
+			}
 		}
 	}
 	
-	private void removedPath(TreePath path) {
-		final Object lastPathComponent = path.getLastPathComponent();
-		if (lastPathComponent instanceof SourceTreeNode) {			
-			final SourceTreeNode sourceTreeNode = (SourceTreeNode) lastPathComponent;
-			allowedEventSender.remove(generateIdentifier((Class<?>) ((ClassTreeNode) sourceTreeNode.getParent()).getUserObject(), (String) (sourceTreeNode.getUserObject())));
+	public void removedPath(TreePath path) {
+		synchronized (allowedEventSender) {	
+			final Object lastPathComponent = path.getLastPathComponent();
+			if (lastPathComponent instanceof SourceTreeNode) {			
+				final SourceTreeNode sourceTreeNode = (SourceTreeNode) lastPathComponent;
+				allowedEventSender.remove(generateIdentifier((Class<?>) ((ClassTreeNode) sourceTreeNode.getParent()).getUserObject(), (String) (sourceTreeNode.getUserObject())));
+			}
 		}
 	}
 		
