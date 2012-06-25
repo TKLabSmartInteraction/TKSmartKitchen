@@ -13,6 +13,11 @@ public class SensorData {
 	private float data_z_axes = 0;
 
 	/**
+	 * Storing the delta time between sender and receiver.
+	 */
+	private int time_delta = 0;
+
+	/**
 	 * Constructor without start value.
 	 */
 	public SensorData() {
@@ -47,6 +52,16 @@ public class SensorData {
 	 */
 	public void setData(SensorEvent event) {
 		setData(event, 1);
+	}
+
+	/**
+	 * Sets the time difference in ms.
+	 * 
+	 * @param delta
+	 *            The time difference in ms.
+	 */
+	public void setTimeDelta(int delta) {
+		time_delta = delta;
 	}
 
 	/**
@@ -111,8 +126,8 @@ public class SensorData {
 		osc_data[0] = new Float(data_x_axes);
 		osc_data[1] = new Float(data_y_axes);
 		osc_data[2] = new Float(data_z_axes);
-		// send timestamp as 1/100 second instead as nanosecond
-		osc_data[3] = new Integer((int) (timestamp / 10000000));
+		// send timestamp as 1/1000 second (= ms) instead as nanosecond
+		osc_data[3] = new Integer((int) (timestamp / 1000000) + time_delta);
 
 		return osc_data;
 	}
