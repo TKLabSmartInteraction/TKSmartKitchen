@@ -12,4 +12,10 @@
 	<modules>
 		<module>event-inspector</module>
 	</modules>
+	<repositories>
+		<repository>
+			<id>LocalRepo</id>
+			<url>file://${project.basedir}/../../localmavenrepo/</url>
+		</repository>
+	</repositories>
 </project>
