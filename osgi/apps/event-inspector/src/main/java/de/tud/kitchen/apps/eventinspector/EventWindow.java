@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,6 +35,10 @@ import de.tud.kitchen.api.event.acc.AccelerometerEvent;
 import de.tud.kitchen.apps.eventinspector.DynamicEventFilter.DynamicEventFilterDelegate;
 import de.tud.kitchen.apps.eventinspector.rtgraph.GraphWindow;
 
+/**
+ * EventWindow to display log messages on the left side and a tree containing event classes and senders on the right side
+ * @author niklas
+ */
 public class EventWindow {
 
 	private JFrame frame;
@@ -89,6 +92,7 @@ public class EventWindow {
 		dynamicEventFilter = new DynamicEventFilter(new DynamicEventFilterDelegate() {
 			@Override
 			public void handleEvent(final Event event) {
+				//the event has to be added in the GUI thread
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
@@ -97,6 +101,7 @@ public class EventWindow {
 				});
 			}
 		});
+		//tree selection listener to allow subtree selection
 		tree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
 			@Override
 			public void valueChanged(TreeSelectionEvent arg0) {
@@ -122,10 +127,9 @@ public class EventWindow {
 		tree.getSelectionModel().addTreeSelectionListener(dynamicEventFilter);
 		rootTreeNode = new ClassTreeNode(Event.class);
 		tree.setModel(new DefaultTreeModel(rootTreeNode));
-		for (int i = 0; i < tree.getRowCount(); i++) {
-		         tree.expandRow(i);
-		}
+		expandTree();
 		
+		//Right Click on AccelerometerEvent sender invokes a pop up menu
 		MouseListener ml = new MouseAdapter() {
 			private void myPopupEvent(MouseEvent e) {
 				int x = e.getX();
@@ -141,6 +145,9 @@ public class EventWindow {
 					if (((Class<?>) parent.getUserObject()).equals(AccelerometerEvent.class)) {
 					JPopupMenu popup = new JPopupMenu();
 					popup.add(new JMenuItem(new AbstractAction("Plot") {
+						
+						private static final long serialVersionUID = -7529793691742978380L;
+
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							graphWindow.getEventFilter().addedPath(path);
@@ -163,10 +170,19 @@ public class EventWindow {
 					myPopupEvent(e);
 			}
 		};
-		 tree.addMouseListener(ml);
-		
+		tree.addMouseListener(ml);
 		frame.getContentPane().add(tree, BorderLayout.EAST);
 		
+		
+		initToolbar();
+
+		DefaultCaret caret = (DefaultCaret)eventTextPane.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		
+		graphWindow = new GraphWindow();
+	}
+
+	private void initToolbar() {
 		toolBar = new JToolBar();
 		toolBar.setFloatable(false);
 		frame.getContentPane().add(toolBar, BorderLayout.NORTH);
@@ -176,13 +192,17 @@ public class EventWindow {
 		tglbtnScroll = new JToggleButton(toggleScrollAction);
 		tglbtnScroll.setSelected(true);
 		toolBar.add(tglbtnScroll);
-
-		DefaultCaret caret = (DefaultCaret)eventTextPane.getCaret();
-		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-		
-		graphWindow = new GraphWindow();
 	}
 	
+	private void expandTree() {
+		for (int i = 0; i < tree.getRowCount(); i++) {
+		    tree.expandRow(i);
+		}
+	}
+
+	/**
+	 * EventConsumer to receive all events regardless of the Event-class filtering happens in {@link DynamicEventFilter}
+	 * */
 	public class DebugEventConsumer extends EventConsumer {
 		
 		private HashMap<Class<?>, ClassTreeNode> seenClasses = new HashMap<Class<?>, ClassTreeNode>();
@@ -190,24 +210,17 @@ public class EventWindow {
 		
 		public void handleEvent(final Event event) {
 			if (!seenClasses.containsKey(event.getClass())) {
-					SwingUtilities.invokeLater(new Runnable() {
-						@Override
-						public void run() {
-							ClassTreeNode newTreeNode = new ClassTreeNode(event.getClass());
-							rootTreeNode.add(newTreeNode);
-							if (informTreeModel(newTreeNode)) {
-								seenClasses.put(event.getClass(), newTreeNode);
-							}
-							for (int i = 0; i < tree.getRowCount(); i++) {
-						         tree.expandRow(i);
-							}
-						}
-					});
-					seenSenders.add(generateIdentifier(event));
-					addSender(event);
-			} else if (seenSenders.add(generateIdentifier(event))) {
+					ClassTreeNode newTreeNode = new ClassTreeNode(event.getClass());
+					rootTreeNode.add(newTreeNode);
+					if (informTreeModel(newTreeNode)) {
+						seenClasses.put(event.getClass(), newTreeNode);
+					}
+			}
+			
+			if (seenSenders.add(generateIdentifier(event))) {
 				addSender(event);
 			}
+			
 			dynamicEventFilter.handleEvent(event);
 			
 			if (graphWindow.isVisible()) {
@@ -216,24 +229,25 @@ public class EventWindow {
 				
 		}
 		
-		private boolean informTreeModel(TreeNode newTreeNode) {
-			TreeNode parent = newTreeNode.getParent();
+		private boolean informTreeModel(final TreeNode newTreeNode) {
+			final TreeNode parent = newTreeNode.getParent();
 			if (parent!= null) {
-				((DefaultTreeModel) tree.getModel()).nodesWereInserted(parent,new int[] {parent.getIndex(newTreeNode)});
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						((DefaultTreeModel) tree.getModel()).nodesWereInserted(parent,new int[] {parent.getIndex(newTreeNode)});
+						expandTree();
+					}
+				});
 				return true;
 			}
 			return false;
 		}
 
 		private void addSender(final Event event) {
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					SourceTreeNode newSourceTreeNode = new SourceTreeNode(event.sender);
-					seenClasses.get(event.getClass()).add(newSourceTreeNode);
-					informTreeModel(newSourceTreeNode);
-				}
-			});
+			SourceTreeNode newSourceTreeNode = new SourceTreeNode(event.sender);
+			seenClasses.get(event.getClass()).add(newSourceTreeNode);
+			informTreeModel(newSourceTreeNode);
 		}
 	}
 	
