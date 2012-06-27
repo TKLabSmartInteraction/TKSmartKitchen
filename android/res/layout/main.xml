@@ -94,6 +94,15 @@
                 android:editable="false"
                 android:ems="10"
                 android:singleLine="true" />
+
+            <ImageView
+                android:id="@+id/ntpStatusView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="7dp"
+                android:src="@android:drawable/presence_offline" />
+
         </TableRow>
         
          <TableRow

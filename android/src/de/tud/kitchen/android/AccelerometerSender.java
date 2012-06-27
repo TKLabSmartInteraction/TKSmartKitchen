@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.illposed.osc.OSCMessage;
@@ -40,7 +41,6 @@ public class AccelerometerSender extends Activity {
 	private SensorEventReceiver mSimulationView;
 
 	private OSCPortOut sender;
-	private int receiverTimeDelta;
 
 	private JmDNS jmdns;
 	private ServiceListener listener;
@@ -52,6 +52,13 @@ public class AccelerometerSender extends Activity {
 	private String userName;
 	private MulticastLock multicastLock;
 
+	private NTPTimeReceiver timeReceiver;
+	private ServiceInfo kitchenServer;
+
+	private int receiverTimeDelta;
+
+	private EditText edtTimeOffset;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -61,10 +68,11 @@ public class AccelerometerSender extends Activity {
 
 		setContentView(R.layout.main);
 
-		userName = "user" + Math.ceil(Math.random() * 100);
+		userName = "user" + (int) Math.ceil(Math.random() * 100);
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		userName = settings.getString("userName", userName);
 		edtUserName = (EditText) findViewById(R.id.edtUserName);
+		edtTimeOffset = (EditText) findViewById(R.id.edtTimeOffset);
 		edtUserName.setText(userName);
 
 		TextWatcher textWatcher = new TextWatcher() {
@@ -80,6 +88,19 @@ public class AccelerometerSender extends Activity {
 		};
 		edtUserName.addTextChangedListener(textWatcher);
 
+		TextWatcher offsetWatcher = new TextWatcher() {
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+
+			public void afterTextChanged(Editable arg0) {
+				receiverTimeDelta = Integer.valueOf(edtTimeOffset.getText().toString());
+			}
+
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+		};
+		edtTimeOffset.addTextChangedListener(offsetWatcher);
+		
 		txtStatus = (EditText) findViewById(R.id.txtStatus);
 		setStatus("Starting. Not connected.");
 
@@ -90,8 +111,9 @@ public class AccelerometerSender extends Activity {
 		// Currently only one server is supported.
 		try {
 			jmdns = JmDNS.create();
-
+			setStatus("Started. Searching...");
 			jmdns.addServiceListener(REMOTE_TYPE, listener = new ServiceListener() {
+
 				public void serviceResolved(ServiceEvent ev) {
 					connect(ev.getInfo());
 				}
@@ -101,44 +123,33 @@ public class AccelerometerSender extends Activity {
 				}
 
 				public void serviceAdded(ServiceEvent event) {
-					if (event.getInfo() == null || event.getInfo().getInetAddresses().length == 0) {
-						jmdns.requestServiceInfo(event.getType(), event.getName(), true);
-					} else {
-						connect(event.getInfo());
-					}
+					jmdns.requestServiceInfo(event.getType(), event.getName(), true);
 				}
 
 				private void disconnect() {
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							sender = null;
-							setStatus("Not connected!");
-						}
-					});
+					kitchenServer = null;
+					stopTimeReceiver();
+					sender = null;
+					setStatus("Not connected! Searching");
 				}
 
 				private void connect(final ServiceInfo info) {
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							try {
-								sender = new OSCPortOut(info.getInetAddresses()[0], info.getPort());
-								syncReceiverTime(info.getInetAddresses()[0]);
-								setStatus("Connected to: " + info.getInetAddresses()[0] + ":" + info.getPort());
-							} catch (SocketException e) {
-								setStatus("Connection problem: " + e.getMessage());
-								e.printStackTrace();
-							}
-						}
-					});
+					kitchenServer = info;
+					startTimeReceiver();
+					try {
+						sender = new OSCPortOut(info.getInetAddresses()[0], info.getPort());
+						setStatus("Connected to: " + info.getInetAddresses()[0] + ":" + info.getPort());
+					} catch (final SocketException e) {
+						setStatus("Connection problem: " + e.getMessage());
+						e.printStackTrace();
+					}
 				}
 			});
 		} catch (Exception ex) {
 			setStatus("Error: " + ex.getMessage());
 		}
 	}
-
+	
 	public void transmitData(SensorData data) {
 		// If an IP address for a data receiver is set, transmit the sensor
 		// data.
@@ -166,8 +177,19 @@ public class AccelerometerSender extends Activity {
 		}
 	}
 
-	public void setStatus(String status) {
-		txtStatus.setText(status);
+	@Override
+	protected void onStart() {
+		super.onStart();
+		startTimeReceiver();
+	}
+	
+	public void setStatus(final String status) {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {				
+				txtStatus.setText(status);
+			}
+		});
 	}
 
 	public void doExit(View view) {
@@ -184,12 +206,16 @@ public class AccelerometerSender extends Activity {
 	protected void onStop() {
 		super.onStop();
 
+		stopTimeReceiver();
+		
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putString("userName", userName);
 
 		editor.commit();
 	}
+
+
 
 	private void startMulticast() { // to be called by onCreate
 		android.net.wifi.WifiManager wifi = (android.net.wifi.WifiManager) getSystemService(android.content.Context.WIFI_SERVICE);
@@ -205,28 +231,31 @@ public class AccelerometerSender extends Activity {
 		}
 	}
 
-	private void syncReceiverTime(InetAddress receiver_address) {
-		// get time delta between receiver and smartphone
-		NTPUDPClient client = new NTPUDPClient();
-		client.setDefaultTimeout(10000);
-
-		try {
-			client.open();
-			TimeInfo info = client.getTime(receiver_address);
-			info.computeDetails();
-
-			Long offsetValue = info.getOffset();
-			receiverTimeDelta = (offsetValue == null) ? 0 : offsetValue.intValue();
-
-			EditText edtOffset = (EditText) findViewById(R.id.edtTimeOffset);
-			edtOffset.setText(String.valueOf(receiverTimeDelta));
-		} catch (SocketException se) {
-			setStatus("Sync Time, SocketException: " + se.getMessage());
-		} catch (IOException ioe) {
-			setStatus("Sync Time, IOException: " + ioe.getMessage());
-			ioe.printStackTrace();
-		}
-
-		client.close();
+	private void startTimeReceiver() {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				stopTimeReceiver();
+				if (kitchenServer != null) {
+					final EditText edtOffset = (EditText) findViewById(R.id.edtTimeOffset);
+					final ImageView imageView = (ImageView) findViewById(R.id.ntpStatusView);
+					timeReceiver = new NTPTimeReceiver(edtOffset, imageView);
+					timeReceiver.execute(kitchenServer.getInetAddresses()[0]);
+				}
+			}
+		});
+		
+	}
+	
+	private void stopTimeReceiver() {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if (timeReceiver != null) {
+					timeReceiver.cancel(true);
+					timeReceiver = null;
+				}
+			}
+		});
 	}
 }
