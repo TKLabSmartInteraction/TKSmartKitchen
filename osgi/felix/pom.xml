@@ -55,10 +55,22 @@
 									<groupId>${project.groupId}</groupId>
 									<artifactId>dsensingni-adapter</artifactId>
 								</artifactItem>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>zeroconf-osc</artifactId>
+								</artifactItem>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>wax3-bundle</artifactId>
+								</artifactItem>
 								<!-- Add apps here -->
 								<artifactItem>
 									<groupId>${project.groupId}</groupId>
 									<artifactId>kitchen-event-inspector</artifactId>
+								</artifactItem>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>tagging-gui</artifactId>
 								</artifactItem>
 								<!-- Add third party dependencies here -->
 								<artifactItem>
@@ -101,10 +113,25 @@
 			<artifactId>dsensingni-adapter</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>zeroconf-osc</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>wax3-bundle</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<!-- Add app bundles here -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>kitchen-event-inspector</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>tagging-gui</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<!-- Add third party dependencies here -->
