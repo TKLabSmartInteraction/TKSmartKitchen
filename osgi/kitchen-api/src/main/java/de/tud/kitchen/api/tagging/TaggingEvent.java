@@ -1,12 +1,12 @@
-package de.tud.kitchen.taggingGui;
+package de.tud.kitchen.api.tagging;
 
 import de.tud.kitchen.api.event.Event;
 
-public class taggingEvent extends Event{
+public class TaggingEvent extends Event{
 	
 	String msg = "";
 
-	public taggingEvent(String sender, String msg) {
+	public TaggingEvent(String sender, String msg) {
 		super(sender);
 		this.msg = msg;
 	}

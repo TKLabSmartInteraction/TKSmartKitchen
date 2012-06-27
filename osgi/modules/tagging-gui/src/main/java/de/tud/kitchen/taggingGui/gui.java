@@ -12,19 +12,20 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import de.tud.kitchen.api.event.EventPublisher;
+import de.tud.kitchen.api.tagging.TaggingEvent;
 
 public class gui {
 
 	JFrame window;
 	JTextField input;
 	JButton send;
-	EventPublisher<taggingEvent> publisher;
+	EventPublisher<TaggingEvent> publisher;
 	
 	
 	public static void main(String[] args) {
 		new gui(null);
 	}
-	public gui(EventPublisher<taggingEvent> publisher) {
+	public gui(EventPublisher<TaggingEvent> publisher) {
 		this.publisher = publisher;
 		window = new JFrame();
 		window.setBounds(50, 50, 500, 100);
@@ -77,7 +78,7 @@ public class gui {
 	}
 	
 	private void sendEvent(){
-		taggingEvent event = new taggingEvent("tagging-Gui", input.getText());
+		TaggingEvent event = new TaggingEvent("tagging-Gui", input.getText());
 		input.setText("");
 		publisher.publish(event);
 	}

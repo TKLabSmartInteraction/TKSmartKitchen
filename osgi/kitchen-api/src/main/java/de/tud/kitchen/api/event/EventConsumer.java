@@ -32,7 +32,7 @@ public abstract class EventConsumer {
 		} catch (IllegalAccessException iae) {
 			throw new RuntimeException("Anonymous event consumers are not supported. Declare your event consumer as normal or inner class",iae);
 		} catch (Exception ex) {
-			System.out.println("no appropriate handle() method");
+			System.out.println("no appropriate handle() method " + ex.getMessage());
 		}
 	}
 

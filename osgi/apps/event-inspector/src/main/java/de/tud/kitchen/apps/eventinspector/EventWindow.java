@@ -190,8 +190,7 @@ public class EventWindow {
 		
 		public void handleEvent(final Event event) {
 			if (!seenClasses.containsKey(event.getClass())) {
-				try {
-					SwingUtilities.invokeAndWait(new Runnable() {
+					SwingUtilities.invokeLater(new Runnable() {
 						@Override
 						public void run() {
 							ClassTreeNode newTreeNode = new ClassTreeNode(event.getClass());
@@ -206,11 +205,6 @@ public class EventWindow {
 					});
 					seenSenders.add(generateIdentifier(event));
 					addSender(event);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
-					e.printStackTrace();
-				}
 			} else if (seenSenders.add(generateIdentifier(event))) {
 				addSender(event);
 			}
