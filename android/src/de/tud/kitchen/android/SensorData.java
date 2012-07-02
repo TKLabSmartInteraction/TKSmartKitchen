@@ -73,7 +73,8 @@ public class SensorData {
 	 *            The scale factor for normalization of the given sensor data.
 	 */
 	public void setData(SensorEvent event, float scale_factor) {
-		timestamp = event.timestamp;
+		timestamp = System.currentTimeMillis();
+
 		data_x_axes = event.values[SensorManager.DATA_X] / scale_factor;
 		data_y_axes = event.values[SensorManager.DATA_Y] / scale_factor;
 		data_z_axes = event.values[SensorManager.DATA_Z] / scale_factor;
@@ -123,11 +124,11 @@ public class SensorData {
 	public Object[] toOSCArray() {
 		Object[] osc_data = new Object[4];
 
-		osc_data[0] = new Float(data_x_axes);
-		osc_data[1] = new Float(data_y_axes);
-		osc_data[2] = new Float(data_z_axes);
-		// send timestamp as 1/1000 second (= ms) instead as nanosecond
-		osc_data[3] = new Integer((int) (timestamp / 1000000) + time_delta);
+		osc_data[0] = Float.valueOf(data_x_axes);
+		osc_data[1] = Float.valueOf(data_y_axes);
+		osc_data[2] = Float.valueOf(data_z_axes);
+
+		osc_data[3] = java.math.BigInteger.valueOf(timestamp + time_delta);
 
 		return osc_data;
 	}
