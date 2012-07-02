@@ -22,7 +22,11 @@ do
    sed -e "s/, x://g" splitted/tmp > splitted/$tmp
    sed -e "s/, y://g" splitted/$tmp > splitted/tmp
    sed -e "s/, z://g" splitted/tmp > splitted/$tmp
-   rm splitted/tmp
+   sed -e "s/  / /g" splitted/$tmp > splitted/tmp
+   mv splitted/tmp splitted/$tmp
+   
+
+#rm splitted/tmp
 done
 echo "creating Tagging-Gui file"
 cat $file | grep "tagging-Gui" > splitted/tagging-Gui
