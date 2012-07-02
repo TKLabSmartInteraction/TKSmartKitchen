@@ -1,6 +1,7 @@
 package de.tud.kitchen.osc;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.SocketException;
 
 import de.tud.kitchen.api.Kitchen;
@@ -49,8 +50,9 @@ public class Activator extends KitchenModuleActivator {
 				public void acceptMessage(java.util.Date time, OSCMessage message) {
 					Object[] sensor_data = message.getArguments();
 					//System.out.println("OSC: " + sensor_data[0] + " | " + sensor_data[1] + " | " + sensor_data[2] + "  ||  " + sensor_data[3]);
+					final long timeBase = Integer.MAX_VALUE;
 					final AccelerometerEvent<Float> event = new AccelerometerEvent<Float>(message.getAddress(),
-							System.currentTimeMillis(), 
+							((BigInteger) sensor_data[3]).longValue(), 
 							(Float) sensor_data[0], 
 							(Float) sensor_data[1],
 							(Float) sensor_data[2]);
