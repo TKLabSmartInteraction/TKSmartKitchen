@@ -5,26 +5,35 @@ import de.tud.kitchen.api.event.EventConsumer;
 import de.tud.kitchen.api.event.furniture.DoorEvent;
 import de.tud.kitchen.api.module.KitchenModuleActivator;
 
+/**
+ * the Activator for the DoorGui
+ * @author Christian Klos
+ *
+ */
 public class Activator extends KitchenModuleActivator {
 
-	Demo Gui;
+	Gui doorGui;
+	
 	
 	@Override
 	public void start(Kitchen kitchen) {
 		kitchen.registerEventConsumer(new myEventConsumer());
-		Gui = new Demo();
+		doorGui = new Gui();
 	}
 
 	@Override
 	public void stop() {
-		Gui = null;
-		
+		doorGui = null;		
 	}
 	
-	public class myEventConsumer extends EventConsumer {
-		
+	/**
+	 * 
+	 * @author Christian Klos
+	 * Handles DoorEvents and sends them to the GUI 
+	 */
+	public class myEventConsumer extends EventConsumer {		
 		public void handleDoorEvent (DoorEvent e){
-			Gui.updateGui(e);
+			doorGui.updateGui(e);
 		}
 		
 	}
