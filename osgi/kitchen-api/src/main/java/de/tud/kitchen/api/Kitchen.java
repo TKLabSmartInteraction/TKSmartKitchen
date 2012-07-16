@@ -2,6 +2,7 @@ package de.tud.kitchen.api;
 
 import de.tud.kitchen.api.event.EventConsumer;
 import de.tud.kitchen.api.event.EventPublisher;
+import de.tud.kitchen.api.module.KitchenModule;
 
 public interface Kitchen {
 
@@ -14,10 +15,19 @@ public interface Kitchen {
 	<T> EventPublisher<T> getEventPublisher(Class<T> eventType);
 	
 	/**
-	 * register an EventConsumer for a specific event type
-	 * the consumer will be unregistered automatically when the KitchenModule
+	 * register an EventConsumer. </br>
+	 * the consumer can be unregistered manually and will be unregistered automatically when the KitchenModule is stopped
 	 * 
 	 * @param consumer
 	 */
 	void registerEventConsumer(EventConsumer consumer);
+
+	
+	/**
+	 * remove an EventConsumer manually
+	 * 
+	 * @param consumer
+	 */
+	void removeEventConsumer(EventConsumer consumer);
+
 }
