@@ -19,4 +19,8 @@ public class KitchenModuleManager {
 		module.stop();
 	}
 	
+	public void stop() {
+		factory.getSingletonKitchen().stop();
+	}
+	
 }

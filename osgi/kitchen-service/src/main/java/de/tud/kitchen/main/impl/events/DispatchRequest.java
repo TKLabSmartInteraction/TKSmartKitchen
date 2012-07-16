@@ -2,6 +2,7 @@ package de.tud.kitchen.main.impl.events;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -34,9 +35,17 @@ public class DispatchRequest {
 	void dispatch(ExecutorService services) {
 		if (state.compareAndSet(1, 2)) {
 			try {
-				for (Future<Void> result : services.invokeAll(callable, 100, TimeUnit.MILLISECONDS)) {
-						if (result.isCancelled())
+				for (Future<Void> result : services.invokeAll(callable,100,TimeUnit.MILLISECONDS)) {
+						if (result.isCancelled()) {
 								System.err.println(result + " failed to dispatch");
+						}
+						else {
+							try {
+								result.get();
+							} catch (ExecutionException e) {
+								e.printStackTrace();
+							} catch (InterruptedException e) {}
+						}
 							
 				}
 				manager.returnCallables(callable);

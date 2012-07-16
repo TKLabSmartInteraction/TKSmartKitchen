@@ -24,6 +24,9 @@ class RessourceManager {
 	}
 	
 	public void returnCallables (List<DispatchCallable> callables) {
+		for (DispatchCallable callable: callables) {
+			callable.reset();
+		}
 		callablePool.addAll(callables);
 	}
 

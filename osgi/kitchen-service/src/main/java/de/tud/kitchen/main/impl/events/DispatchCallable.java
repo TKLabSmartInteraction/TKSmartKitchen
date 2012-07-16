@@ -33,4 +33,10 @@ public class DispatchCallable implements Callable<Void> {
 		}
 		return null;
 	}
+
+	public void reset() {
+		state.set(0);
+		this.event = null;
+		this.consumer = null;
+	}
 }

@@ -50,6 +50,7 @@ public class Activator implements BundleActivator {
 			if (service instanceof KitchenModule) {
 				kitchenModuleManager.remove((KitchenModule) service);
 			}
+			kitchenModuleManager.stop();
 		}
 	}
 }

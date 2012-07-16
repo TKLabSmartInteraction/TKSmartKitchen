@@ -3,6 +3,7 @@ package de.tud.kitchen.main.impl;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import de.tud.kitchen.api.event.Event;
 import de.tud.kitchen.api.event.EventConsumer;
 import de.tud.kitchen.api.event.EventPublisher;
 import de.tud.kitchen.api.module.KitchenModule;
@@ -13,7 +14,7 @@ public class KitchenFactory implements IKitchenFactory {
 	private KitchenInternal kitchen = new KitchenImpl();
 	
 	@Override
-	public KitchenInternal getSingletonKitchen(KitchenModule module) {
+	public KitchenInternal getSingletonKitchen() {
 		return kitchen;
 	}
 	
@@ -32,7 +33,7 @@ public class KitchenFactory implements IKitchenFactory {
 		private HashSet<EventConsumer> ownEventConsumers = new HashSet<EventConsumer>();
 
 		@Override
-		public <T> EventPublisher<T> getEventPublisher(Class<T> eventType) {
+		public <T extends Event> EventPublisher<T> getEventPublisher(Class<T> eventType) {
 			return kitchen.getEventPublisher(eventType);
 		}
 

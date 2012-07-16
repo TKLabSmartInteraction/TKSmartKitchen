@@ -49,6 +49,12 @@ public class KitchenImplTest {
 		replay(consumer);
 		//TEST
 		pub.publish(testEvent);
+		try {
+			Thread.sleep(20);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//VERIFY
 		verify(consumer);
 	}
@@ -68,6 +74,12 @@ public class KitchenImplTest {
 		}
 		//TEST
 		pub.publish(testEvent);
+		try {
+			Thread.sleep(40);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//VERIFY
 		verify((Object[]) eventConsumers);
 	}
@@ -91,6 +103,12 @@ public class KitchenImplTest {
 			EventPublisher<TestEvent> eventPublisher = (EventPublisher<TestEvent>) eventPublishers[i];
 			eventPublisher.publish(testEvent);
 		}
+		try {
+			Thread.sleep(20);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//VERIFY
 		verify(consumer);
 	}
@@ -113,6 +131,7 @@ public class KitchenImplTest {
 		@Override
 		protected String getAdditionalLog() {
 			return "";
+		}
 	}
 	
 	public class WrongEventConsumer extends EventConsumer {
@@ -128,6 +147,16 @@ public class KitchenImplTest {
 	public class WrongEvent extends Event {
 		public WrongEvent() {
 			super("wrongSender");
+		}
+		
+		@Override
+		protected String getAdditionalHeader() {
+			return "";
+		}
+
+		@Override
+		protected String getAdditionalLog() {
+			return "";
 		}
 	}
 }

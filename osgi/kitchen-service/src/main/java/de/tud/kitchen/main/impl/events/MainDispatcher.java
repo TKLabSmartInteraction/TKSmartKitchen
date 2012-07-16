@@ -22,10 +22,12 @@ public class MainDispatcher implements Runnable {
 		subDispatchThreadGroup = new ThreadGroup(threadGroup, "Dispatch Threads");
 		threadPool = Executors.newCachedThreadPool(
 		new ThreadFactory() {
-			private AtomicInteger threadCounter;
+			private AtomicInteger threadCounter = new AtomicInteger();
 			@Override
 			public Thread newThread(Runnable arg0) {
-				return new Thread(subDispatchThreadGroup, "Dispatch Thread #" + threadCounter.getAndIncrement());
+				final Thread thread = new Thread(subDispatchThreadGroup, arg0, "Dispatch Thread #" + threadCounter.getAndIncrement());
+				thread.setDaemon(true);
+				return thread;
 			}
 		});
 		this.manager = manager;
@@ -41,9 +43,15 @@ public class MainDispatcher implements Runnable {
 		while(running) {
 			try {
 				final DispatchRequest request = dispatchRequests.poll(100, TimeUnit.MILLISECONDS);
+				if (request == null) continue;
 				request.dispatch(threadPool);
 				manager.returnDispatchRequest(request);
 			} catch (InterruptedException e) {}
 		}
+		threadPool.shutdown();
+	}
+
+	public void shutdown() {
+		running = false;
 	}
 }

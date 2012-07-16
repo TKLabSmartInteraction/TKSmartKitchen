@@ -1,5 +1,7 @@
 package de.tud.kitchen.main.impl.events;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import de.tud.kitchen.api.event.Event;
@@ -19,13 +21,22 @@ public class DispatchManager {
 		mainDispatcher = new MainDispatcher(ressourceManager, dispatchThreadGroup);
 		dispatchThread = new Thread(dispatchThreadGroup,mainDispatcher,"Main Dispatch Thread");
 		dispatchThread.setDaemon(true);
+	}
+	
+	public void start() {
 		dispatchThread.start();
 	}
 	
-	public void scheduleDispatch(List<EventConsumer> consumer, Event event) {
+	public void stop() {
+		mainDispatcher.shutdown();
+	}
+	
+	public void scheduleDispatch(Collection<EventConsumer> consumer, Event event) {
 		List<DispatchCallable> callables = ressourceManager.getFreeCallables(consumer.size());
-		for (int i = 0; i < consumer.size(); i++) {
-			callables.get(i).setData(consumer.get(i), event);
+		Iterator<DispatchCallable> callableIterator = callables.iterator();
+		Iterator<EventConsumer> eventConsumerIterator = consumer.iterator();
+		while(callableIterator.hasNext() || eventConsumerIterator.hasNext()) {
+			callableIterator.next().setData(eventConsumerIterator.next(), event);
 		}
 		DispatchRequest request = ressourceManager.getFreeDispatchRequest();
 		request.setDispatchData(callables);

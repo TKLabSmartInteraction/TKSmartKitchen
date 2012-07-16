@@ -1,8 +1,8 @@
 package de.tud.kitchen.api;
 
+import de.tud.kitchen.api.event.Event;
 import de.tud.kitchen.api.event.EventConsumer;
 import de.tud.kitchen.api.event.EventPublisher;
-import de.tud.kitchen.api.module.KitchenModule;
 
 public interface Kitchen {
 
@@ -12,7 +12,7 @@ public interface Kitchen {
 	 * @param eventType
 	 * @return the EventPublisher
 	 */
-	<T> EventPublisher<T> getEventPublisher(Class<T> eventType);
+	<T extends Event> EventPublisher<T> getEventPublisher(Class<T> eventType);
 	
 	/**
 	 * register an EventConsumer. </br>
