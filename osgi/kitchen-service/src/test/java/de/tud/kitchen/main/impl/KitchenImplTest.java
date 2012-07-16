@@ -1,8 +1,12 @@
 package de.tud.kitchen.main.impl;
 
-import static junit.framework.Assert.*;
-import static org.easymock.EasyMock.*;
+import static junit.framework.Assert.assertTrue;
+import static org.easymock.EasyMock.createMockBuilder;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -83,7 +87,8 @@ public class KitchenImplTest {
 		replay(consumer);
 		//TEST
 		for (int i = 0; i < eventPublishers.length; i++) {
-			EventPublisher<TestEvent> eventPublisher = (EventPublisher<KitchenImplTest.TestEvent>) eventPublishers[i];
+			@SuppressWarnings("unchecked")
+			EventPublisher<TestEvent> eventPublisher = (EventPublisher<TestEvent>) eventPublishers[i];
 			eventPublisher.publish(testEvent);
 		}
 		//VERIFY
@@ -91,15 +96,12 @@ public class KitchenImplTest {
 	}
 	
 	public class TestEventConsumer extends EventConsumer {
-		
 		public void handleEvent(Event event) {
 			
 		}
-		
 	}
 	
 	public class TestEvent extends Event {
-
 		public TestEvent() {
 			super("testSender");
 		}
@@ -111,6 +113,21 @@ public class KitchenImplTest {
 		@Override
 		protected String getAdditionalLog() {
 			return "";
+	}
+	
+	public class WrongEventConsumer extends EventConsumer {
+		@Override
+		public void handleObject(Event event) {
+			Assert.fail();
+		}
+		
+		public void handleWrongEvent(Event event) {
+		}
+	}
+	
+	public class WrongEvent extends Event {
+		public WrongEvent() {
+			super("wrongSender");
 		}
 	}
 }

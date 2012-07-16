@@ -9,13 +9,11 @@ import static org.easymock.EasyMock.verify;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.tud.kitchen.api.Kitchen;
 import de.tud.kitchen.api.module.KitchenModule;
-import de.tud.kitchen.main.impl.IKitchenFactory;
 
 public class KitchenModuleManagerTest {
 
-	Kitchen kitchenMock;
+	KitchenInternal kitchenMock;
 	KitchenModule moduleMock;
 	IKitchenFactory kitchenFactory;
 	KitchenModuleManager manager;
@@ -23,11 +21,9 @@ public class KitchenModuleManagerTest {
 	
 	@Before
 	public void before() {
-		kitchenMock = createMock(Kitchen.class);
+		kitchenMock = createMock(KitchenInternal.class);
 		moduleMock = createMock(KitchenModule.class);
 		kitchenFactory = createMock(IKitchenFactory.class);
-		expect(kitchenFactory.createKitchen(moduleMock)).andReturn(kitchenMock);
-		replay(kitchenFactory);
 		manager = new KitchenModuleManager(kitchenFactory);
 	}
 	
@@ -35,6 +31,8 @@ public class KitchenModuleManagerTest {
 	@Test
 	public void testAdd() {
 		//SETUP
+		expect(kitchenFactory.getSandboxedKitchen(moduleMock)).andReturn(kitchenMock);
+		replay(kitchenFactory);
 		moduleMock.start(kitchenMock);
 		replay(moduleMock);
 		//TEST
@@ -46,14 +44,21 @@ public class KitchenModuleManagerTest {
 	@Test
 	public void testRemove() {
 		//SETUP
+		expect(kitchenFactory.getSandboxedKitchen(moduleMock)).andReturn(kitchenMock).times(2);
+		replay(kitchenFactory);
 		manager.add(moduleMock);
 		reset(moduleMock);
 		moduleMock.stop();
 		replay(moduleMock);
+		reset(kitchenMock);
+		kitchenMock.stop();
+		replay(kitchenMock);
 		//TEST
 		manager.remove(moduleMock);
 		//VERIFY
 		verify(moduleMock);
+		verify(kitchenFactory);
+		verify(kitchenMock);
 	}
 	
 }

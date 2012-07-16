@@ -11,10 +11,11 @@ public class KitchenModuleManager {
 	}
 
 	public void add(KitchenModule module) {
-		module.start(factory.createKitchen(module));
+		module.start(factory.getSandboxedKitchen(module));
 	}
 	
 	public void remove(KitchenModule module) {
+		factory.getSandboxedKitchen(module).stop();
 		module.stop();
 	}
 	
