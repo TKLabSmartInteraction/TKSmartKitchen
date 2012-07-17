@@ -11,59 +11,75 @@ public class EventConsumerTest {
 
 	@Test
 	public void testReflectiveDispatchInSubclass() {
-		//SETUP
-		EventConsumerSubclass consumer = createMockBuilder(EventConsumerSubclass.class).addMockedMethod("handleTestEvent").withConstructor().createMock();
+		// SETUP
+		EventConsumerSubclass consumer = createMockBuilder(EventConsumerSubclass.class)
+				.addMockedMethod("handleTestEvent").withConstructor().createMock();
 		TestEvent testEvent = new TestEvent();
 		consumer.handleTestEvent(testEvent);
 		expectLastCall().once();
 		replay(consumer);
-		//TEST
+		// TEST
 		testEvent.dispatchTo(consumer);
-		//VERIFY
+		// VERIFY
 		verify(consumer);
 	}
-	
+
 	@Test
 	public void testReflectiveDispatchInDowncastedSubclass() {
-		//SETUP
-		EventConsumerSubclass consumer = createMockBuilder(EventConsumerSubclass.class).addMockedMethod("handleTestEvent").withConstructor().createMock();
+		// SETUP
+		EventConsumerSubclass consumer = createMockBuilder(EventConsumerSubclass.class)
+				.addMockedMethod("handleTestEvent").withConstructor().createMock();
 		TestEvent testEvent = new TestEvent();
 		consumer.handleTestEvent(testEvent);
 		expectLastCall().once();
 		replay(consumer);
 		EventConsumer downcastConsumer = consumer;
 		Event downcastEvent = testEvent;
-		//TEST
+		// TEST
 		downcastEvent.dispatchTo(downcastConsumer);
-		//VERIFY
+		// VERIFY
 		verify(consumer);
 	}
 
 	@Test
 	public void testReflectiveDispatchWithAnonymousEventClass() {
-		//SETUP
-		EventConsumerSubclassWithoutTestEventMethod consumer = createMockBuilder(EventConsumerSubclassWithoutTestEventMethod.class).addMockedMethod("handleEvent").withConstructor().createMock();
-		Event event = new Event("testSender") {};
+		// SETUP
+		EventConsumerSubclassWithoutTestEventMethod consumer = createMockBuilder(
+				EventConsumerSubclassWithoutTestEventMethod.class).addMockedMethod("handleEvent").withConstructor()
+				.createMock();
+		Event event = new Event("testSender") {
+			@Override
+			protected String getAdditionalHeader() {
+				return "";
+			}
+
+			@Override
+			protected String getAdditionalLog() {
+				return "";
+			}
+		};
 		consumer.handleEvent(event);
 		expectLastCall().once();
 		replay(consumer);
-		//TEST
+		// TEST
 		event.dispatchTo(consumer);
-		//VERIFY
+		// VERIFY
 		verify(consumer);
 	}
 
 	@Test
 	public void testReflectiveDispatchWithLocalEventClass() {
-		//SETUP
-		EventConsumerSubclass consumer = createMockBuilder(EventConsumerSubclass.class).addMockedMethod("handleTestEvent").withConstructor().createMock();
-		LocalTestEvent event = new LocalTestEvent() {};
+		// SETUP
+		EventConsumerSubclass consumer = createMockBuilder(EventConsumerSubclass.class)
+				.addMockedMethod("handleTestEvent").withConstructor().createMock();
+		LocalTestEvent event = new LocalTestEvent() {
+		};
 		consumer.handleTestEvent(event);
 		expectLastCall().once();
 		replay(consumer);
-		//TEST
+		// TEST
 		event.dispatchTo(consumer);
-		//VERIFY
+		// VERIFY
 		verify(consumer);
 	}
 
@@ -72,15 +88,26 @@ public class EventConsumerTest {
 
 	@Test
 	public void testReflectiveDispatchWithLocalEventConsumer() {
-		//SETUP
-		LocalEventConsumer consumer = createMockBuilder(LocalEventConsumer.class).addMockedMethod("handleEvent").withConstructor(this).createMock();
-		Event event = new Event("testSender") {};
+		// SETUP
+		LocalEventConsumer consumer = createMockBuilder(LocalEventConsumer.class).addMockedMethod("handleEvent")
+				.withConstructor(this).createMock();
+		Event event = new Event("testSender") {
+			@Override
+			protected String getAdditionalHeader() {
+				return "";
+			}
+
+			@Override
+			protected String getAdditionalLog() {
+				return "";
+			}
+		};
 		consumer.handleEvent(event);
 		expectLastCall().once();
 		replay(consumer);
-		//TEST
+		// TEST
 		event.dispatchTo(consumer);
-		//VERIFY
+		// VERIFY
 		verify(consumer);
 	}
 
@@ -89,19 +116,31 @@ public class EventConsumerTest {
 		}
 	}
 
-	@Test 
+	@Test
 	public void testClassHierarchyBasedDispatch() {
-		//SETUP
-		EventConsumerSubclassWithoutTestEventMethod consumer = createMockBuilder(EventConsumerSubclassWithoutTestEventMethod.class).addMockedMethod("handleEvent").withConstructor().createMock();
-		Event event = new Event("testSensor") {}; 
+		// SETUP
+		EventConsumerSubclassWithoutTestEventMethod consumer = createMockBuilder(
+				EventConsumerSubclassWithoutTestEventMethod.class).addMockedMethod("handleEvent").withConstructor()
+				.createMock();
+		Event event = new Event("testSensor") {
+			@Override
+			protected String getAdditionalHeader() {
+				return "";
+			}
+
+			@Override
+			protected String getAdditionalLog() {
+				return "";
+			}
+		};
 		TestEvent testEvent = new TestEvent();
 		consumer.handleEvent(event);
 		consumer.handleEvent(testEvent);
 		replay(consumer);
-		//TEST
+		// TEST
 		event.dispatchTo(consumer);
 		testEvent.dispatchTo(consumer);
-		//VERIFY
+		// VERIFY
 		verify(consumer);
 	}
 
@@ -111,21 +150,28 @@ class TestEvent extends Event {
 	public TestEvent() {
 		super("testEvent");
 	}
+	@Override
+	protected String getAdditionalHeader() {
+		return "";
+	}
+
+	@Override
+	protected String getAdditionalLog() {
+		return "";
+	}
 }
 
 class EventConsumerSubclass extends EventConsumer {
-	
+
 	public void handleTestEvent(TestEvent event) {
-		
+
 	}
 
 }
 
 class EventConsumerSubclassWithoutTestEventMethod extends EventConsumer {
-	
+
 	public void handleEvent(Event e) {
-		
+
 	}
 }
-
-

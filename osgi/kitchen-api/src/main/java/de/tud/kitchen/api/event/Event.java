@@ -1,5 +1,8 @@
 package de.tud.kitchen.api.event;
 
+import java.io.ObjectInputStream.GetField;
+import java.util.Locale;
+
 
 public abstract class Event {
 
@@ -23,4 +26,15 @@ public abstract class Event {
 	public String toString() {
 		return String.format("%s sender: %s, time: %d",getClass().getSimpleName(), sender, timestamp);
 	}
+
+	public String logHeader() {
+		return String.format("sender, time%s", getAdditionalHeader());
+	}
+	
+	public String log() {
+		return String.format(Locale.US, "%s, %d%s", sender, timestamp, getAdditionalLog());
+	}
+	
+	protected abstract String getAdditionalLog();
+	protected abstract String getAdditionalHeader();
 }

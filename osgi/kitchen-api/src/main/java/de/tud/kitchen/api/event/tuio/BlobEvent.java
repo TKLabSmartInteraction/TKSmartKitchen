@@ -16,5 +16,15 @@ public class BlobEvent extends TUIOEvent {
 	public String toString() {
 		return String.format("%s, touchedTangible: %d", super.toString(), this.touchedTangible);
 	}
+	
+	@Override
+	protected String getAdditionalHeader() {
+		return super.getAdditionalHeader() + ", touchedTangible";
+	}
+	
+	@Override
+	protected String getAdditionalLog() {
+		return String.format("%s, %d", super.getAdditionalLog(), touchedTangible);
+	}
 
 }

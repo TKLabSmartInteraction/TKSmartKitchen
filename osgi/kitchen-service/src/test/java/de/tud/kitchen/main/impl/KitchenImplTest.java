@@ -103,6 +103,14 @@ public class KitchenImplTest {
 		public TestEvent() {
 			super("testSender");
 		}
+		@Override
+		protected String getAdditionalHeader() {
+			return "";
+		}
 
+		@Override
+		protected String getAdditionalLog() {
+			return "";
+		}
 	}
 }

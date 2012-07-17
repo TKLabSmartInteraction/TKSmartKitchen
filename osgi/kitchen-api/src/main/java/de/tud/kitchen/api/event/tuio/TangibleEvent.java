@@ -20,4 +20,14 @@ public class TangibleEvent extends TUIOEvent {
 	public String toString() {
 		return String.format("%s, dimensions: %s, parentTangible: %s, hand: %s",super.toString(),dimension,parentTangible,grabbedByHand);
 	}
+	
+	@Override
+	protected String getAdditionalHeader() {
+		return super.getAdditionalHeader() + ", dimensionX, dimensionY, dimensionZ, parentTangible, hand";
+	}
+	
+	@Override
+	protected String getAdditionalLog() {
+		return String.format("%s, %15.12f, %15.12f, %15.12f, %d, %d", super.getAdditionalLog(), dimension.x, dimension.y, dimension.z, parentTangible, grabbedByHand);
+	}
 }

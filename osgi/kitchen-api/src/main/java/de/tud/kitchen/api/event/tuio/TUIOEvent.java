@@ -22,5 +22,15 @@ public abstract class TUIOEvent extends Event {
 	public String toString() {
 		return String.format("%s, position: %s, velocity: %s, tableDistance %f.4", super.toString(), position, velocity, tableDistance);
 	}
+	
+	@Override
+	protected String getAdditionalHeader() {
+		return ",positionX, positionY, positionZ, movementX, movementY, movementZ, velocity, tableDistance";
+	}
+	
+	@Override
+	protected String getAdditionalLog() {
+		return String.format(", %15.12f, %15.12f, %15.12f, %15.12f, %15.12f, %15.12f, %15.12f, %15.12f", position.x, position.y, position.z, velocity.x, velocity.y, velocity.z, velocity.w, tableDistance);
+	}
 
 }
