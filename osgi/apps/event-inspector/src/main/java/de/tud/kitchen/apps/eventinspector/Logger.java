@@ -27,14 +27,14 @@ public class Logger {
 	
 	public void log(Event event) {
 		if (currentWorkingDirectory == null) {
-			SimpleDateFormat df = new SimpleDateFormat("yyyy-mm-dd'T'HH-mm-ss");
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm-ss");
 			currentWorkingDirectory = new File(parentDirectory, df.format(Calendar.getInstance().getTime()));
 			currentWorkingDirectory.mkdir();
 			running = true;
 			writeThread = new Thread(new Runnable() {
 				@Override
 				public void run() {
-					while (running || logEvents.isEmpty()) {
+					while (running || !logEvents.isEmpty()) {
 						try {
 							final Event event = logEvents.take();
 							logEvent(event);
@@ -55,6 +55,14 @@ public class Logger {
 	
 	public void stop() {
 		running = false;
+		while (writeThread.isAlive()) {
+			try {
+				writeThread.join(1000);
+				writeThread.interrupt();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	private PrintStream newEvent(Event event) {
