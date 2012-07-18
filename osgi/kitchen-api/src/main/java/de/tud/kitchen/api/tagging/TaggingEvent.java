@@ -19,5 +19,16 @@ public class TaggingEvent extends Event{
 	public String toString() {
 		return super.toString() + ", message: "+msg;
 	}
+	
+	@Override
+	protected String getAdditionalHeader() {
+		return ", msg";
+	}
+	
+	@Override
+	protected String getAdditionalLog() {
+		return String.format(", %s", msg);
+	}
+	
 
 }

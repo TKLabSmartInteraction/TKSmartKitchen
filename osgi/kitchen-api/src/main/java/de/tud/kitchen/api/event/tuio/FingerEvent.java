@@ -18,5 +18,15 @@ public class FingerEvent extends TUIOEvent {
 	public String toString() {
 		return String.format("%s, handId: %d", super.toString(), this.handId);
 	}
+	
+	@Override
+	protected String getAdditionalHeader() {
+		return super.getAdditionalHeader() + ", hand";
+	}
+	
+	@Override
+	protected String getAdditionalLog() {
+		return String.format("%s, %d", super.getAdditionalLog(), handId);
+	}
 
 }

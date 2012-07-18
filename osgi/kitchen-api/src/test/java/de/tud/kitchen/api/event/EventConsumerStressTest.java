@@ -86,6 +86,16 @@ public class EventConsumerStressTest {
 		public Level1Event() {
 			super("TestSender");
 		}
+		
+		@Override
+		protected String getAdditionalHeader() {
+			return "";
+		}
+		
+		@Override
+		protected String getAdditionalLog() {
+			return "";
+		}
 	}
 
 	public class LevelEventConsumer extends EventConsumer {

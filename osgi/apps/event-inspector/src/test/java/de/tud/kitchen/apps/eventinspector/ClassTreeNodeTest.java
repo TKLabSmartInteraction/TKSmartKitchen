@@ -79,6 +79,15 @@ public class ClassTreeNodeTest {
 		public EventSubclass() {
 			super("test");
 		}
+		@Override
+		protected String getAdditionalHeader() {
+			return "";
+		}
+
+		@Override
+		protected String getAdditionalLog() {
+			return "";
+		}
 	}
 	
 	public class SecondEventSubclass extends EventSubclass {

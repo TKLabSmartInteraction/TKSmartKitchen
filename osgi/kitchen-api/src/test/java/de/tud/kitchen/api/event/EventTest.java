@@ -9,7 +9,17 @@ public class EventTest {
 	public void dispatchTest() {
 		//SETUP
 		EventConsumer eventConsumer = createMockBuilder(EventConsumer.class).addMockedMethod("handleObject").withConstructor().createMock();
-		Event event = new Event("testSensor") {};
+		Event event = new Event("testSensor") {
+			@Override
+			protected String getAdditionalHeader() {
+				return "";
+			}
+
+			@Override
+			protected String getAdditionalLog() {
+				return "";
+			}
+		};
 		eventConsumer.handleObject(event);
 		replay(eventConsumer);
 		//TEST

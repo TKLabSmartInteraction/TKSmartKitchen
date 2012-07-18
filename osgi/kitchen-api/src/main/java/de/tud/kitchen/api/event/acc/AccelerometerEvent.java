@@ -40,5 +40,15 @@ public class AccelerometerEvent<PRECISION> extends Event {
 		}
 		return false;
 	}
+	
+	@Override
+	protected String getAdditionalHeader() {
+		return ", x, y, z";
+	}
+	
+	@Override
+	protected String getAdditionalLog() {
+		return String.format(Locale.US, ", %15.12f, %15.12f, %15.12f",x,y,z);
+	}
 
 }

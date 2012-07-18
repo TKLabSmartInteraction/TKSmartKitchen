@@ -18,5 +18,15 @@ public class HandEvent extends TUIOEvent {
 	public String toString() {
 		return String.format("%s, handId: %d, tableDistance: %f.4, pointingTo: %s", super.toString(), handId, tableDistance, pointingTo);
 	}
+	
+	@Override
+	protected String getAdditionalHeader() {
+		return super.getAdditionalHeader() + ", hand, pointingX, pointingY, pointingZ";
+	}
+	
+	@Override
+	protected String getAdditionalLog() {
+		return String.format("%s, %d, %15.12f, %15.12f, %15.12f", super.getAdditionalLog(), handId, pointingTo.x, pointingTo.y, pointingTo.z);
+	}
 
 }

@@ -18,4 +18,14 @@ public class DoorEvent extends Event {
 		return String.format("%s, %s", super.toString(), (closed)?"closed":"open");
 	}
 	
+	@Override
+	protected String getAdditionalHeader() {
+		return ", closed";
+	}
+	
+	@Override
+	protected String getAdditionalLog() {
+		return String.format(", %s", ((closed)?"true":"false"));
+	}
+	
 }
