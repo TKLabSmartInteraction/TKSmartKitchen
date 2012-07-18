@@ -17,8 +17,16 @@ import de.tud.kitchen.api.event.EventPublisher;
 import de.tud.kitchen.api.tagging.TaggingEvent;
 import java.awt.FlowLayout;
 
+/**
+ * 
+ * @author Christian Klos, Niklas Lochschmidt
+ * a gui that sends Tagging-events to tag Actions
+ */
 public class gui {
 
+	/**
+	 * we save seen Tags, so that we don't need to enter them again
+	 */
 	private HashSet<String> seenTags = new HashSet<String>();
 	JFrame window;
 	JTextField input;

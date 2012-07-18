@@ -1,13 +1,16 @@
 package de.tud.kitchen.taggingGui;
 
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
-
 import de.tud.kitchen.api.Kitchen;
 import de.tud.kitchen.api.event.EventPublisher;
 import de.tud.kitchen.api.module.KitchenModuleActivator;
 import de.tud.kitchen.api.tagging.TaggingEvent;
 
+
+/**
+ * 
+ * @author Christian Klos
+ * the Starter for the tagging Gui
+ */
 public class Activator extends KitchenModuleActivator {
 
 	EventPublisher<TaggingEvent> publisher;
