@@ -18,6 +18,7 @@ import java.net.SocketException;
 import java.util.Date;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import com.illposed.osc.OSCListener;
 import com.illposed.osc.OSCMessage;
@@ -41,6 +42,7 @@ public class Activator extends KitchenModuleActivator {
 	 */
 	OSCPortIn port;
 	EventPublisher<AccelerometerEvent> publisher;
+	Process waxrecProcess = null;
 
 	@Override
 	public void start(Kitchen kitchen) {
@@ -49,13 +51,20 @@ public class Activator extends KitchenModuleActivator {
 		 */
 		if (System.getProperty("os.name").toLowerCase().contains("windows")){
 			System.out.println("running on Windows");
-			String comPort = JOptionPane.showInputDialog(
-					"Please insert the Port where the WAX3 receiver is Plugged in", "COM3");
-			try {
-				Runtime.getRuntime().exec(".\\waxrec.exe \\\\.\\"+comPort+" -osc localhost:57110 -timetag");
-			} catch (IOException e) {
-				System.out.println("Failed to launch Waxrec");
-			}
+			SwingUtilities.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					String comPort = JOptionPane.showInputDialog(
+							"Please insert the Port where the WAX3 receiver is Plugged in", "COM3");
+					try {
+						waxrecProcess = Runtime.getRuntime().exec(".\\waxrec.exe \\\\.\\"+comPort+" -osc localhost:57110 -timetag");
+					} catch (IOException e) {
+						e.printStackTrace();
+						System.out.println("Failed to launch Waxrec: " + e);
+					}
+				}
+			});
 		}
 		
 		/**
@@ -83,6 +92,9 @@ public class Activator extends KitchenModuleActivator {
 		 */
 		port.stopListening();
 		port.close();
+		if (waxrecProcess != null)
+			waxrecProcess.destroy();
+		waxrecProcess = null;
 	}
 
 	/**
