@@ -18,9 +18,8 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Import-Package>de.tud.kitchen.api,*</Import-Package>
+ 						<Import-Package>de.tud.kitchen.api.*,com.phidgets.*</Import-Package>
 						<Bundle-Activator>de.tud.kitchen.phidgets.Activator</Bundle-Activator>
-						<Bundle-NativeCode>lib/win32/phidget21.dll ; osname=Win32 ; processor=x86,lib/win64/phidget21.dll ; osname=Win32 ; processor=x64, lib/mac/libphidget21.jnilib ; osname=macos ; processor=x86-64</Bundle-NativeCode>
 					</instructions>
 				</configuration>
 				<executions>
@@ -41,7 +40,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.phidgets</groupId>
-			<artifactId>phidget</artifactId>
+			<artifactId>phidgets-api</artifactId>
+			<version>1.0</version>
 		</dependency>
 	</dependencies>
 </project>

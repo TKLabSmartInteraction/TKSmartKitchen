@@ -1,50 +1,117 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * 
+ * Contributor(s):
+ *    Marcus Ständer <staender@tk.informatik.tu-darmstadt.de>
+ *    Aristotelis Hadjakos <telis@tk.informatik.tu-darmstadt.de>
+ *    Niklas Lochschmidt <niklas.lochschmidt@stud.tu-darmstadt.de>
+ *    Christian Klos <christian.klos@stud.tu-darmstadt.de>
+ *    Bastian Renner <bastian.renner@stud.tu-darmstadt.de>
+ */
+
 package de.tud.kitchen.phidgets;
 
-import java.util.Date;
+import com.phidgets.PhidgetException;
+import com.phidgets.RFIDPhidget;
+import com.phidgets.event.AttachEvent;
+import com.phidgets.event.AttachListener;
+import com.phidgets.event.TagGainEvent;
+import com.phidgets.event.TagGainListener;
+import com.phidgets.event.TagLossEvent;
+import com.phidgets.event.TagLossListener;
 
 import de.tud.kitchen.api.Kitchen;
 import de.tud.kitchen.api.event.EventPublisher;
-import de.tud.kitchen.api.event.acc.AccelerometerEvent;
+import de.tud.kitchen.api.event.rfid.RfidEvent;
 import de.tud.kitchen.api.module.KitchenModuleActivator;
 
-public class Activator extends KitchenModuleActivator {
-	EventPublisher<AccelerometerEvent> publisher;
+/**
+ * 
+ * @author Bastian Renner <bastian.renner@stud.tu-darmstadt.de>
+ * 
+ */
+public class Activator extends KitchenModuleActivator implements TagGainListener, TagLossListener, AttachListener {
+	private EventPublisher<RfidEvent> publisher;
 
 	private RFIDPhidget rfid;
 
+	/**
+	 * Set to true if you want to switch on the readers onboard led while a rfid tag is gained.
+	 */
+	public boolean useRfidLed = false;
+
 	@Override
 	public void start(Kitchen kitchen) {
-		System.out.println("Phidget bundle started");
-		publisher = kitchen.getEventPublisher(AccelerometerEvent.class);
+		publisher = kitchen.getEventPublisher(RfidEvent.class);
+
+		try {
+			rfid = new RFIDPhidget();
+
+			// add Listener to the RFID Phidget
+			rfid.addAttachListener(this);
+			rfid.addTagGainListener(this);
+			rfid.addTagLossListener(this);
+
+			// connect to the RFID reader
+			rfid.openAny();
+			rfid.waitForAttachment(1000);
+		} catch (PhidgetException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void stop() {
+		try {
+			// Switch of the onboard led and close the rfid reader.
+			rfid.setLEDOn(false);
+			rfid.close();
+		} catch (PhidgetException e) {
+			e.printStackTrace();
+		}
 
+		rfid = null;
 	}
 
-//	private class parametricOscListener implements OSCListener {
-//		String source;
-//		private long lastTime;
-//
-//		public parametricOscListener(String source) {
-//			super();
-//			this.source = source;
-//		}
-//
-//		@Override
-//		public void acceptMessage(Date arg0, OSCMessage arg1) {
-//			long time = ((Date) arg1.getArguments()[4]).getTime();
-//			if (time == 0) 
-//				time = lastTime+20;
-//			lastTime=time;
-//			final AccelerometerEvent<Float> event = new AccelerometerEvent<Float>(source,
-//					time, 
-//					(Float) arg1.getArguments()[0], 
-//					(Float) arg1.getArguments()[1],
-//					(Float) arg1.getArguments()[2]);
-//			publisher.publish(event);
-//		}
-//
-//	}
+	@Override
+	public void attached(AttachEvent ae) {
+		try {
+			// activate the readers antenna and switch of the onboard led
+			((RFIDPhidget) ae.getSource()).setAntennaOn(true);
+			((RFIDPhidget) ae.getSource()).setLEDOn(false);
+		} catch (PhidgetException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	@Override
+	public void tagGained(TagGainEvent tag_gain) {
+		try {
+			// Publish the tag gain with an rfid event.
+			RfidEvent event = new RfidEvent(tag_gain.getSource().getSerialNumber(), true, tag_gain.getValue());
+			publisher.publish(event);
+
+			if (useRfidLed) {
+				((RFIDPhidget) tag_gain.getSource()).setLEDOn(true);
+			}
+		} catch (PhidgetException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void tagLost(TagLossEvent tag_loss) {
+		try {
+			// Publish the tag loss with an rfid event.
+			RfidEvent event = new RfidEvent(tag_loss.getSource().getSerialNumber(), false, tag_loss.getValue());
+			publisher.publish(event);
+
+			if (useRfidLed) {
+				((RFIDPhidget) tag_loss.getSource()).setLEDOn(false);
+			}
+		} catch (PhidgetException e) {
+			e.printStackTrace();
+		}
+	}
 }
