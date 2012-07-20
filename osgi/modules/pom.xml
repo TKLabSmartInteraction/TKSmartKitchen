@@ -18,6 +18,7 @@
 		<module>door-gui</module>
 		<module>tagging-gui</module>
 		<module>blender-receiver</module>
+		<module>Phidgets</module>
 	</modules>
 	<repositories>
 		<repository>

@@ -92,6 +92,10 @@
 									<groupId>${project.groupId}</groupId>
 									<artifactId>wax3-bundle</artifactId>
 								</artifactItem>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>phidget-bundle</artifactId>
+								</artifactItem>
 								<!-- Add apps here -->
 								<artifactItem>
 									<groupId>${project.groupId}</groupId>
@@ -110,6 +114,11 @@
 									<groupId>com.strangeberry</groupId>
 									<artifactId>jmdns</artifactId>
 									<version>3.4.1</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.phidgets</groupId>
+									<artifactId>phidgets-api</artifactId>
+									<version>1.0</version>
 								</artifactItem>
 							</artifactItems>
 							<outputDirectory>${project.basedir}/load</outputDirectory>
@@ -152,6 +161,11 @@
 			<artifactId>wax3-bundle</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>phidget-bundle</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<!-- Add app bundles here -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -177,6 +191,11 @@
 			<groupId>org.apache.felix</groupId>
 			<artifactId>org.apache.felix.main</artifactId>
 			<version>4.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.phidgets</groupId>
+			<artifactId>phidgets-api</artifactId>
+			<version>1.0</version>
 		</dependency>
 	</dependencies>
 </project>
