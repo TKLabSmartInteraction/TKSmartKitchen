@@ -17,6 +17,7 @@
 		<module>dsensingni-adapter</module>
 		<module>door-gui</module>
 		<module>tagging-gui</module>
+		<module>blender-receiver</module>
 	</modules>
 	<repositories>
 		<repository>
