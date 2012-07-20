@@ -11,7 +11,7 @@
  *
  */
 
-package de.tud.kitchen.template;
+package de.tud.kitchen.wax;
 
 import java.io.IOException;
 import java.net.SocketException;
@@ -74,10 +74,10 @@ public class Activator extends KitchenModuleActivator {
 			port = new OSCPortIn(57110);
 			System.out.println("assigned Port");
 			publisher = kitchen.getEventPublisher(AccelerometerEvent.class);
-			port.addListener("/wax/101", new parametricOscListener("101"));
-			port.addListener("/wax/102", new parametricOscListener("102"));
-			port.addListener("/wax/103", new parametricOscListener("103"));
-			port.addListener("/wax/104", new parametricOscListener("104"));
+			port.addListener("/wax/101", new parametricOscListener("/wax/101"));
+			port.addListener("/wax/102", new parametricOscListener("/wax/102"));
+			port.addListener("/wax/103", new parametricOscListener("/wax/103"));
+			port.addListener("/wax/104", new parametricOscListener("/wax/104"));
 			port.startListening();
 		} catch (SocketException e) {
 			e.printStackTrace();
