@@ -248,18 +248,25 @@ public class EventWindow {
 		private HashSet<String> seenSenders = new HashSet<String>();
 
 		public void handleEvent(final Event event) {
-			synchronized (rootTreeNode) {
-				if (!seenClasses.containsKey(event.getClass())) {
-					ClassTreeNode newTreeNode = new ClassTreeNode(event.getClass());
-					rootTreeNode.add(newTreeNode);
-					if (informTreeModel(newTreeNode)) {
-						seenClasses.put(event.getClass(), newTreeNode);
+			if (!seenClasses.containsKey(event.getClass()) || !seenSenders.contains(generateIdentifier(event))) {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						if (!seenClasses.containsKey(event.getClass())) {
+							ClassTreeNode newTreeNode = new ClassTreeNode(event.getClass());
+							rootTreeNode.add(newTreeNode);
+							if (informTreeModel(newTreeNode)) {
+								seenClasses.put(event.getClass(), newTreeNode);
+							}
+						}
+						
+						if (seenSenders.add(generateIdentifier(event))) {
+							SourceTreeNode newSourceTreeNode = new SourceTreeNode(event.sender);
+							seenClasses.get(event.getClass()).add(newSourceTreeNode);
+							informTreeModel(newSourceTreeNode);
+						}
 					}
-				}
-	
-				if (seenSenders.add(generateIdentifier(event))) {
-					addSender(event);
-				}
+				});
 			}
 
 			dynamicEventFilter.handleEvent(event);
@@ -274,23 +281,11 @@ public class EventWindow {
 		private boolean informTreeModel(final TreeNode newTreeNode) {
 			final TreeNode parent = newTreeNode.getParent();
 			if (parent != null) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						((DefaultTreeModel) tree.getModel()).nodesWereInserted(parent,
-								new int[] { parent.getIndex(newTreeNode) });
-//						expandTree();
-					}
-				});
+				((DefaultTreeModel) tree.getModel()).nodesWereInserted(parent,
+						new int[] { parent.getIndex(newTreeNode) });
 				return true;
 			}
 			return false;
-		}
-
-		private void addSender(final Event event) {
-			SourceTreeNode newSourceTreeNode = new SourceTreeNode(event.sender);
-			seenClasses.get(event.getClass()).add(newSourceTreeNode);
-			informTreeModel(newSourceTreeNode);
 		}
 	}
 

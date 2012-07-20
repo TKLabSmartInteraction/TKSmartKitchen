@@ -41,9 +41,10 @@ public class ClassTreeNode extends DefaultMutableTreeNode {
 		
 		while (!superClass.equals(Object.class)) {
 			if (superClass.getSuperclass().equals(getUserObject())) {
-				DefaultMutableTreeNode childNode = findNodeForClassInDirectChildren(superClass);
+				ClassTreeNode childNode = findNodeForClassInDirectChildren(superClass);
 				if (childNode == null) {
 					childNode = new ClassTreeNode(superClass);
+					//recursion
 					this.add(childNode);
 				}
 				childNode.add(classTreeNode);
@@ -53,12 +54,12 @@ public class ClassTreeNode extends DefaultMutableTreeNode {
 		}
 	}
 	
-	private DefaultMutableTreeNode findNodeForClassInDirectChildren(Class<?> eventClass) {
+	private ClassTreeNode findNodeForClassInDirectChildren(Class<?> eventClass) {
 		Enumeration<?> enumeration = children();
 		while (enumeration.hasMoreElements()) {
 			DefaultMutableTreeNode element = (DefaultMutableTreeNode) enumeration.nextElement();
 			if (element.getUserObject().equals(eventClass))
-				return element;
+				return (ClassTreeNode) element;
 		}
 		return null;
 	}
