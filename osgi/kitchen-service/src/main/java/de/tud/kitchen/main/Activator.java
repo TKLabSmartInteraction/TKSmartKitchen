@@ -8,7 +8,7 @@ import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 import de.tud.kitchen.api.module.KitchenModule;
 import de.tud.kitchen.main.impl.KitchenModuleManager;
-import de.tud.kitchen.main.impl.SingletonKitchenFactory;
+import de.tud.kitchen.main.impl.KitchenFactory;
 
 public class Activator implements BundleActivator {
 	
@@ -16,7 +16,7 @@ public class Activator implements BundleActivator {
 	public KitchenModuleManager kitchenModuleManager;
 	
 	public void start(BundleContext context) throws Exception {
-		kitchenModuleManager = new KitchenModuleManager(new SingletonKitchenFactory());
+		kitchenModuleManager = new KitchenModuleManager(new KitchenFactory());
 		kitchenModuleTracker = new ServiceTracker(context, KitchenModule.class.getName(), new KitchenModuleTrackerCustomizer(context));
 		kitchenModuleTracker.open();
 	}
@@ -50,6 +50,7 @@ public class Activator implements BundleActivator {
 			if (service instanceof KitchenModule) {
 				kitchenModuleManager.remove((KitchenModule) service);
 			}
+			kitchenModuleManager.stop();
 		}
 	}
 }

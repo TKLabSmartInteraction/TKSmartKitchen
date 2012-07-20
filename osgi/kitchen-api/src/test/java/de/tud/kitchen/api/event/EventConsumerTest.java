@@ -4,6 +4,7 @@ import static org.easymock.EasyMock.createMockBuilder;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -142,6 +143,17 @@ public class EventConsumerTest {
 		testEvent.dispatchTo(consumer);
 		// VERIFY
 		verify(consumer);
+	}
+	
+	
+	@Test
+	public void testHandlesCheck() {
+		//SETUP
+		EventConsumerSubclass consumer = new EventConsumerSubclass();
+		//TEST
+		assertTrue(consumer.handles(TestEvent.class));
+		assertFalse(consumer.handles(Event.class));
+		assertTrue(consumer.handles(LocalTestEvent.class));
 	}
 
 }
