@@ -18,7 +18,8 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Import-Package>de.tud.kitchen.api,*</Import-Package>
+					    <Bundle-Classpath>.,lib,lib/mundocore.jar</Bundle-Classpath>
+						<Import-Package>org.w3c.dom,javax.xml.parsers,!org.mundo.rt,de.tud.kitchen.api,*</Import-Package>
 						<Bundle-Activator>de.tud.kitchen.blenderReceiver.Activator</Bundle-Activator>
 					</instructions>
 				</configuration>

@@ -9,13 +9,6 @@ import de.tud.kitchen.api.module.KitchenModuleActivator;
 
 public class Activator extends KitchenModuleActivator {
 	
-	public void start(BundleContext context) throws Exception {
-		
-		
-	}
-
-	
-
 	@Override
 	public void start(Kitchen kitchen) {
 		Mundo.init();
