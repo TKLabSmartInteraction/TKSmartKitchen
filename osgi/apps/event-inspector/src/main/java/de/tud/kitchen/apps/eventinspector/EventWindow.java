@@ -235,16 +235,18 @@ public class EventWindow {
 		private HashSet<String> seenSenders = new HashSet<String>();
 
 		public void handleEvent(final Event event) {
-			if (!seenClasses.containsKey(event.getClass())) {
-				ClassTreeNode newTreeNode = new ClassTreeNode(event.getClass());
-				rootTreeNode.add(newTreeNode);
-				if (informTreeModel(newTreeNode)) {
-					seenClasses.put(event.getClass(), newTreeNode);
+			synchronized (rootTreeNode) {
+				if (!seenClasses.containsKey(event.getClass())) {
+					ClassTreeNode newTreeNode = new ClassTreeNode(event.getClass());
+					rootTreeNode.add(newTreeNode);
+					if (informTreeModel(newTreeNode)) {
+						seenClasses.put(event.getClass(), newTreeNode);
+					}
 				}
-			}
-
-			if (seenSenders.add(generateIdentifier(event))) {
-				addSender(event);
+	
+				if (seenSenders.add(generateIdentifier(event))) {
+					addSender(event);
+				}
 			}
 
 			dynamicEventFilter.handleEvent(event);
@@ -264,7 +266,7 @@ public class EventWindow {
 					public void run() {
 						((DefaultTreeModel) tree.getModel()).nodesWereInserted(parent,
 								new int[] { parent.getIndex(newTreeNode) });
-						expandTree();
+//						expandTree();
 					}
 				});
 				return true;
@@ -322,6 +324,7 @@ public class EventWindow {
 
 	private class StartLogToFileAction extends AbstractAction {
 		
+		private static final long serialVersionUID = -1070218022122675225L;
 		private Logger privateLogger;
 		
 		public StartLogToFileAction() {
@@ -330,7 +333,6 @@ public class EventWindow {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			int result;
 			if (privateLogger == null) {
 				JFileChooser chooser = new JFileChooser();
 				chooser.setCurrentDirectory(new java.io.File("."));
@@ -357,6 +359,9 @@ public class EventWindow {
 	}
 
 	private class StopLogToFileAction extends AbstractAction {
+		
+		private static final long serialVersionUID = 2279623488191047504L;
+
 		public StopLogToFileAction() {
 			putValue(NAME, "Stop FileLogger");
 			putValue(SHORT_DESCRIPTION, "");
