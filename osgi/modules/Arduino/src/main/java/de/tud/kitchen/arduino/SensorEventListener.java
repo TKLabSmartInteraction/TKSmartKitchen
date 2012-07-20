@@ -1,5 +1,11 @@
 package de.tud.kitchen.arduino;
 
+/**
+ * Should be implemented by everyone that wants to be notified
+ * about DoorSensor changes
+ * @author Christian Klos
+ *
+ */
 public interface SensorEventListener {
 	
 	/**

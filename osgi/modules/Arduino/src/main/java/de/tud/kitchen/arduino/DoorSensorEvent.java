@@ -11,14 +11,12 @@ import gnu.io.SerialPortEvent;
  * with the original Serial event
  * the sensor name represented by a lowercase char
  * and the sensor status
- * @author cklos
+ * @author Christian Klos
  *
  */
 public class DoorSensorEvent extends SerialPortEvent {
 
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 8042367384009053908L;
 	private Character Sensor;
 	private boolean Value;

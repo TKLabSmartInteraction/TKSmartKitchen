@@ -19,7 +19,7 @@ import gnu.io.SerialPortEventListener;
  * that you are not able to instantiate more than one Arduino
  * at the same time
  * 
- * @author cklos
+ * @author Christian Klos
  *
  */
 public class Arduino implements SerialPortEventListener{
@@ -278,7 +278,7 @@ public class Arduino implements SerialPortEventListener{
 /**
  * this class is used when we want to tell the SensorEventListeners
  * that Sensor data arrived.
- * @author cklos
+ * @author Christian Klos
  *
  */
 class CallSensorEventListener extends Thread {
