@@ -42,7 +42,7 @@ public class DSensingNIObjectEventConverter implements OSCListener {
 	}
 	
 	private TangibleEvent createTangibleEvent(Object[] arguments) {
-		return new TangibleEvent(createSenderId((Integer) arguments[1], "tangible"), 
+		return new TangibleEvent(createSenderId("tangible"), 
 								System.currentTimeMillis(),
 								createPoint3f(arguments, 2, 3, 4), 
 								createPoint4f(arguments, 12, 13, 14, 18), 
@@ -60,7 +60,7 @@ public class DSensingNIObjectEventConverter implements OSCListener {
 		return new Point4f((Float)arguments[x],(Float)arguments[y],(Float)arguments[z],(Float)arguments[w]);
 	}
 
-	private static final String createSenderId(final int id, final String type) {
-		return "kinect/" + type + "/" + id;
+	private static final String createSenderId( final String type) {
+		return "kinect/" + type ;
 	}
 }
