@@ -18,6 +18,7 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
+					    <Export-Package></Export-Package>
 						<Bundle-Activator>de.tud.kitchen.main.Activator</Bundle-Activator>
 					</instructions>
 				</configuration>
@@ -36,7 +37,6 @@
 		<dependency>
 			<groupId>de.tud.kitchen</groupId>
 			<artifactId>kitchen-api</artifactId>
-			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>

@@ -48,9 +48,19 @@ public class Activator implements BundleActivator {
 		
 		@Override
 		public Object addingService(ServiceReference reference) {
-			KitchenModule module = (KitchenModule) context.getService(reference);
-			kitchenModuleManager.add(module);
-			return module;
+			try {
+				KitchenModule module = (KitchenModule) context.getService(reference);
+				kitchenModuleManager.add(module);
+				return module;
+			} catch (ClassCastException e) {
+				System.err.println("This is weird. Checking ClassLoader...");
+				ClassLoader myClassLoader = KitchenModule.class.getClassLoader();
+				ClassLoader remoteClassLoader = context.getService(reference).getClass().getSuperclass().getClassLoader();
+				System.err.println("My ClassLoader is: " + myClassLoader);
+				System.err.println("There ClassLoader is: " + remoteClassLoader);
+				e.printStackTrace();
+				return null;
+			}
 		}
 		
 		@Override

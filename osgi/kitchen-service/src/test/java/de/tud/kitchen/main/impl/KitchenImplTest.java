@@ -63,7 +63,7 @@ public class KitchenImplTest {
 		//TEST
 		pub.publish(testEvent);
 		try {
-			Thread.sleep(20);
+			Thread.sleep(100);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -88,7 +88,7 @@ public class KitchenImplTest {
 		//TEST
 		pub.publish(testEvent);
 		try {
-			Thread.sleep(40);
+			Thread.sleep(200);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -117,7 +117,7 @@ public class KitchenImplTest {
 			eventPublisher.publish(testEvent);
 		}
 		try {
-			Thread.sleep(20);
+			Thread.sleep(200);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
