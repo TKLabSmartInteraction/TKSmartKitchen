@@ -1,0 +1,42 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>kitchen-modules</artifactId>
+		<groupId>de.tud.kitchen</groupId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>blender-receiver</artifactId>
+	<name>receiver for the blender</name>
+	<packaging>bundle</packaging>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>2.3.7</version>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Import-Package>de.tud.kitchen.api,*</Import-Package>
+						<Bundle-Activator>de.tud.kitchen.blenderReceiver.Activator</Bundle-Activator>
+					</instructions>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>bundle</goal>
+						</goals>
+						<phase>package</phase>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>de.tud.kitchen</groupId>
+			<artifactId>kitchen-api</artifactId>
+		</dependency>
+	</dependencies>
+</project>
