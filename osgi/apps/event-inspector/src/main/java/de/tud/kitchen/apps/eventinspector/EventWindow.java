@@ -1,3 +1,16 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * 
+ * Contributor(s):
+ *    Marcus Staender <staender@tk.informatik.tu-darmstadt.de>
+ *    Aristotelis Hadjakos <telis@tk.informatik.tu-darmstadt.de>
+ *    Niklas Lochschmidt <niklas.lochschmidt@stud.tu-darmstadt.de>
+ *    Christian Klos <christian.klos@stud.tu-darmstadt.de>
+ *    Bastian Renner <bastian.renner@stud.tu-darmstadt.de>
+ *
+ */
+
 package de.tud.kitchen.apps.eventinspector;
 
 import java.awt.BorderLayout;
@@ -235,16 +248,25 @@ public class EventWindow {
 		private HashSet<String> seenSenders = new HashSet<String>();
 
 		public void handleEvent(final Event event) {
-			if (!seenClasses.containsKey(event.getClass())) {
-				ClassTreeNode newTreeNode = new ClassTreeNode(event.getClass());
-				rootTreeNode.add(newTreeNode);
-				if (informTreeModel(newTreeNode)) {
-					seenClasses.put(event.getClass(), newTreeNode);
-				}
-			}
-
-			if (seenSenders.add(generateIdentifier(event))) {
-				addSender(event);
+			if (!seenClasses.containsKey(event.getClass()) || !seenSenders.contains(generateIdentifier(event))) {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						if (!seenClasses.containsKey(event.getClass())) {
+							ClassTreeNode newTreeNode = new ClassTreeNode(event.getClass());
+							rootTreeNode.add(newTreeNode);
+							if (informTreeModel(newTreeNode)) {
+								seenClasses.put(event.getClass(), newTreeNode);
+							}
+						}
+						
+						if (seenSenders.add(generateIdentifier(event))) {
+							SourceTreeNode newSourceTreeNode = new SourceTreeNode(event.sender);
+							seenClasses.get(event.getClass()).add(newSourceTreeNode);
+							informTreeModel(newSourceTreeNode);
+						}
+					}
+				});
 			}
 
 			dynamicEventFilter.handleEvent(event);
@@ -259,23 +281,11 @@ public class EventWindow {
 		private boolean informTreeModel(final TreeNode newTreeNode) {
 			final TreeNode parent = newTreeNode.getParent();
 			if (parent != null) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						((DefaultTreeModel) tree.getModel()).nodesWereInserted(parent,
-								new int[] { parent.getIndex(newTreeNode) });
-						expandTree();
-					}
-				});
+				((DefaultTreeModel) tree.getModel()).nodesWereInserted(parent,
+						new int[] { parent.getIndex(newTreeNode) });
 				return true;
 			}
 			return false;
-		}
-
-		private void addSender(final Event event) {
-			SourceTreeNode newSourceTreeNode = new SourceTreeNode(event.sender);
-			seenClasses.get(event.getClass()).add(newSourceTreeNode);
-			informTreeModel(newSourceTreeNode);
 		}
 	}
 
@@ -322,6 +332,7 @@ public class EventWindow {
 
 	private class StartLogToFileAction extends AbstractAction {
 		
+		private static final long serialVersionUID = -1070218022122675225L;
 		private Logger privateLogger;
 		
 		public StartLogToFileAction() {
@@ -330,7 +341,6 @@ public class EventWindow {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			int result;
 			if (privateLogger == null) {
 				JFileChooser chooser = new JFileChooser();
 				chooser.setCurrentDirectory(new java.io.File("."));
@@ -357,6 +367,9 @@ public class EventWindow {
 	}
 
 	private class StopLogToFileAction extends AbstractAction {
+		
+		private static final long serialVersionUID = 2279623488191047504L;
+
 		public StopLogToFileAction() {
 			putValue(NAME, "Stop FileLogger");
 			putValue(SHORT_DESCRIPTION, "");

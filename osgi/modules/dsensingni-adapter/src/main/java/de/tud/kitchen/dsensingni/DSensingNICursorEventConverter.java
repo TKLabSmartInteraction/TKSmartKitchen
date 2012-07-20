@@ -1,3 +1,16 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * 
+ * Contributor(s):
+ *    Marcus Staender <staender@tk.informatik.tu-darmstadt.de>
+ *    Aristotelis Hadjakos <telis@tk.informatik.tu-darmstadt.de>
+ *    Niklas Lochschmidt <niklas.lochschmidt@stud.tu-darmstadt.de>
+ *    Christian Klos <christian.klos@stud.tu-darmstadt.de>
+ *    Bastian Renner <bastian.renner@stud.tu-darmstadt.de>
+ *
+ */
+
 package de.tud.kitchen.dsensingni;
 
 import java.util.Date;
@@ -50,7 +63,7 @@ public class DSensingNICursorEventConverter implements OSCListener {
 //			System.out.print(i+": "+object+" ");
 //		}
 //		System.out.println("");
-		return new HandEvent(createSenderId(id, "hand"),			//id
+		return new HandEvent(createSenderId("hand"),			//id
 							System.currentTimeMillis(), 			//time
 							createPoint3f(arguments, 2,3,4),		//position 
 							createPoint4f(arguments, 5, 6, 7, 8), 	//velocity
@@ -60,7 +73,7 @@ public class DSensingNICursorEventConverter implements OSCListener {
 	}
 	
 	private static final BlobEvent createBlobEvent(int id, Object[] arguments) {
-		return new BlobEvent(createSenderId(id, "blob"),			//id
+		return new BlobEvent(createSenderId("blob"),			//id
 							System.currentTimeMillis(),				//time
 							createPoint3f(arguments, 2, 3, 4),		//position
 							createPoint4f(arguments, 5, 6, 7, 8),	//velocity
@@ -69,7 +82,7 @@ public class DSensingNICursorEventConverter implements OSCListener {
 	}
 
 	private static final FingerEvent createFingerEvent(int id, Object[] arguments) {
-		return new FingerEvent(createSenderId(id, "finger"),		//id
+		return new FingerEvent(createSenderId("finger"),		//id
 							  System.currentTimeMillis(),			//time
 							  createPoint3f(arguments, 2, 3, 4),	//position
 							  createPoint4f(arguments, 5, 6, 7, 8),	//velocity
@@ -85,7 +98,7 @@ public class DSensingNICursorEventConverter implements OSCListener {
 		return new Point4f((Float)arguments[x],(Float)arguments[y],(Float)arguments[z],(Float)arguments[w]);
 	}
 
-	private static final String createSenderId(final int id, final String type) {
-		return "kinect/" + type + "/" + id;
+	private static final String createSenderId(final String type) {
+		return "kinect/" + type;
 	}
 }

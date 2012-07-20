@@ -1,10 +1,24 @@
-package de.tud.kitchen.template;
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * 
+ * Contributor(s):
+ *    Marcus Staender <staender@tk.informatik.tu-darmstadt.de>
+ *    Aristotelis Hadjakos <telis@tk.informatik.tu-darmstadt.de>
+ *    Niklas Lochschmidt <niklas.lochschmidt@stud.tu-darmstadt.de>
+ *    Christian Klos <christian.klos@stud.tu-darmstadt.de>
+ *    Bastian Renner <bastian.renner@stud.tu-darmstadt.de>
+ *
+ */
+
+package de.tud.kitchen.wax;
 
 import java.io.IOException;
 import java.net.SocketException;
 import java.util.Date;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import com.illposed.osc.OSCListener;
 import com.illposed.osc.OSCMessage;
@@ -28,6 +42,7 @@ public class Activator extends KitchenModuleActivator {
 	 */
 	OSCPortIn port;
 	EventPublisher<AccelerometerEvent> publisher;
+	Process waxrecProcess = null;
 
 	@Override
 	public void start(Kitchen kitchen) {
@@ -36,13 +51,20 @@ public class Activator extends KitchenModuleActivator {
 		 */
 		if (System.getProperty("os.name").toLowerCase().contains("windows")){
 			System.out.println("running on Windows");
-			String comPort = JOptionPane.showInputDialog(
-					"Please insert the Port where the WAX3 receiver is Plugged in", "COM3");
-			try {
-				Runtime.getRuntime().exec(".\\waxrec.exe \\\\.\\"+comPort+" -osc localhost:57110 -timetag");
-			} catch (IOException e) {
-				System.out.println("Failed to launch Waxrec");
-			}
+			SwingUtilities.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					String comPort = JOptionPane.showInputDialog(
+							"Please insert the Port where the WAX3 receiver is Plugged in", "COM3");
+					try {
+						waxrecProcess = Runtime.getRuntime().exec(".\\waxrec.exe \\\\.\\"+comPort+" -osc localhost:57110 -timetag");
+					} catch (IOException e) {
+						e.printStackTrace();
+						System.out.println("Failed to launch Waxrec: " + e);
+					}
+				}
+			});
 		}
 		
 		/**
@@ -52,10 +74,10 @@ public class Activator extends KitchenModuleActivator {
 			port = new OSCPortIn(57110);
 			System.out.println("assigned Port");
 			publisher = kitchen.getEventPublisher(AccelerometerEvent.class);
-			port.addListener("/wax/101", new parametricOscListener("101"));
-			port.addListener("/wax/102", new parametricOscListener("102"));
-			port.addListener("/wax/103", new parametricOscListener("103"));
-			port.addListener("/wax/104", new parametricOscListener("104"));
+			port.addListener("/wax/101", new parametricOscListener("/wax/101"));
+			port.addListener("/wax/102", new parametricOscListener("/wax/102"));
+			port.addListener("/wax/103", new parametricOscListener("/wax/103"));
+			port.addListener("/wax/104", new parametricOscListener("/wax/104"));
 			port.startListening();
 		} catch (SocketException e) {
 			e.printStackTrace();
@@ -70,6 +92,9 @@ public class Activator extends KitchenModuleActivator {
 		 */
 		port.stopListening();
 		port.close();
+		if (waxrecProcess != null)
+			waxrecProcess.destroy();
+		waxrecProcess = null;
 	}
 
 	/**

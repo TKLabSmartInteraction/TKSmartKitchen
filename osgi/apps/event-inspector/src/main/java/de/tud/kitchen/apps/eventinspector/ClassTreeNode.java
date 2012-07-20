@@ -1,3 +1,16 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * 
+ * Contributor(s):
+ *    Marcus Staender <staender@tk.informatik.tu-darmstadt.de>
+ *    Aristotelis Hadjakos <telis@tk.informatik.tu-darmstadt.de>
+ *    Niklas Lochschmidt <niklas.lochschmidt@stud.tu-darmstadt.de>
+ *    Christian Klos <christian.klos@stud.tu-darmstadt.de>
+ *    Bastian Renner <bastian.renner@stud.tu-darmstadt.de>
+ *
+ */
+
 package de.tud.kitchen.apps.eventinspector;
 
 import java.util.Enumeration;
@@ -28,9 +41,10 @@ public class ClassTreeNode extends DefaultMutableTreeNode {
 		
 		while (!superClass.equals(Object.class)) {
 			if (superClass.getSuperclass().equals(getUserObject())) {
-				DefaultMutableTreeNode childNode = findNodeForClassInDirectChildren(superClass);
+				ClassTreeNode childNode = findNodeForClassInDirectChildren(superClass);
 				if (childNode == null) {
 					childNode = new ClassTreeNode(superClass);
+					//recursion
 					this.add(childNode);
 				}
 				childNode.add(classTreeNode);
@@ -40,12 +54,12 @@ public class ClassTreeNode extends DefaultMutableTreeNode {
 		}
 	}
 	
-	private DefaultMutableTreeNode findNodeForClassInDirectChildren(Class<?> eventClass) {
+	private ClassTreeNode findNodeForClassInDirectChildren(Class<?> eventClass) {
 		Enumeration<?> enumeration = children();
 		while (enumeration.hasMoreElements()) {
 			DefaultMutableTreeNode element = (DefaultMutableTreeNode) enumeration.nextElement();
 			if (element.getUserObject().equals(eventClass))
-				return element;
+				return (ClassTreeNode) element;
 		}
 		return null;
 	}

@@ -1,16 +1,24 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * 
+ * Contributor(s):
+ *    Marcus Staender <staender@tk.informatik.tu-darmstadt.de>
+ *    Aristotelis Hadjakos <telis@tk.informatik.tu-darmstadt.de>
+ *    Niklas Lochschmidt <niklas.lochschmidt@stud.tu-darmstadt.de>
+ *    Christian Klos <christian.klos@stud.tu-darmstadt.de>
+ *    Bastian Renner <bastian.renner@stud.tu-darmstadt.de>
+ *
+ */
+
 package de.tud.kitchen.android;
 
-import java.io.IOException;
-import java.net.InetAddress;
 import java.net.SocketException;
 
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceInfo;
 import javax.jmdns.ServiceListener;
-
-import org.apache.commons.net.ntp.NTPUDPClient;
-import org.apache.commons.net.ntp.TimeInfo;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -19,16 +27,21 @@ import android.net.wifi.WifiManager.MulticastLock;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.illposed.osc.OSCMessage;
 import com.illposed.osc.OSCPortOut;
 
+/**
+ * Android app for sending the data of the smartphone accelerometer to the server.
+ * 
+ * @author Bastian Renner <bastian.renner@stud.tu-darmstadt.de>
+ * @author Niklas Lochschmidt <niklas.lochschmidt@stud.tu-darmstadt.de>
+ * 
+ */
 public class AccelerometerSender extends Activity {
 
 	public final String TAG = "Kitchen-DataSender";
@@ -47,6 +60,9 @@ public class AccelerometerSender extends Activity {
 
 	private EditText txtStatus;
 	private EditText edtUserName;
+	/**
+	 * Set to true the sensor event data will be shown on the ui.
+	 */
 	private boolean showData = false;
 
 	private String userName;
@@ -58,7 +74,7 @@ public class AccelerometerSender extends Activity {
 	private int receiverTimeDelta;
 
 	private EditText edtTimeOffset;
-	
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +84,7 @@ public class AccelerometerSender extends Activity {
 
 		setContentView(R.layout.main);
 
+		// Initialize with random userid and load the stored one from the phone.
 		userName = "user" + (int) Math.ceil(Math.random() * 100);
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		userName = settings.getString("userName", userName);
@@ -75,6 +92,7 @@ public class AccelerometerSender extends Activity {
 		edtTimeOffset = (EditText) findViewById(R.id.edtTimeOffset);
 		edtUserName.setText(userName);
 
+		// Add a TextWatcher to the userid input field.
 		TextWatcher textWatcher = new TextWatcher() {
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 			}
@@ -88,6 +106,7 @@ public class AccelerometerSender extends Activity {
 		};
 		edtUserName.addTextChangedListener(textWatcher);
 
+		// Add a TextWatcher to the field with the time offset.
 		TextWatcher offsetWatcher = new TextWatcher() {
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 			}
@@ -100,7 +119,7 @@ public class AccelerometerSender extends Activity {
 			}
 		};
 		edtTimeOffset.addTextChangedListener(offsetWatcher);
-		
+
 		txtStatus = (EditText) findViewById(R.id.txtStatus);
 		setStatus("Starting. Not connected.");
 
@@ -149,7 +168,13 @@ public class AccelerometerSender extends Activity {
 			setStatus("Error: " + ex.getMessage());
 		}
 	}
-	
+
+	/**
+	 * Transmits the given sensor data to the connected server.
+	 * 
+	 * @param data
+	 *            The sensor data to transmit to the server.
+	 */
 	public void transmitData(SensorData data) {
 		// If an IP address for a data receiver is set, transmit the sensor
 		// data.
@@ -182,21 +207,37 @@ public class AccelerometerSender extends Activity {
 		super.onStart();
 		startTimeReceiver();
 	}
-	
+
+	/**
+	 * Shows a text on the ui status field.
+	 * 
+	 * @param status
+	 *            The text to display as status.
+	 */
 	public void setStatus(final String status) {
 		runOnUiThread(new Runnable() {
 			@Override
-			public void run() {				
+			public void run() {
 				txtStatus.setText(status);
 			}
 		});
 	}
 
+	/**
+	 * Exit the android app.
+	 * 
+	 * @param view
+	 */
 	public void doExit(View view) {
 		mSimulationView.stopSimulation();
 		this.finish();
 	}
 
+	/**
+	 * Sets the showData according to the isChecked() status of the chkShowData check box.
+	 * 
+	 * @param view
+	 */
 	public void setShowDataStatus(View view) {
 		CheckBox chkShowData = (CheckBox) findViewById(R.id.chkShowData);
 		showData = chkShowData.isChecked();
@@ -207,7 +248,7 @@ public class AccelerometerSender extends Activity {
 		super.onStop();
 
 		stopTimeReceiver();
-		
+
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putString("userName", userName);
@@ -215,8 +256,9 @@ public class AccelerometerSender extends Activity {
 		editor.commit();
 	}
 
-
-
+	/**
+	 * Get a multicast lock from the android system.
+	 */
 	private void startMulticast() { // to be called by onCreate
 		android.net.wifi.WifiManager wifi = (android.net.wifi.WifiManager) getSystemService(android.content.Context.WIFI_SERVICE);
 		multicastLock = wifi.createMulticastLock("HeeereDnssdLock");
@@ -224,6 +266,9 @@ public class AccelerometerSender extends Activity {
 		multicastLock.acquire();
 	}
 
+	/**
+	 * Release the multicast lock.
+	 */
 	protected void onDestroy() {
 		super.onDestroy();
 		if (multicastLock != null) {
@@ -231,6 +276,9 @@ public class AccelerometerSender extends Activity {
 		}
 	}
 
+	/**
+	 * Start the NTP receiver in a differend thread.
+	 */
 	private void startTimeReceiver() {
 		runOnUiThread(new Runnable() {
 			@Override
@@ -244,9 +292,12 @@ public class AccelerometerSender extends Activity {
 				}
 			}
 		});
-		
+
 	}
-	
+
+	/**
+	 * Stop the NTP time receiver.
+	 */
 	private void stopTimeReceiver() {
 		runOnUiThread(new Runnable() {
 			@Override
