@@ -5,7 +5,7 @@
  * Contributor(s):
  *    Marcus Staender <staender@tk.informatik.tu-darmstadt.de>
  *    Aristotelis Hadjakos <telis@tk.informatik.tu-darmstadt.de>
- *    Niklas Lochschmidt <niklas.lochschmidt@stud.tu-darmstadt.de>
+ *    Niklas Lochschmidt <nlochschmidt@gmail.com>
  *    Christian Klos <christian.klos@stud.tu-darmstadt.de>
  *    Bastian Renner <bastian.renner@stud.tu-darmstadt.de>
  *
@@ -19,15 +19,16 @@ import de.tud.kitchen.api.event.Event;
 
 
 /**
+ * A basic {@link Event} for publishing accelerometer data.
  * 
- * @author niklas
  * @param <PRECISION> use one of the typical number types (Integer, Float or Double)
+ * @author Niklas Lochschmidt <nlochschmidt@gmail.com>
  */
 public class AccelerometerEvent<PRECISION> extends Event {
 
-	public PRECISION x;
-	public PRECISION y;
-	public PRECISION z;
+	public final PRECISION x;
+	public final PRECISION y;
+	public final PRECISION z;
 	
 	public AccelerometerEvent(String sender, long timestamp, PRECISION x, PRECISION y, PRECISION z) {
 		super(sender,timestamp);

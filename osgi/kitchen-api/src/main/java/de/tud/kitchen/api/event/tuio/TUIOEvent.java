@@ -5,7 +5,7 @@
  * Contributor(s):
  *    Marcus Staender <staender@tk.informatik.tu-darmstadt.de>
  *    Aristotelis Hadjakos <telis@tk.informatik.tu-darmstadt.de>
- *    Niklas Lochschmidt <niklas.lochschmidt@stud.tu-darmstadt.de>
+ *    Niklas Lochschmidt <nlochschmidt@gmail.com>
  *    Christian Klos <christian.klos@stud.tu-darmstadt.de>
  *    Bastian Renner <bastian.renner@stud.tu-darmstadt.de>
  *
@@ -18,10 +18,26 @@ import javax.vecmath.Point4f;
 
 import de.tud.kitchen.api.event.Event;
 
+/**
+ * Base class for all events in package de.tud.kitchen.api.event.tuio
+ * @author Niklas Lochschmidt <nlochschmidt@gmail.com>
+ *
+ */
 public abstract class TUIOEvent extends Event {
 
+	/**
+	 * position where the subject of this event is located
+	 */
 	public final Point3f position;
+	
+	/**
+	 * direction into which the subject of this event is moving including speed as fourth value
+	 */
 	public final Point4f velocity;
+	
+	/**
+	 * approximate distance of the subject to the tables surface
+	 */
 	public final float tableDistance;
 	
 	public TUIOEvent(String sender, long timestamp, Point3f pos, Point4f velocity, float tableDistance) {

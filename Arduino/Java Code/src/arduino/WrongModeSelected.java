@@ -5,7 +5,7 @@
  * Contributor(s):
  *    Marcus Staender <staender@tk.informatik.tu-darmstadt.de>
  *    Aristotelis Hadjakos <telis@tk.informatik.tu-darmstadt.de>
- *    Niklas Lochschmidt <niklas.lochschmidt@stud.tu-darmstadt.de>
+ *    Niklas Lochschmidt <nlochschmidt@gmail.com>
  *    Christian Klos <christian.klos@stud.tu-darmstadt.de>
  *    Bastian Renner <bastian.renner@stud.tu-darmstadt.de>
  *

@@ -5,7 +5,7 @@
  * Contributor(s):
  *    Marcus Staender <staender@tk.informatik.tu-darmstadt.de>
  *    Aristotelis Hadjakos <telis@tk.informatik.tu-darmstadt.de>
- *    Niklas Lochschmidt <niklas.lochschmidt@stud.tu-darmstadt.de>
+ *    Niklas Lochschmidt <nlochschmidt@gmail.com>
  *    Christian Klos <christian.klos@stud.tu-darmstadt.de>
  *    Bastian Renner <bastian.renner@stud.tu-darmstadt.de>
  *
@@ -16,8 +16,6 @@ package de.tud.kitchen.dsensingni;
 
 import java.net.SocketException;
 
-import org.osgi.framework.BundleContext;
-
 import com.illposed.osc.OSCPortIn;
 
 import de.tud.kitchen.api.Kitchen;
@@ -26,12 +24,6 @@ import de.tud.kitchen.api.module.KitchenModuleActivator;
 public class Activator extends KitchenModuleActivator {
 	
 	private OSCPortIn dsensingni;
-	
-	@Override
-	public void start(BundleContext context) throws Exception {
-//		System.out.println("DsensingNI Bundle start called");
-		super.start(context);
-	}
 
 	@Override
 	public void start(Kitchen kitchen) {

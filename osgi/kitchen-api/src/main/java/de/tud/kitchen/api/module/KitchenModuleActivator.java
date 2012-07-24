@@ -5,7 +5,7 @@
  * Contributor(s):
  *    Marcus Staender <staender@tk.informatik.tu-darmstadt.de>
  *    Aristotelis Hadjakos <telis@tk.informatik.tu-darmstadt.de>
- *    Niklas Lochschmidt <niklas.lochschmidt@stud.tu-darmstadt.de>
+ *    Niklas Lochschmidt <nlochschmidt@gmail.com>
  *    Christian Klos <christian.klos@stud.tu-darmstadt.de>
  *    Bastian Renner <bastian.renner@stud.tu-darmstadt.de>
  *
@@ -21,8 +21,8 @@ import de.tud.kitchen.api.Kitchen;
 
 
 /**
- * Convenient base class for Activators used in modules for the SmartKitchen environment
- * 
+ * Convenient base class for Activators used in modules for the SmartKitchen environment.
+ * This class takes care of registering the module activator in the OSGi Service Registry with the correct interface {@link KitchenModule}.
  * 
  * @author niklas
  */
@@ -32,22 +32,25 @@ public abstract class KitchenModuleActivator implements KitchenModule, BundleAct
 	private ServiceRegistration registration;
 	
 	@Override
-	public void start(BundleContext context) throws Exception {
+	public final void start(BundleContext context) throws Exception {
 		registration = context.registerService(KitchenModule.class.getName(), this, null);
 	}
 	
 	@Override
-	public void stop(BundleContext context) throws Exception {
+	public final void stop(BundleContext context) throws Exception {
 		registration.unregister();
 	}
 	
 	/**
 	 * Gets called when the kitchen-service bundle detects and loads the module.</br>
-	 * In this method you will typically get the EventPublisher and register EventConsumers used by this module
+	 * In this method you will typically request an EventPublisher and register EventConsumers used by this module.
+	 * <p>
+	 * Example:
 	 * <pre>
 	 * kitchen.getEventPublisher(MyCustomEvent.class)
 	 * kitchen.registerEventConsumer(myConsumer);
 	 * </pre>
+	 * </p>
 	 */
 	abstract public void start(Kitchen kitchen);
 	

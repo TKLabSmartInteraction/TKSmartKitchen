@@ -5,7 +5,7 @@
  * Contributor(s):
  *    Marcus Staender <staender@tk.informatik.tu-darmstadt.de>
  *    Aristotelis Hadjakos <telis@tk.informatik.tu-darmstadt.de>
- *    Niklas Lochschmidt <niklas.lochschmidt@stud.tu-darmstadt.de>
+ *    Niklas Lochschmidt <nlochschmidt@gmail.com>
  *    Christian Klos <christian.klos@stud.tu-darmstadt.de>
  *    Bastian Renner <bastian.renner@stud.tu-darmstadt.de>
  *
@@ -18,25 +18,36 @@ import javax.vecmath.Point4f;
 
 import de.tud.kitchen.api.event.tuio.TUIOEvent;
 
+/**
+ * Event that comes from the DSensingNI framework. Finger events occurs when
+ * DSensingNI detects fingers, which is usually when the user holds his hand
+ * flat over the table or extends a number of fingers.
+ * 
+ * @author Niklas Lochschmidt <nlochschmidt@gmail.com>
+ * 
+ */
 public class FingerEvent extends TUIOEvent {
 
+	/**
+	 * The hand to which this finger belongs
+	 */
 	public final int handId;
 
 	public FingerEvent(String sender, long timestamp, Point3f pos, Point4f velocity, float tableDistance, int handId) {
 		super(sender, timestamp, pos, velocity, tableDistance);
 		this.handId = handId;
 	}
-	
+
 	@Override
 	public String toString() {
 		return String.format("%s, handId: %d", super.toString(), this.handId);
 	}
-	
+
 	@Override
 	protected String getAdditionalCsvHeader() {
 		return super.getAdditionalCsvHeader() + ", hand";
 	}
-	
+
 	@Override
 	protected String getAdditionalCsvValues() {
 		return String.format("%s, %d", super.getAdditionalCsvValues(), handId);

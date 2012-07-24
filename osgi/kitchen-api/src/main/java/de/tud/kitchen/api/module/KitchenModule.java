@@ -5,7 +5,7 @@
  * Contributor(s):
  *    Marcus Staender <staender@tk.informatik.tu-darmstadt.de>
  *    Aristotelis Hadjakos <telis@tk.informatik.tu-darmstadt.de>
- *    Niklas Lochschmidt <niklas.lochschmidt@stud.tu-darmstadt.de>
+ *    Niklas Lochschmidt <nlochschmidt@gmail.com>
  *    Christian Klos <christian.klos@stud.tu-darmstadt.de>
  *    Bastian Renner <bastian.renner@stud.tu-darmstadt.de>
  *
@@ -15,8 +15,22 @@ package de.tud.kitchen.api.module;
 
 import de.tud.kitchen.api.Kitchen;
 
+/**
+ * A tracking interface used for the OSGi service registration and discovery.
+ * 
+ * @author Niklas Lochschmidt <nlochschmidt@gmail.com>
+ */
 public interface KitchenModule {
 
-	void start(Kitchen kitchen);
-	void stop();
+	/**
+	 * called once the kitchen service is started and loaded this module.
+	 * 
+	 * @param kitchen object to interact with the kitchen service
+	 */
+	public void start(Kitchen kitchen);
+	
+	/**
+	 * called once the kitchen module gets unloaded.
+	 */
+	public void stop();
 }
