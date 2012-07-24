@@ -52,6 +52,7 @@ import de.tud.kitchen.api.event.acc.AccelerometerEvent;
 import de.tud.kitchen.apps.eventinspector.DynamicEventFilter.DynamicEventFilterDelegate;
 import de.tud.kitchen.apps.eventinspector.rtgraph.GraphWindow;
 import javax.swing.SwingConstants;
+import javax.swing.JPanel;
 
 /**
  * EventWindow to display log messages on the left side and a tree containing
@@ -78,6 +79,7 @@ public class EventWindow {
 	private JSeparator separator;
 	public Logger fileLogger;
 	private JButton loggerButton;
+	private JScrollPane scrollPane_1;
 
 	/**
 	 * Create the application.
@@ -110,8 +112,13 @@ public class EventWindow {
 		eventTextPane = new JTextArea();
 		eventTextPane.setEditable(false);
 		scrollPane.setViewportView(eventTextPane);
+		
+		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setPreferredSize(new Dimension(160, 23));
+		frame.getContentPane().add(scrollPane_1, BorderLayout.EAST);
 
 		tree = new JTree();
+		scrollPane_1.setViewportView(tree);
 		tree.setPreferredSize(new Dimension(160, 76));
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 		dynamicEventFilter = new DynamicEventFilter(new DynamicEventFilterDelegate() {
@@ -196,7 +203,6 @@ public class EventWindow {
 			}
 		};
 		tree.addMouseListener(ml);
-		frame.getContentPane().add(tree, BorderLayout.EAST);
 
 		initToolbar();
 
