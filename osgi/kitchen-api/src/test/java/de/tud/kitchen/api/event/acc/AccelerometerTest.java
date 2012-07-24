@@ -72,8 +72,7 @@ public class AccelerometerTest {
 		AccelerometerConsumer accelerometerEventConsumer = new AccelerometerConsumer();
 		
 		EventConsumer downcastAccelerometerConsumer = accelerometerEventConsumer;
-		downCastEvent.dispatchTo(downcastAccelerometerConsumer);
-		
+		downcastAccelerometerConsumer.handle(downCastEvent);
 		assertTrue("Accelerometer Consumer not called", accelerometerEventConsumer.accelerometerConsumerCalled);
 		
 	}

@@ -30,11 +30,7 @@ public abstract class Event {
 	public Event(String sender) {
 		this(sender, System.currentTimeMillis());
 	}
-	
-	public void dispatchTo(EventConsumer handler) {
-		handler.handle(this);
-	}
-	
+
 	@Override
 	public String toString() {
 		return String.format("%s sender: %s, time: %d",getClass().getSimpleName(), sender, timestamp);

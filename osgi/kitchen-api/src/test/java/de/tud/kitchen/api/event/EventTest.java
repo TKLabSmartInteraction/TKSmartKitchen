@@ -36,7 +36,7 @@ public class EventTest {
 		eventConsumer.handleObject(event);
 		replay(eventConsumer);
 		//TEST
-		event.dispatchTo(eventConsumer);
+		eventConsumer.handle(event);
 		//CHECK
 		verify(eventConsumer);
 	}

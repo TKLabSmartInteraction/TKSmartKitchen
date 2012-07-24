@@ -33,7 +33,7 @@ public class EventConsumerTest {
 		expectLastCall().once();
 		replay(consumer);
 		// TEST
-		testEvent.dispatchTo(consumer);
+		consumer.handle(testEvent);
 		// VERIFY
 		verify(consumer);
 	}
@@ -50,7 +50,7 @@ public class EventConsumerTest {
 		EventConsumer downcastConsumer = consumer;
 		Event downcastEvent = testEvent;
 		// TEST
-		downcastEvent.dispatchTo(downcastConsumer);
+		downcastConsumer.handle(downcastEvent);
 		// VERIFY
 		verify(consumer);
 	}
@@ -76,7 +76,7 @@ public class EventConsumerTest {
 		expectLastCall().once();
 		replay(consumer);
 		// TEST
-		event.dispatchTo(consumer);
+		consumer.handle(event);
 		// VERIFY
 		verify(consumer);
 	}
@@ -92,7 +92,7 @@ public class EventConsumerTest {
 		expectLastCall().once();
 		replay(consumer);
 		// TEST
-		event.dispatchTo(consumer);
+		consumer.handle(event);
 		// VERIFY
 		verify(consumer);
 	}
@@ -120,7 +120,7 @@ public class EventConsumerTest {
 		expectLastCall().once();
 		replay(consumer);
 		// TEST
-		event.dispatchTo(consumer);
+		consumer.handle(event);
 		// VERIFY
 		verify(consumer);
 	}
@@ -152,8 +152,8 @@ public class EventConsumerTest {
 		consumer.handleEvent(testEvent);
 		replay(consumer);
 		// TEST
-		event.dispatchTo(consumer);
-		testEvent.dispatchTo(consumer);
+		consumer.handle(event);
+		consumer.handle(testEvent);
 		// VERIFY
 		verify(consumer);
 	}

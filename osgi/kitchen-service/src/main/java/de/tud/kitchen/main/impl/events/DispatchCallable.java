@@ -40,7 +40,7 @@ public class DispatchCallable implements Callable<Void> {
 	
 	public Void call() throws Exception {
 		try {
-			event.dispatchTo(consumer);
+			consumer.handle(event);
 		} finally {
 			state.set(3);
 		}
