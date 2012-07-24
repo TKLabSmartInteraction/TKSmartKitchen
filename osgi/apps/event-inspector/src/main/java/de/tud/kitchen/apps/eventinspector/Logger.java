@@ -31,7 +31,7 @@ public class Logger {
 	private HashMap<String, PrintStream> logFiles = new HashMap<String, PrintStream>();
 	private LinkedBlockingQueue<Event> logEvents = new LinkedBlockingQueue<Event>();
 	private Thread writeThread;
-	private transient boolean running = true;
+	private transient long stopTime = -1;
 	
 	public Logger(File parentDirectory) {
 		this.parentDirectory = parentDirectory;
@@ -43,21 +43,26 @@ public class Logger {
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm-ss");
 			currentWorkingDirectory = new File(parentDirectory, df.format(Calendar.getInstance().getTime()));
 			currentWorkingDirectory.mkdir();
-			running = true;
+			stopTime = Long.MAX_VALUE;
 			writeThread = new Thread(new Runnable() {
 				@Override
 				public void run() {
-					while (running || !logEvents.isEmpty()) {
+					while (stopTime == Long.MAX_VALUE || (logEvents.peek() != null && logEvents.peek().timestamp < stopTime)) {
 						try {
 							final Event event = logEvents.take();
 							logEvent(event);
-						} catch (InterruptedException e) {}
+						} catch (InterruptedException e) {
+							if (stopTime == Long.MAX_VALUE) {
+								e.printStackTrace();
+							}
+						}
 					}
-					currentWorkingDirectory = null;
 					for (PrintStream printStream : logFiles.values() ) {
 						printStream.close();
 					}
 					logFiles.clear();
+					logEvents.clear();
+					currentWorkingDirectory = null;
 				}
 			}, "Log Thread");
 			writeThread.setDaemon(true);
@@ -67,10 +72,10 @@ public class Logger {
 	}
 	
 	public void stop() {
-		running = false;
+		stopTime = System.currentTimeMillis();
 		while (writeThread.isAlive()) {
 			try {
-				writeThread.join(1000);
+				writeThread.join(10);
 				writeThread.interrupt();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
