@@ -34,12 +34,12 @@ public class TaggingEvent extends Event{
 	}
 	
 	@Override
-	protected String getAdditionalHeader() {
+	protected String getAdditionalCsvHeader() {
 		return ", msg";
 	}
 	
 	@Override
-	protected String getAdditionalLog() {
+	protected String getAdditionalCsvValues() {
 		return String.format(", %s", msg);
 	}
 	

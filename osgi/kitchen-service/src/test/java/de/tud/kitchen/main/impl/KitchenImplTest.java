@@ -137,12 +137,12 @@ public class KitchenImplTest {
 			super("testSender");
 		}
 		@Override
-		protected String getAdditionalHeader() {
+		protected String getAdditionalCsvHeader() {
 			return "";
 		}
 
 		@Override
-		protected String getAdditionalLog() {
+		protected String getAdditionalCsvValues() {
 			return "";
 		}
 	}
@@ -163,12 +163,12 @@ public class KitchenImplTest {
 		}
 		
 		@Override
-		protected String getAdditionalHeader() {
+		protected String getAdditionalCsvHeader() {
 			return "";
 		}
 
 		@Override
-		protected String getAdditionalLog() {
+		protected String getAdditionalCsvValues() {
 			return "";
 		}
 	}

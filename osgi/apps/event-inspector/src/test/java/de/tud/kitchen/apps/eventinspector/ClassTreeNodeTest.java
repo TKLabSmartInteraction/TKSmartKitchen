@@ -93,12 +93,12 @@ public class ClassTreeNodeTest {
 			super("test");
 		}
 		@Override
-		protected String getAdditionalHeader() {
+		protected String getAdditionalCsvHeader() {
 			return "";
 		}
 
 		@Override
-		protected String getAdditionalLog() {
+		protected String getAdditionalCsvValues() {
 			return "";
 		}
 	}

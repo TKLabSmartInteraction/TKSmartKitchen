@@ -63,12 +63,12 @@ public class EventConsumerTest {
 				.createMock();
 		Event event = new Event("testSender") {
 			@Override
-			protected String getAdditionalHeader() {
+			protected String getAdditionalCsvHeader() {
 				return "";
 			}
 
 			@Override
-			protected String getAdditionalLog() {
+			protected String getAdditionalCsvValues() {
 				return "";
 			}
 		};
@@ -107,12 +107,12 @@ public class EventConsumerTest {
 				.withConstructor(this).createMock();
 		Event event = new Event("testSender") {
 			@Override
-			protected String getAdditionalHeader() {
+			protected String getAdditionalCsvHeader() {
 				return "";
 			}
 
 			@Override
-			protected String getAdditionalLog() {
+			protected String getAdditionalCsvValues() {
 				return "";
 			}
 		};
@@ -138,12 +138,12 @@ public class EventConsumerTest {
 				.createMock();
 		Event event = new Event("testSensor") {
 			@Override
-			protected String getAdditionalHeader() {
+			protected String getAdditionalCsvHeader() {
 				return "";
 			}
 
 			@Override
-			protected String getAdditionalLog() {
+			protected String getAdditionalCsvValues() {
 				return "";
 			}
 		};
@@ -176,12 +176,12 @@ class TestEvent extends Event {
 		super("testEvent");
 	}
 	@Override
-	protected String getAdditionalHeader() {
+	protected String getAdditionalCsvHeader() {
 		return "";
 	}
 
 	@Override
-	protected String getAdditionalLog() {
+	protected String getAdditionalCsvValues() {
 		return "";
 	}
 }

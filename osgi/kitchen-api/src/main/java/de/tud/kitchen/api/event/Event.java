@@ -36,14 +36,51 @@ public abstract class Event {
 		return String.format("%s sender: %s, time: %d",getClass().getSimpleName(), sender, timestamp);
 	}
 
-	public String logHeader() {
-		return String.format("sender, time%s", getAdditionalHeader());
+	/**
+	 * Create a CSV logfile header. This method can not be overridden to ensure
+	 * that sender and time is always included in the log. Override
+	 * {@link #getAdditionalCsvHeader()} to add your own fields to the header.
+	 * 
+	 * @return header for a CSV log
+	 */
+	public final String csvHeader() {
+		return String.format("sender, time%s", getAdditionalCsvHeader());
 	}
-	
-	public String log() {
-		return String.format(Locale.US, "%s, %d%s", sender, timestamp, getAdditionalLog());
+
+	/**
+	 * Generate a CSV logfile entry This method can not be overridden to ensure
+	 * that sender and time is always included in the entry. Override
+	 * {@link #getAdditionalCsvValues()} to add the values of your own fields.
+	 * 
+	 * @return entry to be written to a CSV log file
+	 */
+	public final String csvValues() {
+		return String.format(Locale.US, "%s, %d%s", sender, timestamp, getAdditionalCsvValues());
 	}
+
+	/**
+	 * Generate a string that gets appened to the default header from
+	 * {@link #csvHeader()}. When overridden, this method must not return null
+	 * but an empty string in case nothing has to be appended to the default
+	 * header. Otherwise the string returned by this function must start with
+	 * ", " to ensure correct formating of the CSV header.
+	 * 
+	 * @return string appended to the {@link #csvHeader()} (e.g. ", x, y, z")
+	 */
+	protected abstract String getAdditionalCsvHeader();
 	
-	protected abstract String getAdditionalLog();
-	protected abstract String getAdditionalHeader();
+	
+	/**
+	 * Generate a string that gets appended to the default values from
+	 * {@link #csvValues()}. When overridden, this method must not return null
+	 * but an empty string in case nothing has to be appended to the default
+	 * values. Otherwise the string returned by this function must start with
+	 * ", " to ensure correct formating of the CSV entry. Also make sure that
+	 * the sequence of values matches your header from
+	 * {@link #getAdditionalCsvHeader()}.
+	 * 
+	 * @return string appended to the {@link #csvValues()} (e.g. ", 0.23132, 0.12333, 0.9089343")
+	 */
+	protected abstract String getAdditionalCsvValues();
+
 }

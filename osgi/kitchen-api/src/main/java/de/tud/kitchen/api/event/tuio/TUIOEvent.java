@@ -37,12 +37,12 @@ public abstract class TUIOEvent extends Event {
 	}
 	
 	@Override
-	protected String getAdditionalHeader() {
+	protected String getAdditionalCsvHeader() {
 		return ",positionX, positionY, positionZ, movementX, movementY, movementZ, velocity, tableDistance";
 	}
 	
 	@Override
-	protected String getAdditionalLog() {
+	protected String getAdditionalCsvValues() {
 		return String.format(", %15.12f, %15.12f, %15.12f, %15.12f, %15.12f, %15.12f, %15.12f, %15.12f", position.x, position.y, position.z, velocity.x, velocity.y, velocity.z, velocity.w, tableDistance);
 	}
 

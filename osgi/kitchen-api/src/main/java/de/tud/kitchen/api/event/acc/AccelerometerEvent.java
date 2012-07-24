@@ -55,12 +55,12 @@ public class AccelerometerEvent<PRECISION> extends Event {
 	}
 	
 	@Override
-	protected String getAdditionalHeader() {
+	protected String getAdditionalCsvHeader() {
 		return ", x, y, z";
 	}
 	
 	@Override
-	protected String getAdditionalLog() {
+	protected String getAdditionalCsvValues() {
 		return String.format(Locale.US, ", %15.12f, %15.12f, %15.12f",x,y,z);
 	}
 

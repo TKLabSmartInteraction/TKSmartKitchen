@@ -92,7 +92,7 @@ public class Logger {
 			try {
 				stream = new PrintStream(newFile);
 			} catch (FileNotFoundException e) { return null; }
-			stream.println(event.logHeader());
+			stream.println(event.csvHeader());
 			return stream;
 		} else {
 			System.err.println("Could not create log directory for " + event.sender);
@@ -106,6 +106,6 @@ public class Logger {
 			targetFile = new PrintStream(newEvent(event));
 			logFiles.put(event.sender, targetFile);
 		}
-		targetFile.println(event.log());
+		targetFile.println(event.csvValues());
 	}
 }

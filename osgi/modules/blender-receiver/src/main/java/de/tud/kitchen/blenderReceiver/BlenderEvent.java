@@ -22,13 +22,13 @@ public class BlenderEvent extends Event {
 	}
 
 	@Override
-	protected String getAdditionalLog() {
+	protected String getAdditionalCsvValues() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	protected String getAdditionalHeader() {
+	protected String getAdditionalCsvHeader() {
 		return String.format(", %s", ((pushed)?"pushed":"pushed"));
 	}
 

@@ -49,12 +49,12 @@ public class RfidEvent extends Event {
 	}
 
 	@Override
-	protected String getAdditionalHeader() {
+	protected String getAdditionalCsvHeader() {
 		return ", tag_gained, tag_id";
 	}
 
 	@Override
-	protected String getAdditionalLog() {
+	protected String getAdditionalCsvValues() {
 		return String.format(", %s, %s", (rfid_tag_gained ? "gained" : "lost"), rfid_tag_value);
 	}
 

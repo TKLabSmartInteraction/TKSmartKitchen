@@ -24,12 +24,12 @@ public class EventTest {
 		EventConsumer eventConsumer = createMockBuilder(EventConsumer.class).addMockedMethod("handleObject").withConstructor().createMock();
 		Event event = new Event("testSensor") {
 			@Override
-			protected String getAdditionalHeader() {
+			protected String getAdditionalCsvHeader() {
 				return "";
 			}
 
 			@Override
-			protected String getAdditionalLog() {
+			protected String getAdditionalCsvValues() {
 				return "";
 			}
 		};

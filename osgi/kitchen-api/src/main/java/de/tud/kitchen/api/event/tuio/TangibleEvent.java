@@ -35,12 +35,12 @@ public class TangibleEvent extends TUIOEvent {
 	}
 	
 	@Override
-	protected String getAdditionalHeader() {
-		return super.getAdditionalHeader() + ", dimensionX, dimensionY, dimensionZ, parentTangible, hand";
+	protected String getAdditionalCsvHeader() {
+		return super.getAdditionalCsvHeader() + ", dimensionX, dimensionY, dimensionZ, parentTangible, hand";
 	}
 	
 	@Override
-	protected String getAdditionalLog() {
-		return String.format("%s, %15.12f, %15.12f, %15.12f, %d, %d", super.getAdditionalLog(), dimension.x, dimension.y, dimension.z, parentTangible, grabbedByHand);
+	protected String getAdditionalCsvValues() {
+		return String.format("%s, %15.12f, %15.12f, %15.12f, %d, %d", super.getAdditionalCsvValues(), dimension.x, dimension.y, dimension.z, parentTangible, grabbedByHand);
 	}
 }

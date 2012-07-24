@@ -33,13 +33,13 @@ public class HandEvent extends TUIOEvent {
 	}
 	
 	@Override
-	protected String getAdditionalHeader() {
-		return super.getAdditionalHeader() + ", hand, pointingX, pointingY, pointingZ";
+	protected String getAdditionalCsvHeader() {
+		return super.getAdditionalCsvHeader() + ", hand, pointingX, pointingY, pointingZ";
 	}
 	
 	@Override
-	protected String getAdditionalLog() {
-		return String.format("%s, %d, %15.12f, %15.12f, %15.12f", super.getAdditionalLog(), handId, pointingTo.x, pointingTo.y, pointingTo.z);
+	protected String getAdditionalCsvValues() {
+		return String.format("%s, %d, %15.12f, %15.12f, %15.12f", super.getAdditionalCsvValues(), handId, pointingTo.x, pointingTo.y, pointingTo.z);
 	}
 
 }

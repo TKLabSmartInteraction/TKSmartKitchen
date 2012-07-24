@@ -31,13 +31,13 @@ public class BlobEvent extends TUIOEvent {
 	}
 	
 	@Override
-	protected String getAdditionalHeader() {
-		return super.getAdditionalHeader() + ", touchedTangible";
+	protected String getAdditionalCsvHeader() {
+		return super.getAdditionalCsvHeader() + ", touchedTangible";
 	}
 	
 	@Override
-	protected String getAdditionalLog() {
-		return String.format("%s, %d", super.getAdditionalLog(), touchedTangible);
+	protected String getAdditionalCsvValues() {
+		return String.format("%s, %d", super.getAdditionalCsvValues(), touchedTangible);
 	}
 
 }
