@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <appSettings>
+        <clear />
+        <add key="Blobs_MinimumArea" value="20" />
+        <add key="Blobs_ShowBlobs" value="True" />
+        <add key="Blobs_TrackingRadius" value="30" />
+        <add key="Blobs_ShowDistanceToSurface" value="True" />
+        <add key="Blobs_ShowBlobsPosition" value="False" />
+        <add key="Hands_ShowDistanceToSurface" value="False" />
+        <add key="Hands_ShowHandsPosition" value="False" />
+        <add key="Hands_ApproxFactor" value="10" />
+        <add key="Hands_ApproxPointDistance" value="15" />
+        <add key="Fingers_Recognize" value="True" />
+        <add key="Hands_ShowHands" value="True" />
+        <add key="Tangibles_ShowTangiblesDimension" value="False" />
+        <add key="Tangibles_ShowTangiblesVolume" value="False" />
+        <add key="Tangibles_ShowTangiblesAngle" value="False" />
+        <add key="Tangibles_ShowTangiblesPosition" value="False" />
+        <add key="Tangibles_ShowTangibles" value="True" />
+        <add key="Fingers_ShowDistanceToSurface" value="False" />
+        <add key="Fingers_ShowFingersPosition" value="False" />
+        <add key="Calibration_ScaleZ" value="416" />
+        <add key="Calibration_ScaleX" value="1464" />
+        <add key="Calibration_PositionX" value="26" />
+        <add key="Calibration_PositionY" value="273" />
+        <add key="Calibration_RotationZ" value="1" />
+        <add key="Calibration_RotationY" value="4" />
+        <add key="Calibration_ScaleY" value="589" />
+        <add key="Calibration_RotationX" value="0" />
+        <add key="Calibration_PositionZ" value="1392" />
+        <add key="Fingers_ShowFingers" value="True" />
+        <add key="Hands_MinimumArea" value="4025" />
+        <add key="Home_ShowDebugImage" value="False" />
+        <add key="Common_ShowRawImage" value="False" />
+        <add key="Common_PositionStabilizationFactor" value="33" />
+        <add key="Fingers_TrackingRadius" value="10" />
+        <add key="Blobs_DeadTime" value="2" />
+        <add key="Blobs_MaxDistance" value="25" />
+        <add key="Common_MinDistance" value="9" />
+        <add key="Tangibles_AssignmentRadius" value="16" />
+        <add key="Tangibles_VolumeThreshold" value="10" />
+        <add key="TUIO_Send2Dobj" value="False" />
+        <add key="TUIO_SendHands" value="True" />
+        <add key="TUIO_Port" value="3333" />
+        <add key="TUIO_IgnoreObjectsOutside" value="True" />
+        <add key="TUIO_SendBlobs" value="True" />
+        <add key="TUIO_SendTangibles" value="True" />
+        <add key="TUIO_Send2Dcur" value="False" />
+        <add key="TUIO_SendFingers" value="True" />
+        <add key="TUIO_Send3Dobj" value="False" />
+        <add key="TUIO_Send2Dblb" value="False" />
+        <add key="Tangibles_IgnoreRadius" value="1" />
+    </appSettings>
+</configuration>
