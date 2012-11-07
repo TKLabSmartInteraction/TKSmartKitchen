@@ -11,6 +11,7 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>event-inspector</module>
+		<module>wmw-classifier</module>
 	</modules>
 	<repositories>
 		<repository>
