@@ -65,6 +65,7 @@
 								<artifactItem>
 									<groupId>com.illposed.osc</groupId>
 									<artifactId>javaosc-core</artifactId>
+									<version>0.2</version>
 								</artifactItem>
 								<artifactItem>
 									<groupId>com.strangeberry</groupId>
@@ -109,6 +110,10 @@
 								<artifactItem>
 									<groupId>${project.groupId}</groupId>
 									<artifactId>phidget-bundle</artifactId>
+								</artifactItem>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>blender-receiver</artifactId>
 								</artifactItem>
 								<!-- Add apps here -->
 								<artifactItem>
@@ -166,6 +171,11 @@
 			<artifactId>phidget-bundle</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>blender-receiver</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<!-- Add app bundles here -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -181,6 +191,7 @@
 		<dependency>
 			<groupId>com.illposed.osc</groupId>
 			<artifactId>javaosc-core</artifactId>
+			<version>0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.strangeberry</groupId>
