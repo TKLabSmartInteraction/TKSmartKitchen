@@ -6,8 +6,8 @@
 		<groupId>de.tud.kitchen</groupId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>Arduino-Board</artifactId>
-	<name>Arduino-Board</name>
+	<artifactId>WAXReceiver-bundle</artifactId>
+	<name>WAXReceiver-Bundle</name>
 	<packaging>bundle</packaging>
 	<build>
 		<plugins>
@@ -18,10 +18,9 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						
-						<Import-Package>de.tud.kitchen.serialprovider, gnu.io, de.tud.kitchen.api*</Import-Package>
+						<Import-Package>de.tud.kitchen.api*, de.tud.kitchen.serialprovider</Import-Package>
 						<Export-Package></Export-Package>
-						<Bundle-Activator>de.tud.kitchen.newArduino.Activator</Bundle-Activator>
+						<Bundle-Activator>de.tud.kitchen.wax.felix.Activator</Bundle-Activator>
 					</instructions>
 				</configuration>
 				<executions>
@@ -39,10 +38,6 @@
 		<dependency>
 			<groupId>de.tud.kitchen</groupId>
 			<artifactId>kitchen-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.illposed.osc</groupId>
-			<artifactId>javaosc-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>de.tud.kitchen</groupId>

@@ -2,12 +2,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>kitchen-modules</artifactId>
+		<artifactId>kitchen</artifactId>
 		<groupId>de.tud.kitchen</groupId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>Arduino-Board</artifactId>
-	<name>Arduino-Board</name>
+	<artifactId>SerialProvider-bundle</artifactId>
+	<name>SerialProvider-Bundle</name>
 	<packaging>bundle</packaging>
 	<build>
 		<plugins>
@@ -18,10 +18,9 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						
-						<Import-Package>de.tud.kitchen.serialprovider, gnu.io, de.tud.kitchen.api*</Import-Package>
-						<Export-Package></Export-Package>
-						<Bundle-Activator>de.tud.kitchen.newArduino.Activator</Bundle-Activator>
+						<Import-Package>org.apache.felix.service.command, org.osgi.framework, gnu.io</Import-Package>
+						<Export-Package>de.tud.kitchen.serialprovider</Export-Package>
+						<Bundle-Activator>de.tud.kitchen.serialprovider.felix.Activator</Bundle-Activator>
 					</instructions>
 				</configuration>
 				<executions>
@@ -37,17 +36,14 @@
 	</build>
 	<dependencies>
 		<dependency>
-			<groupId>de.tud.kitchen</groupId>
-			<artifactId>kitchen-api</artifactId>
+			<groupId>com.neuronrobotics</groupId>
+			<artifactId>nrjavaserial</artifactId>
+			<version>3.8.9</version>
 		</dependency>
 		<dependency>
-			<groupId>com.illposed.osc</groupId>
-			<artifactId>javaosc-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.tud.kitchen</groupId>
-			<artifactId>SerialProvider-bundle</artifactId>
-			<version>0.1-SNAPSHOT</version>
-		</dependency>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.apache.felix.gogo.runtime</artifactId>
+			<version>0.10.0</version>
+</dependency>
 	</dependencies>
 </project>

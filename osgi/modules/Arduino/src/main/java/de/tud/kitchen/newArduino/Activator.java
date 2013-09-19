@@ -13,7 +13,9 @@
 
 package de.tud.kitchen.newArduino;
 
-
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.util.TooManyListenersException;
 
 import de.tud.kitchen.api.Kitchen;
 import de.tud.kitchen.api.event.EventPublisher;
@@ -22,6 +24,10 @@ import de.tud.kitchen.api.module.KitchenModuleActivator;
 import de.tud.kitchen.arduino.Arduino;
 import de.tud.kitchen.arduino.DoorSensorEvent;
 import de.tud.kitchen.arduino.SensorEventListener;
+import de.tud.kitchen.serialprovider.SPSerialPort;
+import de.tud.kitchen.serialprovider.SPServiceEndpoint;
+import de.tud.kitchen.serialprovider.SerialProvider;
+import de.tud.kitchen.serialprovider.ChallengeResponse;;
 
 /**
  * the Activator for the Arduino-board thats used to send
@@ -29,7 +35,9 @@ import de.tud.kitchen.arduino.SensorEventListener;
  * @author Christian Klos
  *
  */
-public class Activator extends KitchenModuleActivator {
+public class Activator extends KitchenModuleActivator implements SPServiceEndpoint{
+	SerialProvider provider = SerialProvider.getInstance();
+	
 	//get an instance of the board
 	Arduino ard = Arduino.getInstance();
 	//and create an eventPublisher
@@ -39,9 +47,8 @@ public class Activator extends KitchenModuleActivator {
 	public void start(Kitchen kitchen) {	
 		// assign the eventpublisher
 		 eventpublisher = kitchen.getEventPublisher(DoorEvent.class);
-		 // connect to the board and set it in the correct state
-		 ard.connect("COM4");
-		 ard.switchMode(Arduino.MCHANGES);
+		 provider.requestDevice(new ChallengeResponse(new byte[]{0x41,0x42,0x43,0x44,0x45,0x46,0x47,0x48,0x49,0x50}, new byte[]{0x41,0x42,0x43,0x44,0x45,0,0,0,0,0}, 1000, 50), this);	// identify arduino board by partial echo (exact matching-mode)
+
 		 /* create and add a sensorEventListener thats called from the 
 		  Arduino class and that publishes the DoorEvent to a kitchen
 		  compatible one.
@@ -54,14 +61,42 @@ public class Activator extends KitchenModuleActivator {
 				eventpublisher.publish(event);			
 			}
 		});
-		
-		
+		 
 	}
 
-	//when the bundle is stopped disconnect the Board
 	@Override
 	public void stop() {
-		ard.disconnect();
-		
 	}
+	
+	@Override
+	public void serialDeviceAttached(DataInputStream instream,
+			DataOutputStream outstream, SPSerialPort port) {
+		System.out.println("Arduino: Serial device attached!");
+		ard.connect(instream, outstream); // connect to the board and set it in the correct state
+		try {
+			port.addSerialPortEventListener(ard);
+		} catch (TooManyListenersException e) {
+			System.err.println("Arduino: Too many listeners exception!");
+			e.printStackTrace();
+		}
+		try {
+			Thread.sleep(1000);	// wait for Arduino-board to become ready again after reset
+		} catch (InterruptedException e) {
+		}
+		ard.switchMode(Arduino.MCHANGES);
+//		try {
+//			if(instream.available() >= 1)
+//				instream.skipBytes(instream.available());	// skip all bytes in device buffer
+//		} catch (IOException e) {
+//			System.err.println("Arduino: I/O-Exception!");
+//			e.printStackTrace();
+//		}
+	}
+	
+	@Override
+	public void serialDeviceRemoved(DataInputStream instream,
+			DataOutputStream outstream, SPSerialPort port) {
+		provider.requestDevice(new ChallengeResponse(new byte[]{0x41,0x42,0x43,0x44,0x45,0x46,0x47,0x48,0x49,0x50}, new byte[]{0x41,0x42,0x43,0x44,0x45,0,0,0,0,0}, 1000, 50), this);	// identify arduino board by partial echo (exact matching-mode)
+	}
+	
 }

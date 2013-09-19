@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<slime:DocumentModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:slime="http://de.mvmsoft.slimeuml.model.slimemodel">
+  <children xsi:type="slime:ClassModel" x="41" y="37" width="67" height="113" name="Activator" classText="Activator" methodText="+ start()&#xA;+ stop()&#xA;+ attached()&#xA;+ tagGained()&#xA;+ tagLost()" qualifiedClassName="de.tud.kitchen.phidgets.Activator" javaProjectName="phidget-bundle" type="=phidget-bundle/src\/main\/java&lt;de.tud.kitchen.phidgets{Activator.java[Activator"/>
+</slime:DocumentModel>

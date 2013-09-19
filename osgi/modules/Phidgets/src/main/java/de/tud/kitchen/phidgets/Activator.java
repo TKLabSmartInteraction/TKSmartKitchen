@@ -32,14 +32,16 @@ import de.tud.kitchen.api.module.KitchenModuleActivator;
  * 
  */
 public class Activator extends KitchenModuleActivator implements TagGainListener, TagLossListener, AttachListener {
+	
+	private final int SERIALNO = 103075; // serial number of opened RFID-phidget
+	
 	private EventPublisher<RfidEvent> publisher;
-
 	private RFIDPhidget rfid;
 
 	/**
 	 * Set to true if you want to switch on the readers onboard led while a rfid tag is gained.
 	 */
-	public boolean useRfidLed = false;
+	private boolean useRfidLed = true;
 
 	@Override
 	public void start(Kitchen kitchen) {
@@ -54,8 +56,8 @@ public class Activator extends KitchenModuleActivator implements TagGainListener
 			rfid.addTagLossListener(this);
 
 			// connect to the RFID reader
-			rfid.openAny();
-			rfid.waitForAttachment(1000);
+			rfid.open(SERIALNO); // identify RFID-phidget by serial number
+			//rfid.waitForAttachment(1000); // this blocking call is not reasonable in conjunction with attached-event
 		} catch (PhidgetException e) {
 			e.printStackTrace();
 		}
@@ -65,7 +67,8 @@ public class Activator extends KitchenModuleActivator implements TagGainListener
 	public void stop() {
 		try {
 			// Switch of the onboard led and close the rfid reader.
-			rfid.setLEDOn(false);
+			if(rfid.isAttached())
+				rfid.setLEDOn(false);
 			rfid.close();
 		} catch (PhidgetException e) {
 			e.printStackTrace();

@@ -19,6 +19,8 @@
 		<module>tagging-gui</module>
 		<module>blender-receiver</module>
 		<module>Phidgets</module>
+		<module>WAXReceiver</module>
+		<module>SerialProvider</module>
 	</modules>
 	<repositories>
 		<repository>

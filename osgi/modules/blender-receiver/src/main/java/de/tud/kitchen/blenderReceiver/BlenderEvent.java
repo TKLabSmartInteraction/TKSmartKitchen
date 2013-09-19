@@ -22,37 +22,30 @@ import de.tud.kitchen.api.event.Event;
  */
 public class BlenderEvent extends Event {
 	
-	boolean pushed;
-	String prettyButtonName;
+	boolean isActive;
+	String actionName;
 	
-	public BlenderEvent(String sender, boolean pushed) {		
+	public BlenderEvent(String sender, String actionName, boolean isActive) {		
 		super(sender);
-		int buttonNumber=new Integer(sender);
+		int buttonNumber=new Integer(actionName);
 		switch (buttonNumber) {
+		case 00:
+			this.actionName = "Blending-Dialed";
+			break;
 		case 01:
-			prettyButtonName = "Smoothy";
+			this.actionName = "Smoothy-Button";
 			break;
 		case 02:
-			prettyButtonName = "Ice";
+			this.actionName = "Ice-Button";
 			break;
 		case 04:
-			prettyButtonName = "Pulse";
-			break;
-		case 8:
-			prettyButtonName = "Dial-on";
-			break;
-		case 10:
-			prettyButtonName = "Dial-Min...Max";
-			break;		
-		case 20:
-			prettyButtonName = "Motor";
+			this.actionName = "Pulse-Button";
 			break;
 		default:
-			prettyButtonName = sender;
+			this.actionName = "Blending-Dialed";
 			break;
 		}
-		
-		this.pushed = pushed;
+		this.isActive = isActive;
 	}
 	
 	public BlenderEvent(String sender) {
@@ -62,7 +55,7 @@ public class BlenderEvent extends Event {
 
 	@Override
 	public String toString() {
-		return "Button "+this.prettyButtonName+(pushed ? " pushed" : " released");
+		return "Action "+this.actionName+(isActive ? " active" : " inactive");
 	}
 
 	@Override
@@ -73,7 +66,7 @@ public class BlenderEvent extends Event {
 
 	@Override
 	protected String getAdditionalCsvHeader() {
-		return String.format(", %s", ((pushed)?"pushed":"pushed"));
+		return String.format(", %s, %s", actionName ,((isActive)?"active":"inactive"));
 	}
 
 	

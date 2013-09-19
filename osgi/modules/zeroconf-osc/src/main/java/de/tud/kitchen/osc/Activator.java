@@ -43,7 +43,7 @@ public class Activator extends KitchenModuleActivator {
 	
 	@Override
 	public void start(Kitchen kitchen) {
-		System.out.println("Starting Android Bundle");
+		//System.out.println("Starting Android Bundle");
 		publisher = kitchen.getEventPublisher(AccelerometerEvent.class);
 		// ----- start jmdns and register service for android ----- //
 		try {

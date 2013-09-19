@@ -27,16 +27,32 @@ import de.tud.kitchen.api.event.EventPublisher;
  * @version    1.0.0, 15.08.2011
  * @author     Marcus St&auml;nder, Aristotelis Hadjakos    
  */
-public class BlenderReciever extends Service implements IBlenderEvent {
+public class BlenderReciever extends Service implements IBlenderEvent, BlenderStateMachineEventListener {
 	EventPublisher<BlenderEvent> eventpublisher;
+	
+	BlenderStateMachine blenderFSM;
+	BlenderState blenderOff, blenderOn, blenderActive;
+	//BlenderAction a0, a1, a2;
 	
 	public static final String DEFAULT_ZONE = "lan";
     public static final String DEFAULT_CHANNEL = "kaffeekueche.blender.event";
     
-    
-    
 	public BlenderReciever(EventPublisher<BlenderEvent> publisher) {
 		this.eventpublisher = publisher;
+		
+		/* configure blender states */
+		blenderOff = new BlenderState("blenderOff", 0);
+		blenderOn = new BlenderState("blenderOn", 1);
+		blenderActive = new BlenderState("blenderActive", 2);
+		blenderOff.addTransition(new BlenderTransition(new BlenderAction(DIAL_ON, true), blenderOn));
+		blenderOn.addTransition(new BlenderTransition(new BlenderAction(16, true), blenderActive));
+		blenderActive.addTransition(new BlenderTransition(new BlenderAction(16, false), blenderOn));
+		
+		/* configure blender state machine */
+		blenderFSM = new BlenderStateMachine(blenderOff); // set off as default state
+		
+		/* add event listener for specific states */
+		blenderActive.addEventListener(this);
 	}
 	
 	/**
@@ -51,12 +67,32 @@ public class BlenderReciever extends Service implements IBlenderEvent {
 
 	@Override
 	public void buttonPushed(int but) {
-		eventpublisher.publish(new BlenderEvent(""+but, true));
+		if(but == 1 || but == 2 || but == 4){ // special buttons pushed
+			System.out.println("Passing action: Button " + but + "pressed: true");
+			eventpublisher.publish(new BlenderEvent("Blender1",""+but, true));
+		}
+		else {
+			//System.out.println("Passing action to blenderFSM: Button " + but + "pressed: true");
+			blenderFSM.inputAction(new BlenderAction(but, true));
+		}
 	}
 	
 	@Override
 	public void buttonReleased(int but) {
-		eventpublisher.publish(new BlenderEvent(""+but, true));
+		if(but == 1 || but == 2 || but == 4){ // special buttons pushed
+			System.out.println("Passing action: Button " + but + "pressed: false");
+			eventpublisher.publish(new BlenderEvent("Blender1",""+but, false));
+		}
+		else {
+			//System.out.println("Passing action to blenderFSM: Button " + but + "pressed: false");
+			blenderFSM.inputAction(new BlenderAction(but, false));
+		}
+	}
+
+	@Override
+	public void stateChanged(BlenderState newState, boolean isActive) {
+		//System.out.println("New blender state: " + newState.getHumanReadableName() + " is active: " + isActive);
+		eventpublisher.publish(new BlenderEvent("Blender1","0", isActive));
 	}
 
 }

@@ -77,6 +77,11 @@
 									<artifactId>phidgets-api</artifactId>
 									<version>1.0</version>
 								</artifactItem>
+								<artifactItem>
+									<groupId>com.neuronrobotics</groupId>
+									<artifactId>nrjavaserial</artifactId>
+									<version>3.8.8</version>
+								</artifactItem>
 							</artifactItems>
 							<outputDirectory>${project.basedir}/bundle</outputDirectory>
 							<overWriteSnapshots>true</overWriteSnapshots>
@@ -105,7 +110,19 @@
 								</artifactItem>
 								<artifactItem>
 									<groupId>${project.groupId}</groupId>
-									<artifactId>wax3-bundle</artifactId>
+									<artifactId>WAXReceiver-bundle</artifactId>
+								</artifactItem>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>SerialProvider-bundle</artifactId>
+								</artifactItem>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>SteamerReceiver-bundle</artifactId>
+								</artifactItem>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>ScaleReceiver-bundle</artifactId>
 								</artifactItem>
 								<artifactItem>
 									<groupId>${project.groupId}</groupId>
@@ -167,7 +184,22 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>wax3-bundle</artifactId>
+			<artifactId>WAXReceiver-bundle</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>SerialProvider-bundle</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>SteamerReceiver-bundle</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>ScaleReceiver-bundle</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -216,6 +248,11 @@
 			<groupId>com.phidgets</groupId>
 			<artifactId>phidgets-api</artifactId>
 			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.neuronrobotics</groupId>
+			<artifactId>nrjavaserial</artifactId>
+			<version>3.8.9</version>
 		</dependency>
 	</dependencies>
 </project>
